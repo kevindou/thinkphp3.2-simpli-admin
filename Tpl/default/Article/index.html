@@ -1,0 +1,46 @@
+<include file="Layout:header" />
+<div class="main clear">
+    <div class="m_l">
+        <include file="Layout:leftMenu" />
+    </div>
+    <div class="m_r">
+        <div class="titile">
+            <div class="where">
+                <span>您现在所在的位置：</span>
+                <span> 死神WEB平台 </span>
+                <a href="/">平台首页</a>
+                <if condition="!empty($arrCate)">
+                    <foreach name="arrCate" item="value">
+                        <span> &gt; </span>
+                        <a href="?m=Article&index&pid={$value.id}">{$value.cateName}</a>
+                    </foreach>
+                </if>
+            </div>
+            <h3 class="inT">死神狂潮游戏活动</h3>
+        </div>
+        <div class="inside b">
+            <div class="inbox">
+                <div class="inside_tab">
+                    <if condition="$arrChild">
+                    <ul>
+                        <foreach name="arrChild" item="value">
+                        <li <if condition="$intPid eq $value['id']">class="active"</if>><a href="?m=Article&a=index&pid={$value.id}">{$value.cateName}</a></li>
+                        </foreach>
+                    </ul>
+                    </if>
+                </div>
+                <if condition="$arrArticle">
+                <ul class="newList">
+                    <foreach name="arrArticle" item="value">
+                    <li><span>{$value.createTime|date='Y-m-d',###}</span><a href="?m=Article&a=detail&pid={$value.cateId}&id={$value.id}">{$value.title}</a></li>
+                    </foreach>
+                </ul>
+                </if>
+                <div class="pagination page">
+                    {$strPage}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<include file="Layout:footer" />

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>{$title}</title>
+	<style>
+		html, body { height:100%; }
+		 body { margin:0; padding:0; overflow:auto; text-align:center;
+				background-color: #000000; 
+			} 
+	</style>
+	<script type="text/javascript" language="javascript">
+		function IFrameReSize(iframename) {
+			var pTar = document.getElementById(iframename);
+			if (pTar) { //ff
+				if (pTar.contentDocument && pTar.contentDocument.body.offsetHeight) {
+					pTar.height = pTar.contentDocument.body.offsetHeight;
+				} 	//ie
+				else if (pTar.Document && pTar.Document.body.scrollHeight) {
+					pTar.height = pTar.Document.body.scrollHeight;
+				}
+			}
+		}
+			
+		//iframe宽度自适应
+		function IFrameReSizeWidth(iframename) {
+			var pTar = document.getElementById(iframename);
+			if (pTar) { //ff
+				if (pTar.contentDocument && pTar.contentDocument.body.offsetWidth) {
+					pTar.width = pTar.contentDocument.body.offsetWidth;
+				} //ie
+				else if (pTar.Document && pTar.Document.body.scrollWidth) {
+					pTar.width = pTar.Document.body.scrollWidth;
+				}
+			}
+		}
+	</script>
+</head>
+
+<body>
+<!-- <iframe src="{$server.url}" scrolling="no" frameborder="0" height="100%" id="mainFrame" width="100%" onload='IFrameReSize("mainFrame");IFrameReSizeWidth("mainFrame");'></iframe> -->
+<iframe src="{$url}" id="mainFrame" name="mainFrame" scrolling="no" width="100%" height="100%" frameborder="0"  ></iframe>
+</body>
+</html>

@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* CSS Document */
+
+.wrap {margin: -4px auto 0px;overflow: hidden;}
+.container {margin: 0px auto;padding: 10px 10px 0px;background: white;border-left: 1px solid #CBCBCB;border-right: 1px solid #CBCBCB;overflow: hidden; text-align:center;}
+.content_3 {width: 965px; margin-top:10px; margin-bottom: 20px; margin-left: auto;margin-right: auto;}
+.content_3_left {width: 240px;float: left;margin-right: 8px;}
+.content_3_right {width: 717px;float: left;}
+
+/*左侧导航*/
+.ab_leftdh {display: inline;float: left;width: 160px;height: 163px;background: url(../images/about_Img.png) no-repeat 0px 0px;padding: 1px 3px 3px 1px;}
+.ab_leftdh ul {overflow: hidden;zoom: 1;width: 160px;height: 203px;}
+.ab_leftdh ul li {float: left;width: 160px;height: 40px;overflow: hidden;background: url(../images/about_Img.png) no-repeat -1px -210px;border-bottom: 1px white solid;}
+.ab_leftdh ul li a {display: block;height: 40px;overflow: hidden;zoom: 1;}
+.ab_leftdh ul li a em {width: 16px;height: 16px;overflow: hidden;float: left;display: inline;margin: 12px 0px 0px 20px;cursor: pointer;}
+.ab_leftdh ul li a:hover{ background:url(../images/about_Img.png) no-repeat -162px -210px;}
+.ab_leftdh ul li a:hover span {color: #FB8524;text-shadow: 0px 1px 0px #FCFCFC;}
+.ab_leftdh ul li a span {float: left;height: 16px;overflow: hidden;display: inline;margin: 11px 0px 0px 12px;font-size: 14px;font-family: "微软雅黑";line-height: 16px;color: #999;text-shadow: 0px 1px 0px white;cursor: pointer;}
+.ab_leftdh ul li .hover{ background:url(../images/about_Img.png) no-repeat -162px -210px;}
+.ab_leftdh li .hover span{ color:#fb8524; text-shadow:0px 1px 0px #fcfcfc;}
+
+
+.gywm a em {background: url(../images/about_Img.png) no-repeat -1px -254px;}
+.swhz a em {background: url(../images/about_Img.png) no-repeat -1px -271px;}
+.flsm a em {background: url(../images/about_Img.png) no-repeat -1px -322px;}
+.lxfs a em {background: url(../images/about_Img.png) no-repeat -1px -288px;}
+
+.gywm a:hover em {background: url(../images/about_Img.png) no-repeat -18px -254px;}
+.swhz a:hover em {background: url(../images/about_Img.png) no-repeat -18px -271px;}
+.flsm a:hover em {background: url(../images/about_Img.png) no-repeat -18px -322px;}
+.lxfs a:hover em {background: url(../images/about_Img.png) no-repeat -18px -288px;}
+
+.gywm .hover em {background: url(../images/about_Img.png) no-repeat -18px -254px;}
+.swhz .hover em {background: url(../images/about_Img.png) no-repeat -18px -271px;}
+.flsm .hover em {background: url(../images/about_Img.png) no-repeat -18px -322px;}
+.lxfs .hover em {background: url(../images/about_Img.png) no-repeat -18px -288px;}
+
+/*右侧内容*/
+.content_3_right {width: 717px; height:auto; margin-left:20px;float: left; border-radius:10px 10px 0px 0px; background-color:#fafafa; border:1px solid #e6e6e6}
+.ab_tit{ width:680px; border-bottom:2px solid #ff9730; font-family:"微软雅黑"; font-size:16px; color:#333;margin-left: 20px;height: 30px;line-height: 30px;text-align: left;margin-top: 10px;}
+.ab_cont{ background-color:#FFF; width:660PX; margin-left:20PX; padding:10PX; height:auto; overflow:hidden;margin-top: 10px;border: 1px solid #E6E6E6;text-align: left;line-height: 30px;font-family: '微软雅黑';font-size: 15px;
+letter-spacing: 1px;text-indent: 2em; margin-bottom:10px;}
+

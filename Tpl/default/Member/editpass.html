@@ -1,0 +1,87 @@
+<include file="Layout:header" />
+<div class="content">
+    <include file="./Tpl/Public/member/menu.html" />
+    <div class="re span9">
+        <div class="box-header">
+            <h2>修改密码</h2>
+        </div>
+        <form id="edit" class="form-horizontal" method="post" action="javascript:;">
+            <div class="control-group">
+                <label class="control-label">用户名</label>
+                <div class="controls">
+                    <input type="text" name="username" value="{$Think.session.gt_homeUser.username}" required="true" rangth="[2,25]" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">旧密码</label>
+                <div class="controls">
+                    <input type="password" name="oldpass" required="true" rangelength="[2,25]" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">新密码</label>
+                <div class="controls">
+                    <input type="password" name="password" mpass="1" required="true" rangelength="[5,20]" checkPass="true" neqTo="input[name=oldpass]"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">确认新密码</label>
+                <div class="controls">
+                    <input type="password" name="truepass" required="true" rangelength="[5, 20]" checkPass="true" equalTo="input[mpass=1]"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">验证码</label>
+                <div class="controls">
+                    <img src="?m=Index&a=verify" class="verify le" onclick="this.src='?m=Index&a=verify&rdm='+Math.random()" title="点击刷新验证码"/>
+                    <input type="text" class="le" name="verify" maxlength="5" minlength="5" required="true" number="true" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary" id="editSub">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<include file="Layout:footer" />
+<script type="text/javascript">
+    // 添加验证方法
+    $.validator.addMethod('neqTo', function(value, element, params){
+        return value != $(params).val();
+    });
+
+    // 表单数据提交
+    $('#editSub').click(function(){
+        if (isLoginAlter())
+        {
+            if ($('#edit').validate().form())
+            {
+                $.ajax({
+                    url:'?m=Member&a=editPass',
+                    type:'post',
+                    data:$('#edit').serialize(),
+                    dataType:'json',
+                    success:function(json)
+                    {
+                        if (json.status == 1)
+                        {
+                            success(json.info, function(){
+                                $('#edit')[0].reset();
+                            });
+                            return false;
+                        }
+
+                        warning(json.info);
+                    },
+                    error:function()
+                    {
+                        warning('服务器繁忙,请稍后再试...');
+                    }
+                })
+            }
+        }
+    });
+</script>

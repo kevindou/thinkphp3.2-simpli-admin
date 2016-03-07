@@ -1,0 +1,32 @@
+@charset "gb2312";
+/* images */
+.more{ float: right; margin-top:10px; width:36px; height:9px; margin-right:5px;}
+.more a{ display:block; width:36px; height:9px; overflow:hidden; background:url(../images/602indexImg.png) no-repeat -915px -319px; text-indent:-999em;}
+
+
+/* strategy */
+#strategy{ width:510px;float:left; margin-right:5px;}
+#strategy .glboxK_top{ height:4px; overflow:hidden;background:url(../images/glboxK.png) no-repeat 0px 0px;}
+#strategy .glboxK_bottom{ height:4px; overflow:hidden;background:url(../images/glboxK.png) no-repeat -1020px 0px;}
+#strategy .glboxK_middle{ overflow:hidden;zoom:1; background:url(../images/glboxK.png) repeat-y -510px 0px; padding-top: 3px;}
+#strategy .hd { position: relative; height:28px; line-height:28px; padding-bottom: 5px;}
+#strategy .hd h2 { height: 28px; line-height:28px; font-size:18px; color:#333333; padding-left: 10px; font-family:"Î¢ÈíÑÅºÚ";}
+#strategy .hd .ext {position:absolute;top: 12px;right:10px;display:block;width:36px;height:9px;text-indent:-999em;overflow:hidden;background: url(../images/602indexImg.png) no-repeat -915px -319px;}
+#strategy #scroll_header { height: 32px; line-height: 32px; width:490px; margin: 0 auto; overflow:hidden; background:url(../images/tabBg.png) repeat-x 0px -32px;}
+#ranks_change_bar { float:left; height: 32px; line-height: 32px; overflow:hidden;}
+#strategy #scroll_header a { display: block; width: 30px; height: 32px; text-indent: -999em;}
+#strategy #scroll_header #previous { float: left; width:30px; height:32px; overflow:hidden;background:url(../images/tabBg.png) no-repeat 0px 0px  !important;}
+#strategy #scroll_header #next { float: right; width:30px; height:32px; overflow:hidden;background:url(../images/tabBg.png) no-repeat 0px -64px  !important;}
+#strategy #scroll_header ul { float: left; width:430px; height: 32px; line-height:32px;overflow: hidden; background-position:0 -89px;}
+#strategy #scroll_header ul li { float:left; margin-right:-1px; width:72px; height: 32px; text-align: center;cursor: pointer; overflow: hidden; font-weight: bold; background:url(../images/tabPl.png) no-repeat 70px 10px;}
+#strategy #scroll_header ul li.nav_current {color: #FFF;background:url(../images/tabHover.png) no-repeat 0px 0px}
+#strategy .hot_ranks_list { padding-bottom:6px; }
+#strategy .bd { width: 510px; margin:0 auto; overflow: hidden;zoom:1;}
+#strategy .bd ul { display:none; width: 100%; overflow:hidden; margin-left:-10px; padding:5px 0 10px; }
+#strategy .bd .current { display:block; }
+#strategy .bd ul li { float: left; display:inline; margin-left:20px; width: 225px; height: 20px; line-height: 20px; padding: 4px 0 4px 10px; overflow: hidden; background: url(../images/602indexImg.png) no-repeat -947px -982px;}
+#strategy .bd li a { white-space:nowrap; color:#333; text-decoration:none;}
+#strategy .bd li a:hover{ color:#F60;}
+#strategy .bar { margin:0 auto; width: 475px; height: 35px; line-height: 35px; padding-left: 20px;position: relative; border-top: 1px dotted #DDDDDD; background-position: 0 -136px;}
+#strategy .bar .ext {position: absolute; bottom: 0; right: 0; color : #FF9900; }
+

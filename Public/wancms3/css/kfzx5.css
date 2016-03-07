@@ -1,0 +1,61 @@
+@charset "gb2312";
+/* CSS Document */
+#content_3{ width: 991px;margin-bottom:20px; padding-bottom:59px; float:left;}
+#fcm_2{ width: 965px; overflow: hidden; zoom: 1;}
+
+
+#fcm_2_left{float:left;}
+
+#fcm_2_right{ width:717px; float:right;}
+#fcm_2_right .ksTop{ height:4px; overflow:hidden;background: url(../images/conboxK.png) no-repeat;}
+#fcm_2_right .ksMiddle{ overflow:hidden;zoom:1;background: url(../images/conboxK.png) repeat-y -717px 0px; padding-top: 0px; padding-bottom: 10px;}
+#fcm_2_right .ksBottom{ height:4px; overflow:hidden;background: url(../images/conboxK.png) no-repeat -1434px 0px;}
+
+#fcm_2_right_1{ overflow:hidden;zoom:1; padding: 0px 15px;}
+#tw{ width:294px; float:left;}
+#tw dt{ width:294px; height:29px; font-size:14px; font-weight:bold; padding-top:64px; background:url(../images/index_45.jpg) no-repeat 81px 20px;}
+#tw dd{ width: 254px; padding-left: 15px;}
+#tw dd img{ margin-bottom:12px;}
+
+#wh{ width:363px; padding-top:30px; float:right;}
+#wh dt{ width:363px; height:17px; float:left;border-bottom:1px dashed #c6c6c6; text-align:center;}
+#wh dd{ width:363px; line-height:24px; float:left;}
+#wh dd span{ float:left;}
+#wh dd a{ margin-left:10px; float:left;}
+#wh dd b{ font-weight:100; float:right;}
+
+#fcm_2_right_2{ float:left; padding: 5px 0 0 33px; line-height: 30px;}
+
+.tjwt .btn{ width:133px; height:41px;background:url(../images/tjwt.jpg) no-repeat  }
+
+#ClCache{ display:none;}
+   .basic{ width:221px; border:1px solid #ddd; background:#F7F7F7}
+	 .basic ul{ padding: 8px 0 15px 15px; text-align:left; line-height:25px;}
+	 .basic ul li dl{ width:180px; height:55px;}
+	 .basic ul li dl dt{ float:left; width:50px; height:50px;}
+	 .basic ul li dl dd{ width: 120px; text-align:left; float:right; margin-top: 5px; line-height:12px; font-family: "Î¢ÈíÑÅºÚ"; font-size: 14px; overflow: hidden; zoom: 1; margin-bottom: 8px;}
+	 
+	 .basic ul span{ font-family:Arial; font-size:20px; font-weight:bold ; color: #fb7b00;}
+	 .basic ul li.welcome{ font-size: 14px; margin: 0px 0 6px 0; font-family: "Î¢ÈíÑÅºÚ"; font-weight: bold;}
+	 .basic ul li.record{ line-height:12px; color:#888}
+	 .record font{color:#333; }
+     .basic ul li.balance{ margin-top:8px; border-bottom: 1px #e3e3e3 dashed; width: 190px; margin-bottom: 10px; padding-bottom: 8px;}
+     .emailts{border-top:1px #e3e3e3 dashed;margin-top:10px;padding-top:8px}
+     .link{overflow:hidden;zoom:1;padding: 8px 0px 5px 0px;}
+     .link a{float:left;text-indent: -99em; display:inline;margin-right: 10px;}
+     .link .czBtn{width:50px; height:25px; overflow:hidden; background:url(../images/yhzxImg.png) no-repeat -99px -1px}
+     .link .czBtn:hover{background:url(../images/yhzxImg.png) no-repeat -99px -27px}
+     .link .yxbBtn{width:81px; height:25px; overflow:hidden; background:url(../images/yhzxImg.png) no-repeat -150px -1px}
+     .link .yxbBtn:hover{background:url(../images/yhzxImg.png) no-repeat -150px -27px}
+	 .basic ul li dd a{ color:#EB5901; text-decoration:underline; display:block; float:left; width: 48px; height: 20px; text-indent: -999em; display:inline}
+	 .basic ul li a{color:#EB5901; text-decoration:underline; }
+	 .basic ul li dd .xgbtn{background:url(../images/yhzxImg.png) no-repeat -1px -1px;margin-right: 10px;}
+	 .basic ul li dd .xgbtn:hover{background:url(../images/yhzxImg.png) no-repeat -1px -22px}
+	 .basic ul li dd .tcbtn{background:url(../images/yhzxImg.png) no-repeat -50px -1px}
+	 .basic ul li dd .tcbtn:hover{background:url(../images/yhzxImg.png) no-repeat -50px -22px}
+	 
+     .function ul#menu{ width:221px;  border:1px solid #ddd; margin-top:10px;} 
+         ul#menu a {display: block;text-decoration: none;	}
+         ul#menu li a {color:#333; padding:0.7em;background:url(../images/Ziye-bj.gif) no-repeat -5px -2px;border-bottom:1px solid #ddd; text-align:left;padding-left:36px}
+         ul#menu li ul li a {color: #000;padding-left:55px; background:url(../images/Ziye-bj.gif) no-repeat -50px -130px}
+         ul#menu li ul li a:hover {background: #Fff; color:#E95701; background:url(../images/Ziye-bj.gif) no-repeat 180px -41px; text-decoration:underline}

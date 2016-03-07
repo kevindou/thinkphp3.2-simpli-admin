@@ -1,0 +1,48 @@
+<include file="Layout:header"/>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/Index/css/error.css"/>
+<div class="content">
+    <div style="" class="modal in" id="ucloudmodal">
+        <div class="create_ufirewall">
+            <div class="modal-header">
+                <h3>{$title|default="温馨提醒"}：</h3>
+            </div>
+            <div class="modal-body">
+                <div class="msginfo">
+                    <span class="error">
+                        <strong id="time_num">3</strong>
+                        {$error}{$message}
+                    </span>
+                    <p>如果不想等待请点击 <a href="{$jumpUrl}">这里</a> 跳转</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="limittime"></div>
+                <a href="#" class="btn btn-info" id="href">&nbsp;{$indexTitle|default="去首页"}&nbsp;</a>
+            </div>
+        </div>
+    </div>
+</div>
+<include file="Layout:footer" />
+{$alipay}
+<script type="text/javascript">
+    $(function(){
+        var isSkip = {$isSkip|default="true"};
+        // 点击跳转
+        $('#href').click(function(){
+            top.location.href = '{$indexUrl|default="/"}';
+        });
+
+        // 定时跳转页面
+        var timeOut = setInterval(function(){
+            var num = $('#time_num').html();
+            -- num;
+            $('#time_num').html(num);
+            if (num == 0)
+            {
+                $('#time_num').html('');
+                clearInterval(timeOut);
+                if (isSkip) top.location.href = '{$jumpUrl|default="/"}';
+            }
+        }, 1000);
+    });
+</script>

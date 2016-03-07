@@ -1,0 +1,18 @@
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SHOW COLUMNS FROM `gt_project_agent` [ RunTime:0.225618s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SELECT * FROM `gt_project_agent` [ RunTime:0.000629s ]
+[ 2016-01-10T16:32:48+08:00 ] / | NOTIC: [8] Undefined index: pitch CommonAction.class.php 第 39 行.
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SHOW COLUMNS FROM `gt_project_server` [ RunTime:0.102721s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SELECT * FROM `gt_project_server` WHERE  `recommend` = 1  LIMIT 5  [ RunTime:0.000840s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SHOW COLUMNS FROM `gt_project_article` [ RunTime:0.099229s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SELECT `id`,`cateId`,`title` FROM `gt_project_article` WHERE ( `status` = 1 ) AND ( `recommend` = 1 ) AND ( `cateId` = 11 ) ORDER BY `sort` ASC LIMIT 7  [ RunTime:0.000719s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SHOW COLUMNS FROM `gt_project_category` [ RunTime:0.009233s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SELECT * FROM `gt_project_category` WHERE ( `status` = 1 ) AND ( `recommend` = 1 ) AND ( `pid` = 1 ) ORDER BY `sort` ASC LIMIT 5  [ RunTime:0.019054s ]
+[ 2016-01-10T16:32:48+08:00 ] / | SQL: SELECT * FROM `gt_project_category` WHERE ( `status` = 1 ) AND ( `recommend` = 1 ) AND ( `pid` = 2 ) ORDER BY `sort` ASC LIMIT 4  [ RunTime:0.000391s ]
+[ 2016-01-10T16:32:48+08:00 ] / | NOTIC: [8] Undefined index: gt_uname 0ef38bbeb2228e1af7612d90c638786f.php 第 38 行.
+[ 2016-01-10T16:32:48+08:00 ] / | NOTIC: [8] Undefined index: pitch 0ef38bbeb2228e1af7612d90c638786f.php 第 43 行.
+[ 2016-01-10T16:32:48+08:00 ] / | NOTIC: [8] Undefined index: gt_uname 0ef38bbeb2228e1af7612d90c638786f.php 第 95 行.
+[ 2016-01-10T16:32:49+08:00 ] /?m=Index&a=verify | SQL: SHOW COLUMNS FROM `gt_project_agent` [ RunTime:0.003749s ]
+[ 2016-01-10T16:32:49+08:00 ] /?m=Index&a=verify | SQL: SELECT * FROM `gt_project_agent` [ RunTime:0.000147s ]
+[ 2016-01-10T16:32:49+08:00 ] /?m=Index&a=verify | NOTIC: [8] Undefined index: pitch CommonAction.class.php 第 39 行.
+[ 2016-01-10T16:32:49+08:00 ] /?m=Index&a=verify | SQL: SHOW COLUMNS FROM `gt_project_server` [ RunTime:0.021401s ]
+[ 2016-01-10T16:32:49+08:00 ] /?m=Index&a=verify | SQL: SELECT * FROM `gt_project_server` WHERE  `recommend` = 1  LIMIT 5  [ RunTime:0.000145s ]

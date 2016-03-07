@@ -1,0 +1,230 @@
+@charset "utf-8";
+/* 头部悬停DIV*/
+/*头部导航样式*/
+.nav_header  {position:fixed;height:45px;width:100%;background-color: #f8f8f8;border-bottom:1px solid #e7e7e7;color: #555;line-height:45px;text-align:left;
+	font-family:Arial, Helvetica, sans-serif;font-size:12px;overflow:hidden;z-index:999;}
+.nav_content {height:45px;width:980px;margin:0 auto;}
+.nav_content .menu a {display: block;line-height:25px;padding:10px;color: #777;float:left;}
+.nav_content .menu a.col_red {color:red}
+.nav_content .menu a.active {background-color: #e7e7e7;}
+.nav_content .menu a:hover {background-color: #e7e7e7;color: #555;}
+.nav_content .menu a.col_red:hover {color:red}
+.nav_fixed {width:100%;height:45px;clear:both;}
+
+/*foot*/
+.pfooter *,.pwarning *{ padding:0px; margin:0px; border:0 none; outline:0 none; font-style:normal; font-family:Arial, Helvetica, sans-serif;}
+#pfoot_91 div{ font-size:12px; }
+#pfoot_91 em{font-family: "瀹嬩綋","Arial Narrow",HELVETICA;}
+#pfoot_91 div a{ text-decoration:none; }
+.pbold{ font-weight:bold;}
+.pfr{ float:right;}
+
+#pfoot_91{ overflow:visible;}
+#pfoot_91 ul li{ list-style:none;}
+.pw920{ width:920px; margin:0 auto; position:relative; z-index:1;}
+.pfooter{ 
+    width:100%;
+	background:url(../images/botombg.gif) repeat-x;
+	height:208px;
+	border:1px solid #d7d7d7; 
+	border-right:0px; 
+	border-left:0px;
+	position:relative;
+	overflow:visible;
+}
+.pti9{ text-indent:-10000px;}
+.pbdw{
+	float:left; 
+	display:inline; 
+	margin-top:35px;
+	height:174px;
+    width:150px;
+	border-left:1px solid #fff;
+	border-right:1px solid #e2e2e2;
+	}
+dd.psec_dd{
+	float:left;
+	text-align:left;
+	width:150px;
+	}
+.pmr19,.pbrf{
+	width:150px;
+     }
+.pmr19{ border-left:0 none;}
+.pbrf{ border-right:0 none;}
+.pbdw ul{ padding-left:25px;}
+.pmr19 dd ul li,.pbrf dd ul li{ _height:19px;  overflow:hidden;}
+.ppr20{text-align:right; padding-right:5px;}
+
+.pfooter dl a{ color:#6b6b6b;}
+.pfooter dl{
+	text-align:center;
+	padding-top:23px;
+	height:150px;
+	}
+.pfooter .pbrf dl{
+	}
+.pfooter dl dt{
+	font-size:12px;
+	margin-bottom:3px;
+	font-weight:bold;
+	color:#3c3c3c;
+	}
+.pfooter dl dd{
+	/*
+	border-bottom:1px solid #fff;
+	*/
+	}
+.pfooter dl dd a{
+	/*
+	border-bottom:1px solid #e2e2e2;
+	*/
+	}
+.pfooter dl dd a:hover{
+	color:#0082e0;
+	text-decoration:none;
+	}
+.pwarning{
+	width:100%; 
+	font-size:12px;
+	font-family:Arial, Helvetica, sans-serif;
+	position:relative;
+	}
+#pfoot_91 .pcont{
+	margin:0 auto;
+	width:944px;
+	overflow:visible;
+	font-family:Arial, Helvetica, sans-serif;
+	line-height:22px; 
+	}
+/*more*/
+#pmore,#pother,#pmore a,#pother a{ border-bottom:0 none;}
+#pmore a{  color:#9f9f9f;}
+#pmore a:hover{
+	background:none;
+	color:#0082e0; 
+	text-decoration:underline;
+	outline:0 none;
+	}
+/*game*/
+.pf_logo{ z-index:1; width:270px; }
+.pf_logo a{
+	display:block; 
+	width:270px; 
+	height:51px; 
+	/* background:url(../images/bot_lgo.gif) no-repeat; */
+	position:absolute;
+	z-index:99;
+	}
+.pyouth{
+	background:url(../images/y_bg.gif) repeat-x;
+	height:25px;
+	padding-top:12px;
+	}
+.pytxt{
+	width:828px;
+	margin:0 auto; 
+	background:url(../images/y_outh.gif) no-repeat;
+	height:21px;
+	}
+
+.pbottom{
+	background:#292929 url(../images/b_bg.gif) repeat-x;
+	color:#858585; 
+	padding-bottom:20px;
+	}
+.pbottom .pcont{ padding-top:27px; line-height:22px; text-align:center;}
+.pbottom a{ color:#858585;}
+.pbottom ul li{ display:block; height:22px; overflow:hidden;}
+.pbottom a:hover{
+	color:#d2d0d0; 
+	text-decoration:underline;
+	}
+.pbottom em{
+	font-size:10px;
+	margin:0 10px;
+	color:#525050;
+	}
+	
+/*games*/
+#pfoot_91 .pgamelist{ border:3px solid #d0cece; position:absolute; overflow:visible;width:550px; background:#fff; left:19%; bottom:19%;  z-index:99;}
+.precommend{ height:36px; background:url(../images/rec_rp.gif) repeat-x bottom; border-bottom:1px solid #e3e3e3; line-height:36px;}
+.prec_t{
+	color:#fff; 
+	width:72px;
+	height:17px;
+	line-height:17px;
+	text-align:center;
+	background:url(../images/icon.gif) no-repeat 0 -21px;
+	display:inline-block;
+	float:left;
+	margin:10px 15px 0 12px;
+	}
+ul.pall_of{ padding:0px;  position:relative; margin:0px;}
+.pall_of li{  display:inline-block; margin:0 0 -1px -1px;  float:left;}
+.pall_of a{ display:block; width:100px; border-left:1px solid #e3e3e3; height:31px; line-height:31px; background:url(../images/g_rp.gif) repeat-x bottom;  border-bottom:1px solid #e3e3e3; color:#5a5a5a; padding:0 0 0 10px; overflow:hidden;}
+.pall_of li a:hover,.pall_of .pmore{ color:#0f6ae6;}
+
+.pall_of small{
+	display:block;
+	width:9px;
+	height:9px; 
+	overflow:hidden; 
+	float:right;
+	display:inline-block;
+    background-image:url(../images/icon.gif); background-repeat:no-repeat;
+	margin:10px 10px 0 0;
+	}
+.pn{ background-position:0 0;}
+.ph{ background-position:0 -10px;}
+.pm{ background-position:-10px 0;}
+small.pnormal{ background:none;}
+.pf_txt{ width:90px; overflow:hidden; }
+.pall_of li a span{color:#5A5A5A;}
+.pall_of li a:hover span{color:#0f6ae6;}
+
+.ptip{ width:27px; height:12px; background:url(../images/y_sin.gif) no-repeat; position:absolute; left:30px; z-index:999;}
+#pfoot_91 .precommend a{ color:#e64b0f; float:left; margin-right:15px;}
+.ppage{ position:absolute; right:10px; top:8px;}
+.ppage a{ padding:0 3px; color:#fff; background:#7caf1b; margin-left:3px; font-family:"Courier New", Courier, monospace;}
+.ppage a.pvisted,.ppage a:hover{ background:#e64b0f;}
+	
+.pclear{ clear:both;}
+/* 用户注册表单样式 */
+#m_artdialog, #m_artLogin {display:none}
+label.error, label.h_error {display: block;color: red;margin: 5px;font-size: 12px;line-height: 20px;}
+table.u_register {margin:10px 20px;padding:20px;}
+table.u_login {margin:5px;padding:0;}
+table.u_register tr td {padding:5px;}
+table.u_register tr td select option {padding:3px;}
+input.text {
+	display:block;border: solid 1px #d2d2d2;border-left-color: #ccc;
+	border-top-color: #ccc;border-radius: 2px;box-shadow: inset 0 1px 0 #f8f8f8;
+	background-color: #fff;padding: 4px 6px;height: 21px;line-height: 21px;color: #555;width: 180px;vertical-align: baseline;
+}
+input.verify {width:100px;float:right;}
+table tr td.label {font-weight: bold;width: 80px;text-align: right;line-height: 32px;}
+img.checkcode {width:69px; height:29px;}
+
+/* 分页样式 */
+.pagination {
+	text-align:center;
+}
+
+a.paginate_active {
+	background: #67c2ef none repeat scroll 0 0;
+	color: white;
+}
+.pagination a ,.pagination span {
+	border:1px solid #ddd;
+	background-color: #fff;
+	line-height: 20px;
+	padding: 4px 12px;
+	text-decoration: none;
+	color: #383e4b;
+	font-size:12px;
+}
+.pagination span, .pagination a:hover {
+	background: #67c2ef none repeat scroll 0 0;
+	color: white;
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>【死神狂潮官网】- 死神Web</title>
+    <meta name="description" content="" />
+    <!--加载css-->
+    <if condition="in_array(MODULE_NAME, array('Index', 'Article'))">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Index/css/common.css" />
+    </if>
+
+    <link rel="stylesheet" href="__PUBLIC__/Index/css/footer.css" type="text/css" />
+    <if condition="!in_array(MODULE_NAME, array('Index', 'Article'))">
+    <link rel="stylesheet" href="__PUBLIC__/Index/css/top.css" type="text/css" />
+    </if>
+
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/Index/css/jquery.fancybox-1.3.4.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/dialog-default.css"/>
+    <script src="__PUBLIC__/js/jquery-1.8.3.min.js"></script>
+    <script src="__PUBLIC__/js/jquery.cookie.js"></script>
+</head>
+<body>
+    <!--悬浮窗口-->
+    <div class="nav_header">
+        <div class="nav_content">
+            <div class="menu le">
+                <span class="le col_red m_b">网页导航：</span>
+                <a href="/" >首页</a>
+                <a href="?m=Article&a=index&pid=1">新闻公告</a>
+                <a href="?m=Article&a=index&pid=2">游戏资料</a>
+                <a href="?m=Article&a=index&pid=3">游戏攻略</a>
+                <a href="" >游戏论坛</a>
+                <a href="?m=About" <if condition="MODULE_NAME == 'About'">class="active"</if> >关于我们</a>
+            </div>
+            <div class="menu re">
+                    <span class="le noneLogin">
+                        <a href="javascript:;" class="isLogin">登录</a>
+                        <a href="javascript:;" class="user_register">注册</a>
+                    </span>
+                    <span class="le haveLogin">
+                        <span class="le">欢迎回来:</span>
+                        <span class="le col_red my_name">{$Think.session.gt_homeUser.username}</span>
+                        <a href="/index.php?m=Member&a=index" class="isLogin <if condition="MODULE_NAME eq 'Member'">active</if>">个人中心</a>
+                        <a href="javascript:;" onclick="logout();">退出</a>
+                    </span>
+                <a href="?m=Agent&a=index&pid=1" class="<if condition="in_array(MODULE_NAME  , array('Agent', 'Game'))">active</if>">游戏中心</a>
+                <a href="/index.php?m=Pay&pitch=pay" class="col_red m_b isLogin <if condition="$_GET['pitch'] eq 'pay'">active</if>">账号充值</a>
+                <!--<a href="/index.php?m=Pay&a=games_pay" class="isLogin <if condition="ACTION_NAME eq 'games_pay'">active</if>">游戏充值</a>-->
+            </div>
+        </div>
+    </div>
+    <div class="nav_fixed"></div>
+
+    <if condition="in_array(MODULE_NAME, array('Index', 'Article'))">
+    <!--首页导航-->
+    <div class="hread">
+        <div class="top_nva">
+            <a class="nav_a" rel="nofollow" href="/">死神狂潮</a>
+            <a class="nav_b" href="?m=Article&a=index&pid=1">新闻公告</a>
+            <a class="nav_c" href="?m=Article&a=index&pid=2">游戏资料</a>
+            <h1 class="logo"><a title="死神狂潮" href="/">死神狂潮</a></h1>
+            <a class="nav_d" href="?m=Article&a=index&pid=3">死神狂潮攻略</a>
+            <a class="nav_e" href="#">死神狂潮论坛</a>
+            <a class="nav_f" rel="nofollow" href="?m=About">联系我们</a>
+        </div>
+        <div class="h_bj">
+            <div class="hot_ser">
+                <div class="hot_sBox" id="newGames">
+                    <if condition="!empty($arrRecommend)">
+                    <a target="_blank" class="isLogin" href="?m=Server&aid={$arrRecommend[0].agentid}&server_id={$arrRecommend[0].id}">{$arrRecommend[0].serverName} 火爆</a>
+                    <strong>12-20 10:00开启</strong>
+                    </if>
+                </div>
+            </div>
+        </div>
+    </div>
+    </if>

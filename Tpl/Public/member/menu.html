@@ -1,0 +1,20 @@
+<div class="le span3">
+    <ul class="nav nav-list">
+        <li class="nav-header">用户管理</li>
+        <li <if condition="ACTION_NAME eq 'index' && MODULE_NAME eq 'Member'">class="active" </if>>
+            <a href="?m=Member&a=index" class="isLogin"> 用户信息</a>
+        </li>
+        <li <if condition="$pitch eq 'main' && ACTION_NAME eq 'memberInfo'">class="active" </if>>
+            <a href="?m=Member&a=memberInfo&pitch=main" class="isLogin"> 修改密码</a>
+        </li>
+        <li <if condition="$pitch eq 'memberPay'">class="active" </if>>
+            <a href="?m=Member&a=memberPay&pitch=memberPay" class="isLogin"> 充值记录</a>
+        </li>
+        <li <if condition="ACTION_NAME eq 'index' && MODULE_NAME eq 'Account'">class="active" </if>>
+            <a href="?m=Account" class="isLogin">积分记录</a>
+        </li>
+        <li>
+            <a href="?m=Pay&pitch=pay" class="col_red isLogin">账号充值</a>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,136 @@
+    <div id="m_artdialog">
+    <form class="regform">
+        <table class="u_register">
+            <tr>
+                <td class="label">游戏平台：</td>
+                <td>
+                    <select name="agentid" required="1">
+                        <option value="">请选择游戏平台</option>
+                        <foreach name="arrAgents" item="value">
+                            <option value="{$value.id}">{$value.cn_name}</option>
+                        </foreach>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">用户名：</td>
+                <td>
+                   <input type="text" name="username" class="text" required="1" rangelength="[4, 20]"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">密码：</td>
+                <td>
+                    <input type="password" name="password" class="text" required="1" rangelength="[5, 20]" checkPass="true" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">确认密码：</td>
+                <td>
+                    <input type="password" name="truepass" class="text" required="1" rangelength="[5, 20]" checkPass="true" equalTo="input[name=password]:first" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">验证码：</td>
+                <td class="verify_img">
+                    <img id="reg_verify" src="?m=Index&a=verify" onclick="this.src='?m=Index&a=verify&rdm='+Math.random()"  title="点击刷新验证码" class="checkcode" />
+                    <input type="text" name="verify" class="text verify" required="true" number="true" minlength="5" maxlength="5" />
+                    <label class="h_error"></label>
+                </td>
+            </tr>
+        </table>
+    </form>
+    </div>
+    <div id="m_artLogin">
+        <form class="mLogin">
+            <table class="u_register u_login">
+                <tr>
+                    <td class="label">游戏平台：</td>
+                    <td>
+                        <select name="agentid" required="1" number="1">
+                            <option value="">请选择游戏平台</option>
+                            <foreach name="arrAgents" item="value">
+                                <option value="{$value.id}">{$value.cn_name}</option>
+                            </foreach>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">用户名：</td>
+                    <td>
+                        <input type="text" name="username" class="text" rangelength="[2,25]" required="1" data-msg-required="需要输入登录用户名" data-msg-rangelength="用户名不能小于4位或者大于20位" />
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">密码：</td>
+                    <td>
+                        <input type="password" name="password" class="text" rangelength="[2,25]" required="1" data-msg-required="需要输入登录密码" data-msg-rangelength="登录密码不能小于5位或者大于20位"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="label">验证码：</td>
+                    <td class="verify_img">
+                        <img src="?m=Index&a=verify" onclick="this.src='?m=Index&a=verify&rdm='+Math.random()"  title="点击刷新验证码" class="checkcode" />
+                        <input type="text" name="verify" class="text verify mverify" minlength="5"  maxlength="5" required="1" number="true" data-msg-required="验证码不能为空" data-msg-minlength="验证码最小为5位"/>
+                        <label class="h_error"></label>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+    <div class="cle m_h_28"></div>
+    <div id="pfoot_91">
+        <div class="pwarning">
+            <div class="pyouth">
+                <div class="pcont">
+                    <div class="pytxt pti9">健康游戏中告：抵制不良游戏，拒绝盗版游戏。注意自我保护，谨防受骗上当。适度游戏益脑，沉迷游戏伤身。合理安排时间，享受健康生活！</div>
+                </div>
+            </div>
+            <div class="pbottom">
+                <div class="pcont">
+                    <ul>
+                        <li>
+                            <a href="/" rel="nofollow" >首页</a>
+                            <em>|</em>
+                            <a href="/index.php?m=Article&pid=1" rel="nofollow">新闻公告</a>
+                            <em>|</em>
+                            <a href="/index.php?m=Article&pid=2"  rel="nofollow">游戏资料</a>
+                            <em>|</em>
+                            <a href="/index.php?m=Article&pid=3"  rel="nofollow">游戏攻略</a>
+                            <em>|</em>
+                            <a href="?m=About" rel="nofollow">联系我们</a>
+                            <em>|</em>
+                            <a href="?m=Jobs">招贤纳士</a>
+                        </li>
+                    </ul>
+                    <p class="pclear">
+                        <a href="/">死神狂潮</a>
+                        软著登字第0610770号 沪新出科教[2013]614号
+                        <a href="http://www.miitbeian.gov.cn" target="_blank" rel="nofollow">沪ICP备09070928号</a>
+                        <br />
+                        文化部网络游戏举报网站：
+                        <a href="http://www.12318.gov.cn/" target="_blank" rel="nofollow">http://www.12318.gov.cn</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:none"></div>
+    <style type="text/css">
+        .haveLogin {
+           display:<if condition="isset($_SESSION['gt_homeUser']) && !empty($_SESSION['gt_homeUser'])">block<else/>none</if>;
+        }
+        .noneLogin, .back span a.noneLogin {
+            display:<if condition="!isset($_SESSION['gt_homeUser']) || empty($_SESSION['gt_homeUser'])">block<else/>none</if>;
+        }
+    </style>
+
+    <!--加载js-->
+    <script type="text/javascript" src="__PUBLIC__/Index/js/jquery.fancybox.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Index/js/jquery.Xslider.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/validate.message.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/artDialog.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/Index/js/common.js"></script>
+</body>
+</html>

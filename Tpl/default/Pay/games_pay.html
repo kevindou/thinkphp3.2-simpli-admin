@@ -1,0 +1,164 @@
+<include file="Layout:header" />
+<link href="__PUBLIC__/wancms3/css/css.css" rel="stylesheet" type="text/css">
+<div>
+	<form id="pay" name="pay" target="_blank" method="post" target="_blank" action="?m=Pay&a=begin_gemes_pay">
+		<div id="neiye-layout">
+			<div id="neiye_pay_left">
+				<div id="neiye_pay_left_list">
+					<div id="neiye_pay_left_list_t"></div>
+					<div id="neiye_pay_left_list_c">
+						<ul>
+							<li>
+								<a id="opt_alipay" class="paytype curent">
+								<span class="name"><em></em><i>支付宝</i></span></a>
+							</li>
+						</ul>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div id="neiye_pay_left_infor">
+					<div id="payboxtop"></div>
+					<div id="neiye_pay_left_infor_t">
+						<div class="paytitle">
+							<span class="title">您当前选择的是“<strong id="pay_type_name">支付宝</strong>”的充值方式</span>
+						</div>
+					</div>
+					<div id="neiye_pay_left_infor_c">
+						<div class="neiye_pay_left_infor_c_1 jebox" style="">
+							<div class="neiye_pay_left_infor_c_1_c">
+								<ul>
+                                    <li>温馨提醒：<span class="col_red">充值完成后请及时通知管理员发放金币哦！</span></li>
+									<li>
+										<span class="jename">充值金额：</span>
+										<span class="select_game" id="je_set">
+											<em><label><input type="radio" value="10" name="pay_amount">10元</label></em>
+											<em><label><input type="radio" value="30" name="pay_amount">30元</label></em>
+											<em><label><input type="radio" value="50"  name="pay_amount">50元</label></em>
+											<em><label><input type="radio" value="100"  name="pay_amount" checked="checked">100元</label></em>
+											<em><label><input type="radio" value="200"  name="pay_amount">200元</label></em>
+											<em><label><input type="radio" value="300"  name="pay_amount">300元</label></em>
+											<em><label><input type="radio" value="500"  name="pay_amount">500元</label></em>
+											<em><label><input type="radio" value="1000"  name="pay_amount">1000元</label></em>
+											<em><label><input type="radio" value="5000"  name="pay_amount">5000元</label></em>
+											<em class="otherje">
+												<label><b><input type="radio" value="0" name="pay_amount">其他</b></label>
+												<span><input type="text" name="pay_money" id="text_money"></span>
+												<i>请输入(5-50000)之间的整数</i>
+											</em>
+										</span>
+
+									</li>
+									<li id="ylsuname" class="ylhs">
+                                        您将获得：<font id="dyyl">1000</font> 金币 　
+                                        <span style="color: red;"> * 兑换比例为1元=20金币</span>
+									</li>
+
+								</ul>
+							</div>
+						</div>
+							
+						<!-- 提交支付  -->
+						<div class="neiye_pay_left_infor_c_2" id="tjanniu" style="">
+							<div class="pay">
+								<a href="#" id="tjButton" class="tjBtn">提交</a>
+							</div>
+						</div>
+
+					</div>
+					<div id="neiye_pay_left_infor_f"></div>
+					<div id="wxts">
+						<div class="tstop"></div>
+						<div class="tscon">
+                            <h1>温馨提示：</h1>
+                            <p>支付宝说明：</p>
+                            <p>1、支付宝余额支付：只要您的支付宝账户中存有余额，就可以为游戏进行充值。</p>
+                            <p>2、银行卡支付：只要您拥有与支付宝公司合作银行中的任意一张银行卡，并开通“网上银行”服务，即可完成充值。</p>
+                            <p>3、如果您用信用卡支付，请确认该信用卡的网上交易限额大于等于您的充值金额；</p>
+                        </div>
+						<div class="tsbottom"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+            </div>
+			<div class="clear"></div>
+		</div>
+		<div id="tj"></div>
+	</form>
+</div>
+<div id="m_pay">
+    <table class="m_table">
+        <tr>
+            <td class="label">支付方式：</td>
+            <td>支付宝</td>
+        </tr>
+        <tr>
+            <td class="label">充值金额：</td>
+            <td class="cz_money"></td>
+        </tr>
+        <tr>
+            <td class="label">获得金币：</td>
+            <td class="cz_gold"></td>
+        </tr>
+    </table>
+</div>
+<style type="text/css">
+    #m_pay {display:none}
+    .m_table {width:250px;}
+    .m_table tr td:last-child {font-weight:bold;color:red}
+</style>
+<script>
+$(function(){
+    // 选择其他支付金额
+    $('#text_money').focus(function(){
+        $('#dyyl').html(0)
+        $('input[type=radio]').removeAttr('checked');
+        $('input[type=radio][value=0]').attr('checked', 'checked');
+    });
+
+    // 输入金额
+    $('#text_money').bind('blur keyup', function(){
+        this.value = this.value.replace(/\D/, '');
+        if (this.value > 0) $('#dyyl').html(parseInt(this.value)*20)
+    })
+
+    // 支付金额改变
+    $('input[type=radio]').change(function(){
+        $('#text_money').val('');
+        $('#dyyl').html(parseInt($('input[type=radio]:checked').val())*20);
+    });
+
+    // 确认支付金币
+    $('#tjButton').click(function(){
+        if (isLoginAlter())
+        {
+            var val = parseInt($('input[type=radio]:checked').val()), tval = $('#text_money').val();
+            if ((val <= 0 || isNaN(val)) && tval <= 0)
+            {
+                warning('请填写支付金额');
+                return false;
+            }
+
+            if (val == 0)
+            {
+                if (tval < 5 || tval > 50000)
+                {
+                    warning('填写支付金额需要大于5小于50000');
+                    return false;
+                }
+
+                val = parseInt(tval);
+            }
+
+
+            // 赋值
+            $('.cz_money').html(val);
+            $('.cz_gold').html(val*20 + ' 金币');
+            artOpen('确认充值', $('#m_pay').html(),  '确认充值', function(){
+                $('#pay').submit();
+            });
+        }
+    });
+
+})
+</script>
+<include file="Layout:footer" />

@@ -1,0 +1,201 @@
+<include file="Layout:header" />
+<link href="__PUBLIC__/Index/css/pay.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="__PUBLIC__/Index/js/jquery.pagination.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Index/js/pay.js"></script>
+<div class="jobsbody">
+	<form id="payForm" name="payForm" target="_blank" method="post" action="?m=Pay&a=begin_pay">
+		<div id="neiye-layout">
+			<div id="neiye_pay_left">
+				<div id="neiye_pay_left_list">
+					<div id="neiye_pay_left_list_t"></div>
+					<div id="neiye_pay_left_list_c">
+						<ul>
+							<li>
+								<a id="opt_alipay" class="paytype curent">
+								<span class="name"><em></em><i>支付宝</i></span></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="neiye_pay_left_infor">
+					<div id="payboxtop"></div>
+					<div id="neiye_pay_left_infor_t">
+						<div class="paytitle">
+							<span class="title">您当前选择的是“<strong id="pay_type_name">支付宝</strong>”的充值方式</span>
+						</div>
+					</div>
+					<div id="neiye_pay_left_infor_c">
+						<div class="neiye_pay_left_infor_c_1" style="">
+							<div class="neiye_pay_left_infor_c_1_c" id="div_game" >
+								<ul>
+									<li>
+										<!-- 标题 -->
+										<span class="name">请选择平台：</span> 
+										<span class="select_game">
+											<div id="gameSet">
+												<a href="javascript:void(0);" onclick="open_all_game_data1()">选择平台</a>
+												<b onclick="open_all_game_data1()"></b> 
+												<span id="msg_for_game"></span>
+											</div>
+										</span>
+											
+										<!-- 游戏列表  -->
+										<div id="cz_select_game" class="m-hide">
+											<div class="cz_sg_nav">
+												<ul class="win_game_nav">
+													<li class="no_2 on" id="no_2"><a href="javascript:void(0);" class="t2">网页游戏</a></li>
+												</ul>
+												<span onclick="close_all_game_data1()">
+                                                    <img src="__PUBLIC__/Index/images/closed.gif" />
+                                                </span>
+											</div>
+
+											<!--全部的游戏-->
+											<div id="nlist2" style="opacity: 1;">
+												<ul class="all_game_data" id="all_game_data">
+													<!---->
+													<volist name="games" id="game">
+														<li id="jt" onclick="focusserver('{$game.gamename}','{$game.gid}','{$game.payto}')">{$game.gamename}</li>
+													</volist>
+												</ul>
+											</div>
+										</div>
+									</li>
+									<li id="div_server"><span class="name">请选择服务器：</span> 
+										<span class="select_game">
+											<div id="qfSet">
+												<a href="#" class="isLogin" onclick="open_all_sever_data2()">选择区服</a>
+                                                <b onclick="open_all_sever_data2()"></b>
+											</div>
+										</span>
+
+										<div id="cz_select_server" class="m-hide">
+											<h3>
+												<span onclick="close_all_sever_data2()"><img src="__PUBLIC__/Index/images/closed.gif"></span><a href="javascript:void(0);">请选择服务器</a>
+											</h3>
+											<div class="cz_sega_boxa">
+												<ul id="server_id1" class="all_servers"></ul>
+											</div>
+											<div id="Pagination" class="pagination"></div>
+										</div>
+
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="neiye_pay_left_infor_c_1" style="">
+							<div class="neiye_pay_left_infor_c_1_c">
+								<ul id="czzhbox">
+                                    <li style="text-indent:30px; color:orange">温馨提醒：需要填写正确的游戏UID账号,而不是登录账号哦!</li>
+									<li id="czzh1" style="">
+										<span id="cz_zh" class="name">充值游戏UID帐号:</span>
+                                        <span class="zh">
+                                            <input type="text"  name="suid" id="suid" value="{$Think.session.gt_homeUser.suid}" />
+                                        </span>
+										<em id="zhts1"></em>
+                                    </li>
+									<li id="czzh2" style="">
+                                        <span id="qrcz_zh" class="name isLogin">确认游戏UID帐号:</span>
+                                        <span class="zh">
+                                            <input name="re_suid" type="text" id="re_suid" value="{$Think.session.gt_homeUser.suid}" />
+                                        </span>
+                                        <em id="zhts2"></em>
+                                    </li>
+									<div class="clear"></div>
+								</ul>
+							</div>
+						</div>
+
+						<div class="neiye_pay_left_infor_c_1 jebox" style="">
+							<div class="neiye_pay_left_infor_c_1_c">
+								<ul>
+									<li>
+										<span class="jename">充值金额：</span>
+										<span id="je_set" class="select_game">
+                                            <em><label><input type="radio" value="10" name="pay_amount">10元</label></em>
+											<em><label><input type="radio" value="30" name="pay_amount">30元</label></em>
+											<em><label><input type="radio" value="50"  name="pay_amount">50元</label></em>
+											<em><label><input type="radio" value="100"  name="pay_amount" checked="checked">100元</label></em>
+											<em><label><input type="radio" value="200"  name="pay_amount">200元</label></em>
+											<em><label><input type="radio" value="300"  name="pay_amount">300元</label></em>
+											<em><label><input type="radio" value="500"  name="pay_amount">500元</label></em>
+											<em><label><input type="radio" value="1000"  name="pay_amount">1000元</label></em>
+											<em><label><input type="radio" value="5000"  name="pay_amount">5000元</label></em>
+											<em class="otherje">
+                                                <label><b><input type="radio" value="0" name="pay_amount">其他</b></label>
+                                                <span><input type="text" name="pay_money" id="text_money" range="[5, 5000]" /></span>
+                                                <i>请输入(5-5000)之间的整数</i>
+                                            </em>
+                                        </span>
+									</li>
+									<li id="ylsuname" class="ylhs">
+                                        您将获得：<font id="dyyl">1000</font> 金币 　
+                                        <span style="color: red;"> * 兑换比例为1元=20金币</span>
+                                    </li>
+								</ul>
+							</div>
+						</div>
+							
+						<!-- 提交支付  -->
+						<div class="neiye_pay_left_infor_c_2" id="tjanniu" style="">
+							<div class="pay">
+                                <a href="#" id="tjButton" class="tjBtn">提交</a>
+							</div>
+						</div>
+					</div>
+					<div id="neiye_pay_left_infor_f"></div>
+					<div id="wxts">
+						<div class="tstop"></div>
+						<div class="tscon">
+                            <h1>温馨提示：</h1>
+                            <p>支付宝说明：</p>
+                            <p>1、支付宝余额支付：只要您的支付宝账户中存有余额，就可以为游戏进行充值。</p>
+                            <p>2、银行卡支付：只要您拥有与支付宝公司合作银行中的任意一张银行卡，并开通“网上银行”服务，即可完成充值。</p>
+                            <p>3、如果您用信用卡支付，请确认该信用卡的网上交易限额大于等于您的充值金额；</p>
+                        </div>
+						<div class="tsbottom"></div>
+					</div>
+				</div>
+            </div>
+		</div>
+		<div id="tj"></div>
+
+        <!--表单需要提交的信息-->
+        <input type="hidden" name="server_id" id="server_id" />
+        <input type="hidden" name="game_id" id="game_id" />
+	</form>
+</div>
+<div id="m_pay" class="m-hide">
+    <table class="m_table">
+        <tr>
+            <td class="label">支付方式：</td>
+            <td class="col_red">支付宝</td>
+        </tr>
+        <tr>
+            <td class="label">游戏平台：</td>
+            <td class="cz_gid"></td>
+        </tr>
+        <tr>
+            <td class="label">游戏服务器：</td>
+            <td class="cz_sid"></td>
+        </tr>
+        <tr>
+            <td class="label">游戏UID账号：</td>
+            <td class="cz_uid"></td>
+        </tr>
+        <tr>
+            <td class="label">游戏角色名：</td>
+            <td class="cz_username"></td>
+        </tr>
+        <tr>
+            <td class="label">充值金额：</td>
+            <td class="cz_money"></td>
+        </tr>
+        <tr>
+            <td class="label">获得金币：</td>
+            <td class="cz_gold"></td>
+        </tr>
+    </table>
+</div>
+<include file="Layout:footer" />

@@ -1,0 +1,24 @@
+<include file="Layout:indexHeader" />
+<div class="box-content">
+    <table class="table table-bordered table-striped">
+        <tbody>
+        <tr>
+            <td width="20%">登录账号</td>
+            <td>{$Think.session.gt_adminuser.username}</td>
+        </tr>
+        <tr>
+            <td>注册时间</td>
+            <td>{$Think.session.gt_adminuser.createTime|date="Y-m-d H:i:s",###}</td>
+        </tr>
+        <tr>
+            <td>上次登录时间</td>
+            <td>{$Think.session.gt_adminuser.lastTime|date="Y-m-d H:i:s",###}</td>
+        </tr>
+        <tr>
+            <td>上次登录IP</td>
+            <td>{$Think.session.gt_adminuser.lastIp}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<include file="Layout:indexFooter" />
