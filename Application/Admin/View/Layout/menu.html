@@ -1,0 +1,45 @@
+<ul class="nav nav-list">
+    <foreach name="menu" item="value">
+    <li class="{$value.controller_name}{$value.action_name}">
+        <a <if condition="!empty($value['controller_name'])">href="{:U($value['controller_name'].'/'.$value['action_name'])}" <else /> href="#" class="dropdown-toggle"</if>>
+            <php>$arrIcons = explode('-', $value['icons']);</php>
+            <i class="menu-icon {$arrIcons[0]} {$value.icons}"></i>
+            <span class="menu-text"> {$value.menu_name} </span>
+            <if condition="isset($value['child']) && !empty($value['child'])">
+            <b class="arrow fa fa-angle-down"></b>
+            </if>
+        </a>
+        <if condition="isset($value['child']) && !empty($value['child'])">
+        <b class="arrow"></b>
+        <!--第二级别-->
+        <ul class="submenu">
+            <foreach name="value.child" item="val">
+            <li class="{$val.controller_name}{$val.action_name}">
+                <a <if condition="!empty($val['controller_name'])">href="{:U($val['controller_name'].'/'.$val['action_name'])}" <else /> href="#" class="dropdown-toggle"</if> >
+                    <i class="menu-icon fa fa-caret-right"></i>
+                    {$val.menu_name}
+                    <if condition="isset($val['child']) && !empty($val['child'])">
+                    <b class="arrow fa fa-angle-down"></b>
+                    </if>
+                </a>
+                <if condition="isset($val['child']) && !empty($val['child'])">
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <foreach name="val.child" item="item">
+                    <li class="{$item.controller_name}{$item.action_name}">
+                        <a href="{:U($item['controller_name'].'/'.$item['action_name'])}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            {$item.menu_name}
+                        </a>
+                        <b class="arrow"></b>
+                    </li>
+                    </foreach>
+                </ul>
+                </if>
+            </li>
+            </foreach>
+        </ul>
+        </if>
+    </li>
+    </foreach>
+</ul>

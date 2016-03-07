@@ -1,0 +1,23 @@
+<script type="text/javascript" src="__PUBLIC__/Home/js/snake.js"></script>
+<style type="text/css">
+    input {
+        text-align:center;
+        font-size:16px;
+        font-weight:bold;
+        color:red;
+    }
+    #mycontent {overflow:hidden;}
+</style>
+<div class="col-md-12" id="mycontent">
+    <div id="map">
+
+    </div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        var h = $(window).height() - $('.footer').height() - $('.navbar-fixed-top').height() - 70;
+        $('#mycontent').css({
+            'height':parseInt(h) + 'px',
+        });
+    });
+</script>
