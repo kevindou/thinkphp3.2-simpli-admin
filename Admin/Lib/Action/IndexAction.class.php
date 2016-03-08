@@ -53,6 +53,7 @@ class IndexAction extends Action
 
                 // 执行修改数据
                 $message['status'] = 1;
+                $message['msg']    = "登录成长,正在为您跳转到后台首页,请稍候...";
             }
 
             echo json_encode($message);

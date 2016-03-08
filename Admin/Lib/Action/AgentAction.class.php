@@ -15,9 +15,6 @@ class AgentAction extends CommAction
     // 显示之前执行
     public function beforeIndex($model)
     {
-        $strMd5 = 'abcdefghijklmnopqrstuvwsyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890*!?';
-        $strMd5 = substr(str_shuffle($strMd5),0,10);
-        $model->arrAddTh['loginSecret']['value'] = $model->arrAddTh['paymentSecret']['value'] = $strMd5;
         $model->arrAddTh['recharge_status']['value'] = $model->arrAddTh['status']['value']      = $model->arrShowTh[7]['search']['value']    = $this->arrStatus;
         $model->arrEditTh                        = $model->arrAddTh;
         $model->arrEditTh['unique']              = array('type' => 'hidden');
