@@ -5,12 +5,13 @@
  * User: liujx
  * Date: 2016-02-17
  */
-class AccountAction extends CommAction
+class AccountAction extends BaseAction
 {
     // 初始化定义
-    public $title   = '积分记录';
-    public $model   = 'Account';
-    public $strSort = 'create_time DESC';
+    public $model = 'account';
+    public $where = array(
+        'orderBy' => 'id',
+    );
 
     // 定义操作按钮(表格中的数据)
     public $arrOperateButton = array(
