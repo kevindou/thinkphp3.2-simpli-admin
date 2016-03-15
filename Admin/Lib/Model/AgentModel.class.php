@@ -31,7 +31,7 @@ class AgentModel extends CommModel
         'cn_name'       => array('label' => '中文名', 'other' => array('required' => true, 'rangelength' => '[2, 20]')),
         'loginSecret'   => array('label' => '登录密钥', 'other' => array('required' => true, 'minlength' => 10, 'maxlength' => 10, 'value' => 'Wfe^j*3Hi2')),
         'paymentSecret' => array('label' => '充值密钥', 'other' => array('required' => true, 'minlength' => 10, 'maxlength' => 10, 'value' => 'Wfe^j*3Hi2')),
-        'apiUrl'        => array('label' => '接口地址', 'other' => array('required' => true, 'url' => true)),
+        'apiUrl'        => array('label' => '接口地址', 'other' => array('required' => true, 'url' => true, 'value' => 'http://bleach.sina.gametrees.com/api/')),
         'mysqlHost'     => array('label' => 'Mysql地址', 'other' => array('required' => true, 'rangelength' => '[2, 50]', 'value' => '183.136.239.101')),
         'mysqlPort'     => array('label' => 'Mysql端口', 'other' => array('required' => true, 'number' => true, 'value' => 3306)),
         'mysqlName'     => array('label' => 'Mysql库名', 'other' => array('required' => true, 'rangelength' => '[2, 50]', 'value' => 'bleach_games')),

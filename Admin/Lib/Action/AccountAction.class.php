@@ -69,7 +69,7 @@ class AccountAction extends CommAction
             else                    // 使用积分
             {
                 $str = '用户积分不足,不能进行下一步操作';
-                if ($arrUser['account'] > $intAccount) $isTrue = $objModel->setDec('account', '`id` = ' . $intUid, $intAccount);
+                if ($arrUser['account'] >= $intAccount) $isTrue = $objModel->setDec('account', '`id` = ' . $intUid, $intAccount);
                 $model->account = -$intAccount;
             }
         }
