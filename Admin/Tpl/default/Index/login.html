@@ -6,11 +6,10 @@
 					<h2>登录</h2>
 					<form class="form-horizontal" action="{:U('index/login')}" method="post" id="login">
 						<fieldset>
-							<input class="input-large span12" name="username" id="username" type="text" placeholder="登录账号" />
-							<input class="input-large span12" name="password" id="password" type="password" placeholder="登录密码" />
+							<input class="input-large span12" name="username" required="1" rangelength="[2,10]" type="text" placeholder="登录账号" />
+							<input class="input-large span12" name="password" required="1" rangelength="[6,12]" type="password" placeholder="登录密码" />
 							<div class="clearfix"></div>
 							<button type="submit" class="btn btn-primary span12">登录</button>
-                            <label  class="m_error" style="display:none">页面没有响应</label>
 						</fieldset>
 					</form>
 				</div>
@@ -19,64 +18,30 @@
 	    </div>
 </body>
 </html>
-<style type="text/css">
-    label.error, label.m_error {color:red}
-</style>
 <script type="text/javascript">
     $(window).ready(function(){
-        $('#login').validate({
-            debug: false,
-            rules:{
-                username:{
-                    required:true,
-                    minlength:2,
-                    maxlength:10
-                },
-                password:{
-                    required:true,
-                    minlength:6,
-                    maxlength:12
-                }
-            },
-            messages:{
-                username:{
-                    required:'登录账号不能为空',
-                    minlength:'登录账号不能小于2位',
-                    maxlength:'登录账号不能大于10位'
-                },
-                password:{
-                    required:'登录密码不能为空',
-                    minlength:'登录密码不能小于6位',
-                    maxlength:'登录密码不能大于12位'
-                }
-            }
-        });
-
         // 表单提交
         $('#login').submit(function(){
             if ($(this).validate().form())
             {
+                var intLoad = layer.load();
                // ajax提交
                 $.ajax({
                     url:'?m=Index&a=login',
-                    data:{
-                        'username':$('#username').val(),
-                        'password':$('#password').val()
-                    },
+                    data:$('#login').serialize(),
                     type:'post',
                     dataType:'json',
                     success:function(json)
                     {
-                        if (json.status == 0)
-                        {
-                            $('.m_error').html(json.msg).show();
-                        }
-                        else
-                        {
-                            $('.m_error').html('登录成功！正在跳转...').show();
-                            window.location.href = '?m=Index&a=index';
-                        }
+                        layer.close(intLoad);
+                        var color = json.status == 1 ? "#78BA32" : "";
+                        layer.tips(json.msg, ".btn-primary", {tips: [3, color], time:1000})
+                        if (json.status == 1) window.location.href = "?m=Index&a=index";
                     },
+                    error:function(){
+                        layer.close(intLoad);
+                        layer.msg("服务器繁忙，请稍候再试...", {time:800})
+                    }
                 })
             }
 
