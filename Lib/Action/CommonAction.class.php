@@ -26,7 +26,7 @@ class CommonAction extends Action
 	{
         // 注入变量
         $this->assign(array(
-            'arrAgents'    => M('project_agent')->where(array('status' => 1))->findAll(),  // 平台信息
+            'arrAgents'    => M('project_agent')->where(array('id' => array('neq', '13')))->findAll(),  // 平台信息
             'pitch'        => $this->listPitch(),
             'arrRecommend' => M('project_server')->where(array('status' => 1, 'recommend' => 1))->order('sort ASC')->limit(5)->findAll(),
         ));
