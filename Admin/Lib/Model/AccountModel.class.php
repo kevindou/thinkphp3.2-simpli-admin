@@ -7,7 +7,7 @@
  */
 class AccountModel extends CommModel
 {
-    public $arrEditTh = array();
+//    public $arrEditTh = array();
     public $strLike   = 'desc';
 
     // 表头字段
@@ -28,12 +28,17 @@ class AccountModel extends CommModel
         'id'      => array('type' => 'hidden'),
     );
 
+    public $arrEditTh = array(
+        'desc'    => array('label' => '描述', 'other' => array('required' => true, 'rangelength' => '[2, 256]')),
+        'id'      => array('type' => 'hidden'),
+    );
+
     // 数据验证
     protected $_validate = array(
-        array('user_id', 'require', '用户ID不能为空', 1),
-        array('user_id', 'number', '用户ID必须为一个数字', 1),
-        array('account', 'require', '积分不能为空', 1),
-        array('account', 'number', '积分必须为一个数字', 1),
+        array('user_id', 'require', '用户ID不能为空', 0),
+        array('user_id', 'number', '用户ID必须为一个数字', 0),
+        array('account', 'require', '积分不能为空', 0),
+        array('account', 'number', '积分必须为一个数字', 0),
         array('desc', 'require', '描述信息不能为空', 1),
     );
 

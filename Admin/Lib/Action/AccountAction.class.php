@@ -14,6 +14,7 @@ class AccountAction extends CommAction
 
     // 定义操作按钮(表格中的数据)
     public $arrOperateButton = array(
+        'edit'    => array('title' => '修改', 'other' => array('class' => 'btn btn-info btn-edit')),
         'trash'   => array('title' => '删除', 'other' => array('class' => 'btn btn-danger btn-delete')),
     );
 
@@ -50,27 +51,31 @@ class AccountAction extends CommAction
     protected function beforeUpdate($model, &$str)
     {
         // 获取增加还是减少积分
-        $str        = '用户ID不存在';
-        $intUid     = $model->user_id;          // 用户ID
-        $intAccount = abs($model->account);     // 积分
-        $intStatus  = post('status');           // 使用情况
-
-        // 判断用户ID是否存在
-        $objModel   = M('Users');
-        $arrUser    = $objModel->field('id, account')->where(array('id' => $intUid, 'status' => 1))->find();
-        $isTrue     = false;
-        if ( ! empty($arrUser))
+        $isTrue = true;
+        if ($model->isNew)
         {
-            $str = '修改用户积分信息出现错误';
-            if ($intStatus == 1)    // 添加积分
+            $str        = '用户ID不存在';
+            $intUid     = $model->user_id;          // 用户ID
+            $intAccount = abs($model->account);     // 积分
+            $intStatus  = post('status');           // 使用情况
+
+            // 判断用户ID是否存在
+            $objModel   = M('Users');
+            $arrUser    = $objModel->field('id, account')->where(array('id' => $intUid, 'status' => 1))->find();
+            $isTrue     = false;
+            if ( ! empty($arrUser))
             {
-                $isTrue = $objModel->setInc('account', '`id` = ' . $intUid, $intAccount);
-            }
-            else                    // 使用积分
-            {
-                $str = '用户积分不足,不能进行下一步操作';
-                if ($arrUser['account'] >= $intAccount) $isTrue = $objModel->setDec('account', '`id` = ' . $intUid, $intAccount);
-                $model->account = -$intAccount;
+                $str = '修改用户积分信息出现错误';
+                if ($intStatus == 1)    // 添加积分
+                {
+                    $isTrue = $objModel->setInc('account', '`id` = ' . $intUid, $intAccount);
+                }
+                else                    // 使用积分
+                {
+                    $str = '用户积分不足,不能进行下一步操作';
+                    if ($arrUser['account'] >= $intAccount) $isTrue = $objModel->setDec('account', '`id` = ' . $intUid, $intAccount);
+                    $model->account = -$intAccount;
+                }
             }
         }
 

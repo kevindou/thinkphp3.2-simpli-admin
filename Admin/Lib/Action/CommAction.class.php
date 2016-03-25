@@ -578,7 +578,6 @@ Html;
                         $isTrue = $model->add();
                     else
                         $isTrue = $model->save();
-
                     if ($isTrue)
                     {
                         if ($model->isNew) $intId = $isTrue;
