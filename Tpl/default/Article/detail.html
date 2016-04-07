@@ -67,7 +67,7 @@
                     <div class="hot_t">死神狂潮热点文章</div>
                     <div class="hot_art_list clear">
                         <ul>
-                            <foreach name="arrRecommend" item="value">
+                            <foreach name="recommend" item="value">
                             <li><span class="fr">{$value.createTime|date='Y-m-d',###}</span><a href="?m=Article&a=detail&pid={$value.cateId}&id={$value.id}"  title="{$value.title}">{$value.title}</a></li>
                             </foreach>
                         </ul>

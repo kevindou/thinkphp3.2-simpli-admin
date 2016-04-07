@@ -121,7 +121,7 @@ class ArticleAction extends CommonAction
             'arrArticle'   => $arrArticle,    // 文章信息
             'arrPrev'      => $arrPrev,       // 上一骗
             'arrNext'      => $arrNext,       // 下一篇
-            'arrRecommend' => $arrRecommend,  // 推荐
+            'recommend'    => $arrRecommend,  // 推荐
         ));
         $this->display('detail');
     }
