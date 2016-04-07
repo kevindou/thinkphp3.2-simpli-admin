@@ -112,7 +112,7 @@ class ArticleAction extends CommonAction
             }
 
             // 查询推荐信息
-            $arrRecommend = $objModel->where(array('pid' => $intPid, 'recommend' => 1))->order('createTime DESC')->limit(10)->findAll();
+            $arrRecommend = $objModel->where(array('cateId' => $intPid, 'recommend' => 1))->order('createTime DESC')->limit(10)->findAll();
         }
 
         // 注入变量信息
