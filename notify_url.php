@@ -29,6 +29,8 @@ $alipay_config = $config['alipay_config'];
 $alipayNotify  = new AlipayNotify($alipay_config);
 $verify_result = $alipayNotify->verifyNotify();
 
+// $verify_result = true; // 测试时开启
+
 // 初始化定义错误信息
 $strMsg        = 'fail';
 
@@ -57,7 +59,7 @@ if ($verify_result)
 
             // 我们自己平台的充值
             $intStatus = 1;
-            if (!empty($aid) && !empty($server_id))
+            if ( ! empty($aid) && ! empty($server_id))
             {
                 $isTrue = post_payment($aid, $server_id, $strUid, $order_id, $total_fee);
                 if ($isTrue)
@@ -71,7 +73,7 @@ if ($verify_result)
 					// 判断是否已经赠送，没有才赠送
 					if ( ! $arrAccount)
 					{
-						$intAccount = $Order['amount']/$config['ACCOUNT_RATE'];
+						$intAccount = floor($Order['amount']/$config['ACCOUNT_RATE']);
 						// 修改用户的积分信息
 						$strSql 	= "UPDATE `gt_project_users` SET `account` = `account` + {$intAccount} WHERE `id` = {$Order['user_id']}";
 						$isTrue     = MysqlHelp::getInstance()->query($strSql);
@@ -79,11 +81,11 @@ if ($verify_result)
 						{
 							// 添加记录信息
 							MysqlHelp::getInstance()->insert('gt_project_account', array(
-									'user_id'     => $Order['user_id'],
-									'account'     => $intAccount,
-									'order_id'    => $Order['id'],
-									'desc' 	      => '订单'.$order_id.'充值'.$Order['amount'].'金币,赠送'.$intAccount.'积分',
-									'create_time' => time(),
+								'user_id'     => $Order['user_id'],
+								'account'     => $intAccount,
+								'order_id'    => $Order['id'],
+								'desc' 	      => '订单'.$order_id.'充值'.$Order['amount'].'金币,赠送'.$intAccount.'积分',
+								'create_time' => time(),
 							));
 						}
 					}
