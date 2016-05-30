@@ -1,0 +1,9 @@
+[ 2016-05-16T17:12:40+08:00 ] 127.0.0.1 /favicon.ico
+ERR: 无法加载模块:Favicon
+
+[ 2016-05-16T17:12:40+08:00 ] 127.0.0.1 /favicon.ico
+ERR: 无法加载模块:Favicon
+
+[ 2016-05-16T17:12:45+08:00 ] 127.0.0.1 /Public/js/jquery-1.10.2.min.map
+ERR: 无法加载模块:Public
+

@@ -1,0 +1,20 @@
+<ol class="breadcrumb m-a">
+    <li><a href="/">首页</a></li>
+    <li><a href="{:U('Index/article')}">文章</a></li>
+    <li class="active">{$article.title|mb_strimwidth=###,0,50,"...","utf-8"}</li>
+</ol>
+
+<ul>
+    <h3 class="text-primary p-15">{$article.title}</h3>
+    <div><if condition="$article['img'] neq '' "><img src="{$article.img}" class="col-md-6"/></if>{$article.content}</div>
+    <p class="autor">
+        <span class="lm f_l">个人博客</span>
+        <span class="dtime f_l">{$article.create_time}</span>
+        <span class="viewnum f_r">浏览（{$article.see_num}）</span>
+        <span class="pingl f_r">评论（{$article.comment_num}）</span>
+    </p>
+</ul>
+<div class="bg-info m-top-5 p-15 center-block clearfix m-a">
+    <if condition="!empty($prev)"><span class="glyphicon glyphicon-arrow-left pull-left p-10" aria-hidden="true">上一篇：<a href="{:U('Index/articleView', array('id' => $prev['id']))}">{$prev.title|mb_strimwidth=###,0,30, "...", "utf-8"}</a></span></if>
+    <if condition="!empty($next)"><span class="glyphicon glyphicon-arrow-right pull-right p-10" aria-hidden="true">下一篇：<a href="{:U('Index/articleView', array('id' => $next['id']))}">{$next.title|mb_strimwidth=###,0,30, "...", "utf-8"}</a></span></if>
+</div>

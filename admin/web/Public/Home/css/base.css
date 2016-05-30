@@ -1,0 +1,43 @@
+@charset "utf-8";
+/* 共用css */
+*{ margin:0;padding:0}
+body {
+    font: 12px/1.5 'Microsoft Yahei', 'Simsun';
+    color: #666666;
+    background: #fff;
+    padding-top: 60px;
+}
+img { border: 0; display: block;  }
+ul { list-style: none; }
+h1, h2, h3, h4, h5, h6 { font-weight: normal; margin-top:0}
+a { outline: none; }
+a:link, a:visited { text-decoration: none; color: #666 }
+a:hover { text-decoration: none; }
+.clear { clear: both; }
+.blank { height: 5px; overflow: hidden; width: 100%; margin: auto; clear: both }
+.f_l { float: left }
+.f_r { float: right }
+.l_box { width: 670px; }
+.r_box { width: 300px; }
+
+/* 轮播图片的样式 */
+div.carousel-inner div.item img {width:100%;}
+
+/* 头部信息 */
+.navbar-default .navbar-nav li a:hover {background-color: #e7e7e7;color: #555;}
+div.content { margin:20px auto 20px auto;overflow:hidden}
+/* footer */
+footer { display:block;background: #333; width: 100%;padding:10px 0;color:white}
+footer ul {margin:5px auto;}
+footer ul li {display:inline-block;width:auto; padding:0 10px; border-right:1px solid #777}
+footer ul li:last-child {border:none}
+footer ul li a:link, footer ul li a:visited {color:white}
+footer ul li a:hover {color:#f77825;}
+footer p {line-height:25px;height:25px;margin:0}
+
+/* 返回顶部 */
+#tbox {width:54px;float:right;position:fixed;right: 50px;bottom: 15px;display:none;}
+#togbook, #gotop {width: 54px;height: 56px;display: block;background: url(../images/icons.png) no-repeat #111;box-shadow:0px 1px 0px rgba(255,255,255,.1), inset 0px 1px 1px rgba(0,0,0,.7);border-radius: 6px;  }
+#togbook { margin: 5px 0; background-position: 10px -36px; }
+#gotop { background-position: 12px 10px; }
+#togbook:hover, #gotop:hover { opacity: 0.5 }

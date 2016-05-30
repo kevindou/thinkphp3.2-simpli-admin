@@ -1,0 +1,60 @@
+<div class="banner">
+    <div id="slide-header" class="carousel slide" data-ride="carousel">
+        <!-- 轮播（Carousel）指标 -->
+        <ol class="carousel-indicators">
+            <foreach name="images" item="value">
+            <li data-target="#slide-header" data-slide-to="{$key}" <if condition="$key eq 0">class="active"</if>></li>
+            </foreach>
+        </ol>
+
+        <!-- 轮播（Carousel）项目 -->
+        <div class="carousel-inner">
+            <foreach name="images" item="value">
+            <div class="item <if condition="$key eq 0">active</if>">
+                <img src="{$value.url}" class="img-responsive" alt="First slide">
+                <div class="carousel-caption">
+                    <h3>{$value.title}</h3>
+                    <p>{$value.desc}</p>
+                </div>
+            </div>
+            </foreach>
+        </div>
+
+        <!-- 轮播（Carousel）导航 -->
+        <a class="carousel-control left" href="#slide-header" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">上一张</span>
+        </a>
+        <a class="carousel-control right" href="#slide-header" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">下一张</span>
+        </a>
+    </div>
+</div>
+<div class="topnews layer-photos-demo" id="layer-photos-demo">
+    <h2>
+        <!--<span>-->
+            <!--<a href="/" target="_blank">栏目标题</a>-->
+            <!--<a href="/" target="_blank">栏目标题</a>-->
+            <!--<a href="/" target="_blank">栏目标题</a>-->
+        <!--</span>-->
+        <b>文章</b>
+        推荐
+    </h2>
+    <foreach name="articles" item="value">
+    <div class="blogs">
+        <figure><img src="{$value.img}"></figure>
+        <ul>
+            <h3><a href="{:U('Index/articleView', array('id'=> $value['id']))}">{$value.title|mb_strimwidth=###,0,60,'...', 'utf-8'}</a></h3>
+            <p>引导语：{$value.content|mb_strimwidth=###,0,300,'...', 'utf-8'}</p>
+            <p class="autor">
+                <span class="lm f_l"><a href="{:U('Index/articleView', array('id'=> $value['id']))}">个人博客</a></span>
+                <span class="dtime time f_l">{$value.create_time}</span>
+                <span class="viewnum f_r">浏览（<a href="{:U('Index/articleView', array('id'=> $value['id']))}">{$value.see_num}</a>）</span>
+                <span class="pingl f_r">评论（<a href="{:U('Index/articleView', array('id'=> $value['id']))}">{$value.comment_num}</a>）</span>
+            </p>
+        </ul>
+    </div>
+    </foreach>
+    <div>{$page}</div>
+</div>
