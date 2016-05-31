@@ -1,9 +1,0 @@
-[ 2016-05-16T17:16:10+08:00 ] 127.0.0.1 /Admin/
-ERR: _STORAGE_WRITE_ERROR_:./Application/Runtime/Cache/Admin/a7564bd0a8d87dfcec4a5a3e4b307359.php
-
-[ 2016-05-16T17:16:10+08:00 ] 127.0.0.1 /Admin/
-ERR: _STORAGE_WRITE_ERROR_:./Application/Runtime/Cache/Admin/a7564bd0a8d87dfcec4a5a3e4b307359.php
-
-[ 2016-05-16T17:16:11+08:00 ] 127.0.0.1 /Admin/
-ERR: _STORAGE_WRITE_ERROR_:./Application/Runtime/Cache/Admin/a7564bd0a8d87dfcec4a5a3e4b307359.php
-
