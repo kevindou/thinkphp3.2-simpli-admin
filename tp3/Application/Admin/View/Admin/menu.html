@@ -33,10 +33,7 @@
 </div>
 <script type="text/javascript">
     var parents = {$parents|json_encode=###};
-    var myTable = new MeTable({
-        tableId:"showTable",
-        baseUrl:"{:U('Menu/update')}",
-    },{
+    var myTable = new MeTable({},{
         "aoColumns":[
             {"data":"id", "title":"ID", "sName":"id", "edit":{"type":"hidden"}, "search":{"type":"text"}},
             {"data":"pid", "sName":"pid","title":"父类ID", "value":parents,"edit":{"type": "select", "default":0, "options":{"required":1, "number":1}},"createdCell":function(td, data, rowdata, row, col){
@@ -52,4 +49,8 @@
             {"data": null, "title":"操作", "bSortable":false, "createdCell":setOperate},
         ]
     });
+    
+    $(function(){
+        myTable.init();
+    }) 
 </script>

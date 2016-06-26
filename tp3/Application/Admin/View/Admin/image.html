@@ -33,13 +33,7 @@
 </div>
 <script type="text/javascript" src="__PUBLIC__/js/layer/extend/layer.ext.js"></script>
 <script type="text/javascript">
-    var myTable = new MeTable({
-        tableId:"showTable",
-        baseUrl:"{:U('Image/update')}",
-        formOptions:{
-            "enctype":"multipart/form-data",
-        },
-    },{
+    var myTable = new MeTable({},{
         "aoColumns":[
             {"data":"id", "title":"ID", "sName":"id", "edit":{"type":"hidden"}, "search":{"type":"text"}},
             {"data":"title", "sName":"title", "title":"图片标题","edit":{"options":{"required":1, "rangelength":"[2, 50]"}}, "search":{"type":"text"}},
@@ -76,4 +70,8 @@
             }
         });
     }
+
+    $(function(){
+        myTable.init();
+    })
 </script>

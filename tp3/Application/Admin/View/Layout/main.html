@@ -82,41 +82,68 @@
         <!-- start: 主要内容 -->
         <div id="content" class="span10">
             {__CONTENT__}
-            <div class="isHide" id="data-info"></div>
         </div>
         <!-- end: 主要内容 -->
     </div>
-
-    <!-- 隐藏的model -->
-    <div class="modal hide fade" id="myModal">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">×</button>
-            <h3>温馨提醒</h3>
-        </div>
-        <div class="modal-body">
-            <p>Here settings can be configured...</p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">取消</a>
-            <a href="#" onclick="return myTable.saveData()" class="btn btn-primary">确定</a>
-        </div>
-    </div>
-
     <div class="clearfix"></div>
-
     <footer>
         <p>
             <span class="ms-footer">Copyright &copy; 2016.Company name All rights reserved. <a href="#">我的个人博客后台管理</a></span>
         </p>
     </footer>
 </div>
-</body>
-</html>
-<script type="text/javascript" >
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-ui-1.10.3.custom.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.ui.touch-punch.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/modernizr.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src='__PUBLIC__/js/fullcalendar.min.js'></script>
+    <script type="text/javascript" src='__PUBLIC__/js/jquery.dataTables.min.js'></script>
+    <script type="text/javascript" src="__PUBLIC__/js/excanvas.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.pie.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.stack.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.resize.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.time.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.chosen.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.uniform.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.cleditor.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.noty.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.elfinder.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.iphone.toggle.js"></script>
+
+    <!--文件上传-->
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.uploadify-3.1.min.js"></script>
+
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.gritter.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.imagesloaded.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.masonry.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.knob.modified.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.sparkline.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/counter.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/raphael.2.1.0.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/justgage.1.0.1.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.autosize.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/retina.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.placeholder.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/wizard.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/core.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/charts.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/custom.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.datetimepicker.full.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/datepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/validate.message.js"></script>
+    <script type="text/javascript" >
     $(function(){
         // 定义标题
         var title = $("li.active a").text(),icons = $("li.active a i").attr("class");
-        $("div.box-header h2").append(title).find("i").attr("class", icons);
+        if (icons) $("div.box-header h2").append(title).find("i").attr("class", icons);
 
         // 隐藏内容
         $('.btn-close:first').click(function () {
@@ -128,11 +155,7 @@
                 return false;
             });
         });
-
-        // 表单初始化
-        if (myTable != undefined) myTable.init();
-
-        // 图片上传
-        FileUpload("{:U(CONTROLLER_NAME.'/fileUpload')}", '.fileUpload', undefined, 200000000);
     })
 </script>
+</body>
+</html>

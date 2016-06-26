@@ -60,7 +60,7 @@ class Controller extends \Common\Controller
     public function index(){$this->display('Admin/'.$this->model);}
 
     // 查询所有数据
-    public function getAll()
+    public function search()
     {
         if (IS_AJAX)
         {
