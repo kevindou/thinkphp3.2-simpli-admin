@@ -1,0 +1,14 @@
+<ol class="breadcrumb m-a">
+    <li><a href="/">首页</a></li>
+    <li class="active">文章</li>
+</ol>
+<ul class="col-md-12 p-15 center-block">
+    <foreach name="articles" item="value">
+        <li class="p-15 m-top-5 m-a" style="border-bottom:1px solid #f2dede;">
+            <a href="{:U('Index/articleView', array('id' => $value['id']))}"><span class="text-primary">{$value.title|mb_strimwidth=###,0,36,"...","utf-8"}</span></a>
+            <span class="dtime p-left-20 time pull-right"> {$value.create_time} </span>
+            <span class="glyphicon glyphicon-star pull-right m-right-10"> <a href="{:U('Index/articleView', array('id' => $value['id']))}">编程</a> </span>
+        </li>
+    </foreach>
+</ul>
+{$page}

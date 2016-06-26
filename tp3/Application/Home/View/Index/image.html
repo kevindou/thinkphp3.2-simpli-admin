@@ -1,0 +1,12 @@
+<style type="text/css">
+    img {border: 0 none;height: auto;max-width: 100%;vertical-align: middle;}
+</style>
+<div class="layer-photos-demo" id="layer-photos-demo">
+    <foreach name="images" item="value">
+    <div class="col-md-4 p-15">
+        <a style="background:url({$value.url})" title="{$value.title}" href="javascript:;">
+            <img layer-src="{$value.url}" src="{$value.url}" alt="{$value.title}" />
+        </a>
+    </div>
+    </foreach>
+</div>

@@ -1,0 +1,23 @@
+<div class="box-content">
+    <table class="table table-bordered table-striped">
+        <tbody>
+        <tr>
+            <td width="20%">登录账号</td>
+            <td>{$Think.session.my_admin.username}</td>
+        </tr>
+        <tr>
+            <td>注册时间</td>
+            <td class="dtime">{$Think.session.my_admin.create_time}</td>
+        </tr>
+        <tr>
+            <td>上次登录时间</td>
+            <td class="dtime">{$Think.session.my_admin.last_time}</td>
+        </tr>
+        <tr>
+            <td>上次登录IP</td>
+            <td>{$Think.session.my_admin.last_ip}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">var myTable; $('.dtime').each(function(){$(this).html(timeFormat(parseInt($(this).html()), "yyyy-MM-dd hh:mm:ss"))})</script>
