@@ -11,13 +11,15 @@ class MenuController extends Controller
 {
     // 定义查询数据
     public $model = 'menu';
-    public $where = array(
-        'search'  => 'menu_name',
-        'id'      => 'eq',
-        'url'     => 'like',
-        'status'  => 'eq',
-        'orderBy' => 'id',
-    );
+    public function  where($params)
+    {
+        return [
+            'id'      => 'eq',
+            'url'     => 'like',
+            'status'  => 'eq',
+            'orderBy' => 'id',
+        ];
+    }
 
     // 首页显示处理
     public function index()

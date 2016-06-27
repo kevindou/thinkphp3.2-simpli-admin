@@ -49,6 +49,7 @@
 
     // 新增之后的处理
     myTable.afterSave = function(data) {
+        if (this.actionType == 'insert' && data['id'] && data['pid'] == 0)
         if (this.actionType == 'insert' && data['id'])
         {
             parents[data['id']] = data['menu_name'];

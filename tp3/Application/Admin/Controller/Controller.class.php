@@ -79,12 +79,12 @@ class Controller extends \Common\Controller
             unset($aWhere['orderBy']);
         }
 
+        // 处理默认查询条件
+        if (isset($aWhere['where']) && ! empty($aWhere)) $aSearch['where'] = array_merge($aSearch['where'], $aWhere['where']);
+
         // 处理查询条件
         if ( ! empty($aParams))
         {
-            // 处理默认查询条件
-            if (isset($aWhere['where']) && ! empty($aWhere)) $aSearch['where'] = array_merge($aSearch['where'], $aWhere['where']);
-
             // 处理其他查询条件
             if ( ! empty($aParams))
             {
@@ -92,8 +92,15 @@ class Controller extends \Common\Controller
                 {
                     if (empty($value) || ! isset($aWhere[$key])) continue;
                     $tmpKey = $aWhere[$key];
-                    if ($tmpKey == 'like') $value = "%{$value}%";
-                    $aSearch['where'][$key] = [$tmpKey, $value];
+                    if (is_array($tmpKey))
+                    {
+                        $aSearch['where'][$key] = $tmpKey;
+                    }
+                    else
+                    {
+                        if ($tmpKey == 'like') $value = "%{$value}%";
+                        $aSearch['where'][$key] = [$tmpKey, $value];
+                    }
                 }
             }
         }
@@ -139,7 +146,7 @@ class Controller extends \Common\Controller
         {
             // 接收参数
             $type    = post('actionType');                  // 操作类型
-            $arrType = array('delete', 'insert', 'update'); // 可执行操作
+            $arrType = ['delete', 'insert', 'update'];      // 可执行操作
             $this->arrMsg['msg'] = "操作类型错误";
 
             // 操作类型判断

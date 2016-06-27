@@ -1201,7 +1201,7 @@ class Model {
                     // 判断验证条件
                     switch($val[3]) {
                         case self::MUST_VALIDATE:   // 必须验证 不管表单是否有设置该字段
-                            if(false === $this->_validationField($data,$val)) 
+                            if(false === $this->_validationField($data,$val))
                                 return false;
                             break;
                         case self::VALUE_VALIDATE:    // 值不为空的时候才验证

@@ -38,14 +38,14 @@ class ModuleController extends Controller
                     {
                         $sTitle  = isset($value['comment']) && ! empty($value['comment']) ? $value['comment'] : $value['field'];
                         $sOption = isset($value['null']) && $value['null'] == 'NO' ? '"required":true,' : '';
-                        if (strrchr($value['type'], 'int(') !== false) $sOption .= '"number":true,';
-                        if (strrchr($value['type'], 'varchar(') !== false) {
+                        if (stripos($value['type'], 'int(') !== false) $sOption .= '"number":true,';
+                        if (stripos($value['type'], 'varchar(') !== false) {
                             $sLen = trim(str_replace('varchar(', '', $value['type']), ')');
                             $sOption .= '"rangelength":"[2, '.$sLen.']"';
                         }
 
                         $sOther = '';
-                        if (strrchr($value['field'], 'time')) $sOther .= '"createdCell":dateTimeString,';
+                        if (stripos($value['field'], 'time') !== false) $sOther .= '"createdCell":dateTimeString,';
                         $html    .="\t\t\t".'{"data":"'.$value['field'] .'", "sName":"'.$value['field'].'", "title":"'.$sTitle.'", "edit":{"options":{'.$sOption.'}}, '.$sOther.'},'."\n";
                     }
 
@@ -88,7 +88,7 @@ html;
                 $sMsg = '生成预览文件成功';
                 if ($bCreate === 1)
                 {
-                    $Msg = '生成文件成功 ^.^';
+                    $sMsg = '生成文件成功 ^.^';
                     file_put_contents(APP_PATH.'/Admin/View/Admin/'.$sFileName, $sHtml);
                 }
 

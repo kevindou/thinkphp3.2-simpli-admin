@@ -16,7 +16,7 @@
 <script type="text/javascript">
     var myTable = new MeTable({sTitle:"权限管理"},{
         "aoColumns":[
-			{"data":"name", "sName":"name", "title":"权限名称", "edit":{"options":{"required":true,"rangelength":"[2, 50]"}}},
+			{"data":"name", "sName":"name", "title":"权限名称", "edit":{"options":{"required":true,"rangelength":"[2, 50]"}}, "search":{"type":"text"}},
 			{"data":"desc", "sName":"desc", "title":"说明信息", "edit":{"options":{"required":true,"rangelength":"[2, 255]"}}},
 			{"data":"create_time", "sName":"create_time", "title":"创建时间", "createdCell":dateTimeString},
 			{"data":"update_time", "sName":"update_time", "title":"修改时间", "createdCell":dateTimeString},
