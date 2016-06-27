@@ -46,7 +46,7 @@
         <div id="sidebar-left" class="span2">
             导航栏搜索
             <div class="row-fluid actions">
-                <input type="text" class="search span12" placeholder="搜索栏目" />
+                <input type="text" class="search span12 menu-search" placeholder="搜索栏目" />
             </div>
 
             <div class="nav-collapse sidebar-nav">
@@ -81,7 +81,11 @@
 
         <!-- start: 主要内容 -->
         <div id="content" class="span10">
-            {__CONTENT__}
+            <div class="row-fluid">
+                <div class="box span12">
+                    {__CONTENT__}
+                </div>
+            </div>
         </div>
         <!-- end: 主要内容 -->
     </div>
@@ -137,13 +141,19 @@
     <script type="text/javascript" src="__PUBLIC__/js/custom.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.datetimepicker.full.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/datepicker.zh-CN.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/validate.message.js"></script>
     <script type="text/javascript" >
     $(function(){
-        // 定义标题
-        var title = $("li.active a").text(),icons = $("li.active a i").attr("class");
-        if (icons) $("div.box-header h2").append(title).find("i").attr("class", icons);
+        // 导航栏搜索
+        $('.menu-search').bind('blur keyup', function(){
+            var v = $(this).val();
+            if (v)
+            {
+                $('ul.main-menu a').hide();
+                $('ul.main-menu a:contains(\'' + v + '\')').show();
+            } else {
+                $('ul.main-menu a').show();
+            }
+        });
 
         // 隐藏内容
         $('.btn-close:first').click(function () {

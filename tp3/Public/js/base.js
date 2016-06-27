@@ -214,7 +214,7 @@ function createSearchForm(k, v) {
 // 生成编辑和查看详细modal
 function createModal(oModal, oViews) {
     return '<div class="isHide" '+ handleParams(oViews['params']) +'> ' + oViews['html'] +  ' </table></div> \
-            <div class="modal fade" '+ handleParams(oModal['params']) +' tabindex="-1" role="dialog" > \
+            <div class="modal fade hide" '+ handleParams(oModal['params']) +' tabindex="-1" role="dialog" > \
                 <div class="modal-dialog" role="document"> \
                     <div class="modal-content"> \
                         <div class="modal-header"> \

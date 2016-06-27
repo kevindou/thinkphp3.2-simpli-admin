@@ -59,51 +59,64 @@ class Controller extends \Common\Controller
     // 获取数据页面
     public function index(){$this->display('Admin/'.$this->model);}
 
+    // 查询处理
+    protected function query()
+    {
+        // 接收参数
+        $aParams = post('params');                   // 查询参数
+        $sOrder  = post('sSortDir_0', 'desc');       // 排序类型
+        $aSearch = [
+            'orderBy' => ['id' => 'desc'],           // 默认排序
+            'where'   => [],                         // 查询条件
+        ];
+
+        $aWhere = $this->where($aParams);            // 查询条件信息
+
+        // 处理排序字段
+        if (isset($aWhere['orderBy']) && ! empty($aWhere['orderBy']))
+        {
+            $aSearch['orderBy'] = [$aWhere['orderBy'] => $sOrder];
+            unset($aWhere['orderBy']);
+        }
+
+        // 处理查询条件
+        if ( ! empty($aParams))
+        {
+            // 处理默认查询条件
+            if (isset($aWhere['where']) && ! empty($aWhere)) $aSearch['where'] = array_merge($aSearch['where'], $aWhere['where']);
+
+            // 处理其他查询条件
+            if ( ! empty($aParams))
+            {
+                foreach ($aParams as $key => $value)
+                {
+                    if (empty($value) || ! isset($aWhere[$key])) continue;
+                    $tmpKey = $aWhere[$key];
+                    if ($tmpKey == 'like') $value = "%{$value}%";
+                    $aSearch['where'][$key] = [$tmpKey, $value];
+                }
+            }
+        }
+
+        return $aSearch;
+    }
+
     // 查询所有数据
     public function search()
     {
         if (IS_AJAX)
         {
-            $model = M($this->model);
+            $model   = M($this->model);
 
             // 接收参数
-            $intNum = (int)post('sEcho');               // 第几页
-            $params = post('params');                   // 查询参数
-            $order  = post('sSortDir_0', 'asc');        // 排序类型
-            $start  = (int)post('iDisplayStart', 0);    // 开始位置
-            $length = (int)post('iDisplayLength', 10);  // 查询长度
-            $where  = array();
-
-            // 数据处理
-            if ( ! isset($params['orderBy'])) $params['orderBy'] = 'id';
-
-            // 处理查询条件
-            if ( ! empty($params))
-            {
-                foreach ($params as $key => $value)
-                {
-                    if (isset($this->where[$key]))
-                    {
-                        $tmpKey = $this->where[$key];
-                        switch ($key)
-                        {
-                            case 'search':
-                                $where[$tmpKey] = array('like', "%{$value}%");
-                                break;
-                            case 'orderBy':
-                                $this->where['orderBy'] = $value;
-                                break;
-                            default:
-                                if ($tmpKey == 'like') $value = "%{$value}%";
-                                $where[$key] = array($tmpKey, $value);
-                        }
-                    }
-                }
-            }
+            $intNum  = (int)post('sEcho');               // 第几页
+            $start   = (int)post('iDisplayStart', 0);    // 开始位置
+            $length  = (int)post('iDisplayLength', 10);  // 查询长度
+            $aSearch = $this->query();
 
             // 查询数据
-            $count = $model->where($where)->count();
-            $data  = $model->where($where)->limit($start, $length)->order(array($this->where['orderBy'] => $order))->select();
+            $count = $model->where($aSearch['where'])->count();
+            $data  = $model->where($aSearch['where'])->limit($start, $length)->order($aSearch['orderBy'])->select();
             $this->arrMsg = array(
                 'status' => 1,
                 'msg'    => 'success',
@@ -133,7 +146,7 @@ class Controller extends \Common\Controller
             if (in_array($type, $arrType))
             {
                 // 数据验证
-                $model  = M($this->model);
+                $model  = D($this->model);
                 $isTrue = $model->validate($this->validate)->create();
                 $this->arrMsg['msg'] = $model->getError();
 
@@ -160,10 +173,14 @@ class Controller extends \Common\Controller
                     // 判断操作成功
                     if ($isTrue)
                     {
+                        // 查询数据
+                        $intId =  $type == 'insert' ? $isTrue : $_POST['id'];
+
+                        // 返回
                         $this->arrMsg = array(
                             'status' => 1,
                             'msg'    => '恭喜您,操作成功 ^.^',
-                            'data'   => $isTrue,
+                            'data'   => $model->where(['id' => $intId])->find(),
                         );
                     }
                 }

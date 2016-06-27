@@ -300,7 +300,7 @@ var MeTable = (function($) {
 		var self = this;this.CreateForm();
         // 初始化函数的处理
 		this.table = $(this.options.sTable).DataTable(this.tableOptions);	// 初始化主要表格
-        if (this.options.bRenderH1) $('h1').html(this.options.sTitle);		// 判断是否渲染H1
+        if (this.options.bRenderH1) $('h2').html(this.options.sTitle);		// 判断是否渲染H1
 
         // 判断初始化处理(搜索添加位置)
         if (this.options.sSearchType == 'middle')

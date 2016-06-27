@@ -14,8 +14,6 @@
 		</div>
 	</div>	
 </div>
-</body>
-</html>
 <script type="text/javascript">
 	$(function(){
 		// 登录验证
@@ -33,7 +31,7 @@
 				}).always(function(){
 					layer.close(intLoad);
 				}).done(function(json) {
-					layer.tips(json.msg, ".btn-primary", {tips: [3, (json.status == 1 ? "#78BA32" : "")], time:1000})
+					layer.tips(json.msg, ".btn-primary", {tips: [3, (json.status == 1 ? "#78BA32" : "")], time:1000});
 					if (json.status == 1) window.location.href = "{:U('Admin/login')}";
 				}).fail(function(){
 					layer.msg("服务器繁忙，请稍候再试...", {time:800})
@@ -44,3 +42,5 @@
 		});
 	});
 </script>
+</body>
+</html>
