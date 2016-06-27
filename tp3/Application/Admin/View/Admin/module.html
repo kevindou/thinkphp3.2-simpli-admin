@@ -1,0 +1,63 @@
+<div class="box-header">
+    <h2><i class="icon-edit"></i> 模块自动生成 </h2>
+    <div class="box-icon">
+        <a href="#" class="btn-setting"><i class="icon-wrench"></i></a>
+        <a href="#" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+        <a href="#" class="btn-close"><i class="icon-remove"></i></a>
+    </div>
+</div>
+<div class="box-content">
+    <form class="form-horizontal me-module" name="module">
+        <fieldset>
+            <input type="hidden" name="isCreate" value="0" />
+            <div class="control-group">
+                <label class="control-label"> H2标题 </label>
+                <div class="controls">
+                    <input class="input-xlarge focused" required="true" rangelength="[2, 50]" name="h2"  type="text" value=""  />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"> HTML文件名 </label>
+                <div class="controls">
+                    <input class="input-xlarge focused" required="true" rangelength="[2, 50]" name="filename"  type="text" value=""  />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"> 数据库表名 </label>
+                <div class="controls">
+                    <input class="input-xlarge focused"  required="true" rangelength="[2, 50]" type="text" name="tablename" value=""  />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary me-preview"> 生成预览 </button>
+                <button type="submit" class="btn btn-success me-create"> 生成文件 </button>
+                <button type="reset" class="btn"> 取消 </button>
+            </div>
+        </fieldset>
+    </form>
+    <div class="code"></div>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('.me-preview').click(function(){$('input[name=isCreate]').val(0)});
+        $('.me-create').click(function(){$('input[name=isCreate]').val(1)})
+        $('.me-module').submit(function(){
+            if ($(this).validate(validatorError).form()) {
+                var intL = layer.load();
+                $.ajax({
+                    url:"{:U('/admin/module/create')}",
+                    data:$('.me-module').serialize(),
+                    type:"POST",
+                    dataType:"json",
+                }).always(function(){
+                    layer.close(intL);
+                }).done(function(json){
+                    layer.msg(json.msg, {icon:(json.status == 1 ? 6 : 5)});
+                    if (json.status == 1) $('.code').html(json.data)
+                }).fail(ajaxFail);
+            }
+
+            return false;
+        })
+    });
+</script>
