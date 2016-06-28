@@ -10,6 +10,8 @@
 namespace Admin\Controller;
 
 // 引入命名空间
+use Admin\Model\AuthModel;
+
 class Controller extends \Common\Controller
 {
 
@@ -20,40 +22,9 @@ class Controller extends \Common\Controller
     public function _initialize()
     {
         // 判断是否已经登录
-        if ( ! $this->isLogin()) {
-            if (IS_AJAX) {
-                $this->arrMsg['msg'] = '请先登录...';
-                $this->ajaxReturn($this->arrMsg);
-            } else {
-                $this->redirect('Index/index');
-            }
-        }
-
-        // 查询栏目信息
-        $menusAll = M('menu')->field(array('id', 'pid', 'menu_name', 'url', 'icons'))->where(array('status' => 1))->order(array('sort' => 'asc'))->select();
-
-        // 处理出一级栏目
-        $arrMenus = array();
-        if ($menusAll)
-        {
-            foreach ($menusAll as $key => $value)
-            {
-                $pid = $value['pid'];
-                $id  = $value['id'];
-                if ($pid == 0) {
-                    // 一级栏目
-                    if(isset($arrMenus[$id])) $value['child'] =  $arrMenus[$id]['child'];
-                    $arrMenus[$id] = $value;
-                } else {
-                    // 不存在创建父类数组
-                    if (!isset($arrMenus[$pid])) $arrMenus[$pid] = array();
-                    $arrMenus[$pid]['child'][] = $value;
-                }
-            }
-        }
-
+        parent::_initialize();
         // 注入导航栏
-        $this->assign('menus', $arrMenus);
+        $this->assign('menus', AuthModel::getUserMenus($this->user->id));
     }
 
     // 获取数据页面

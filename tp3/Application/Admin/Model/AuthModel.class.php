@@ -9,6 +9,7 @@
 namespace Admin\Model;
 
 use Think\Model;
+use Common\Helper;
 
 class AuthModel extends Model
 {
@@ -18,28 +19,32 @@ class AuthModel extends Model
     // 表名字
     protected $tableName = 'auth_item';
 
-    // 设置主键
-    protected $pk        = 'name';
-
     // 数据验证
     protected $_validate = [
         ['name', 'require', '名称不能为空'],
         ['name', '2,50', '长度必须为2到50个字符', 1, 'length'],
-        ['name', '', '名称必须唯一', 1, 'unique'],
         ['desc', 'require', '说明不能为空'],
         ['desc', '2, 255', '长度必须为2到255个字符', 1, 'length']
     ];
 
+//    // 验证数据是否存在
+//    protected function hasName($data)
+//    {
+//
+//    }
+
+
     // 创建数据信息
     public function handleItem($sType, $iType)
     {
-        if ($this->create())
+        $maxData = $this->create();
+        if (false !== $maxData)
         {
             switch ($sType)
             {
-                case 'insert': $isTrue = $this->createItem($this->name, $this->desc, $iType);   break;
-                case 'update': $isTrue = $this->updateItem($this->name, $this->desc);           break;
-                default:       $isTrue = $this->deleteItem($this->name, $iType);
+                case 'insert': $isTrue = $this->createItem($maxData['name'], $this->desc, $iType);   break;
+                case 'update': $isTrue = $this->updateItem($maxData['name'], $this->desc);           break;
+                default:       $isTrue = $this->deleteItem($maxData['name'], $iType);
             }
 
         }
@@ -52,14 +57,12 @@ class AuthModel extends Model
     // 新增数据
     public function createItem($name, $desc, $iType)
     {
-        $aInsert = [
+        // 添加数据
+        return $this->add([
             'name' => $name,
             'desc' => $desc,
             'type' => $iType,
-        ];
-
-        // 添加数据
-        return $this->add() ? ($iType === AuthModel::AUTH_TYPE ? $this->addRolePower('admin', $name) : true) : false;
+        ]) ? ($iType === AuthModel::AUTH_TYPE ? $this->addRolePower('admin', $name) : true) : false;
     }
 
     // 修改数据
@@ -78,10 +81,86 @@ class AuthModel extends Model
     }
 
     // 添加给角色添加权限
-    public function addRolePower($role, $auth)
+    public static function addRolePower($role, $auth)
     {
         return M('auth_child')->add(['parent' => $role, 'child' => $auth]);
     }
+
+    // 根据用户获取角色
+    public static function getUserRoles($intUid)
+    {
+        // 判断是否为管理员
+        $where = ['type' => ['eq', AuthModel::ROLE_TYPE]];
+        if ($intUid !== 1) {
+            $where = ['name' => ''];
+            $arrPowers = M('admin')->field(['roles'])->where(['id' => $intUid])->find();
+            if (false !== $arrPowers) $where['name'] = ['in', $arrPowers['roles']];
+        }
+
+        $arrPowers = M('auth_item')->field(['name', 'desc'])->where($where)->select(['index' => 'name']);
+        return Helper::map($arrPowers, 'name', 'desc');
+    }
+
+    // 获取角色对应的权限信息
+    public static function getRoleItems($name)
+    {
+        $arrPowers = M('auth_child')->where(['parent' => $name])->select();
+        return Helper::map($arrPowers, 'child', 'parent');
+    }
+
+    // 获取用户的权限信息
+    public static function getUserItems($intUid)
+    {
+        $arrRoles  = self::getUserRoles($intUid);
+        $arrPowers = [];
+        if ($arrRoles) foreach ($arrRoles as $key => $value) $arrPowers = array_merge($arrPowers, self::getRoleItems($key));
+        return $arrPowers;
+    }
+
+    // 根据权限获取导航栏信息
+    public static function getUserMenus($intUid)
+    {
+        // 获取用户权限
+        $arrPowers = self::getUserItems($intUid);
+        $arrMenus  = $arrParents = $arrAllMenus =  [];
+        $objModel  = M('menu');
+
+        // 查询栏目数据
+        if ($arrPowers) $arrMenus  = $objModel->field(['id', 'pid', 'menu_name', 'icons', 'url'])->where(['url' => ['in', array_keys($arrPowers)]])->order(['sort' => 'asc'])->select();
+        if ($arrMenus)
+        {
+            foreach ($arrMenus as $value) if ($value['pid'] != 0) $arrParents[] = (int)$value['pid'];
+            // 查询父类
+            if ($arrParents)
+            {
+                $arrParents = $objModel->field(['id', 'pid', 'menu_name', 'icons', 'url'])->where(['id' => ['in', array_unique($arrParents)]])->order(['sort' => 'asc'])->select();
+                if ($arrParents) $arrMenus = array_merge($arrMenus, $arrParents);
+            }
+        }
+
+        // 处理栏目数据
+        if ($arrMenus)
+        {
+            foreach ($arrMenus as $key => $value)
+            {
+                $pid = $value['pid'];
+                $id  = $value['id'];
+                if ($pid == 0) {
+                    // 一级栏目
+                    if(isset($arrAllMenus[$id])) $value['child'] =  $arrAllMenus[$id]['child'];
+                    $arrAllMenus[$id] = $value;
+                } else {
+                    // 不存在创建父类数组
+                    if (!isset($arrAllMenus[$pid])) $arrAllMenus[$pid] = array();
+                    $arrAllMenus[$pid]['child'][] = $value;
+                }
+            }
+        }
+
+        return $arrAllMenus;
+    }
+
+
 
     // 数据新增之前
     protected function _before_insert(&$data, $options)
@@ -96,5 +175,4 @@ class AuthModel extends Model
         $data['update_time'] = time();
         return true;
     }
-
 }

@@ -19,6 +19,8 @@ function Label(content,params){return"<label "+handleParams(params)+"> "+content
 function createInput(params, type){return'<input type="'+type+'" '+handleParams(params)+" />"}
 // 生成text
 function createText(params) {return createInput(params, 'text')}
+// 生成密码
+function createPassword(params) {return createInput(params, 'password')}
 // 生成textarea
 function createTextarea(params){if(empty(params)){params={"class":" form-control","rows":5}}else{params["class"]+=" form-control";params["rows"]=5}return"<textarea "+handleParams(params)+"></textarea>"}
 // 生成radio
@@ -130,14 +132,19 @@ function createLang(obj)
 // 多选按钮 checkbox
 function createCheckbox(params, data, checked, arr, isHave)
 {
-    if (arr == undefined) arr = 'col-xs-6';
+    if (!empty(params.isHave))
+    {
+        isHave = params.isHave
+        delete params.isHave;
+    }
+
     var html = '', params = handleParams(params);
     if (data != undefined && typeof data=="object")
     {
-        if (isHave == undefined) html += '<div class="checkbox col-xs-12"><label><input type="checkbox" class="ace checkbox-all" /><span class="lbl"> 选择全部 </span></label></div>';
+        if (isHave == undefined) html += '<label class="checkbox inline"><input type="checkbox" class="ace checkbox-all" /> 选择全部 </label>';
         for (var i in data)
         {
-            html += '<div class="checkbox ' + arr + '"><label><input type="checkbox" ' + params + ' value="' + i + '" /><span class="lbl"> ' + data[i] + ' </span></label></div>';
+            html += '<label class="checkbox inline"><input type="checkbox" ' + params + ' value="' + i + '" /> ' + data[i] + ' </label>';
         }
     }
 
@@ -214,19 +221,15 @@ function createSearchForm(k, v) {
 // 生成编辑和查看详细modal
 function createModal(oModal, oViews) {
     return '<div class="isHide" '+ handleParams(oViews['params']) +'> ' + oViews['html'] +  ' </table></div> \
-            <div class="modal fade hide" '+ handleParams(oModal['params']) +' tabindex="-1" role="dialog" > \
-                <div class="modal-dialog" role="document"> \
-                    <div class="modal-content"> \
-                        <div class="modal-header"> \
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
-                            <h4 class="modal-title"> 编 辑 </h4> \
-                        </div> \
-                        <div class="modal-body">' + oModal['html'] + '</fieldset></form></div> \
-                        <div class="modal-footer"> \
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> \
-                            <button type="button" class="btn btn-primary btn-image ' + oModal['bClass'] + '">确定</button> \
-                        </div> \
-                    </div> \
+            <div class="modal fade hide" '+ handleParams(oModal['params']) +'> \
+                <div class="modal-header"> \
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+                    <h4 class="modal-title"> 编 辑 </h4> \
+                </div> \
+                <div class="modal-body" style="max-height:none">' + oModal['html'] + '</fieldset></form></div> \
+                <div class="modal-footer"> \
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> \
+                    <button type="button" class="btn btn-primary btn-image ' + oModal['bClass'] + '">确定</button> \
                 </div> \
             </div>';
 }

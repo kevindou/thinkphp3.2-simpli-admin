@@ -9,7 +9,7 @@ namespace Admin\Controller;
 // 引入命名空间
 use Admin\Model\AuthModel;
 
-class AuthorityController extends Controller
+class AuthController extends Controller
 {
     // 定义查询数据
     public $model = 'auth_item';

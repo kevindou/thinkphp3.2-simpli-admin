@@ -18,6 +18,7 @@ class Controller extends \Think\Controller
 
     // 定义session 的名称
     protected $_admin = 'my_admin';
+    public    $user   = [];
 
     // 用户登录验证
     public function isLogin()
@@ -37,6 +38,9 @@ class Controller extends \Think\Controller
                 $this->redirect('Index/index');
             }
         }
+
+        // 将用户信息转换为对象
+        $this->user = (object)['id' => (int)$_SESSION[$this->_admin]['id'], 'name' => $_SESSION[$this->_admin]['username']];
     }
 
     // 删除图片
@@ -58,7 +62,7 @@ class Controller extends \Think\Controller
         // 判断数据上传
         if (IS_POST)
         {
-            $strOld  = get('fileurl');
+            $strOld = get('fileurl');
             $upload = new \Think\Upload();                          // 实例化上传类
             $upload->maxSize  = 1024 * 1024 * 2;                    // 上传文件大小
             $upload->rootPath = './public/';                        // 图片保存绝对路径
