@@ -37,7 +37,7 @@ class AdminController extends Controller
     // 新增之前的处理
     public function beforeInsert(&$model)
     {
-        $model->roles       = implode(',', $_POST['roles']);
+        $model->roles       = post('roles') ? implode(',', post('roles')) : '';
         $model->password    = sha1($model->password);
         $model->create_time = $model->update_time = $model->last_time = time();
         $model->create_id   = $model->update_id   = $this->user->id;
@@ -48,7 +48,7 @@ class AdminController extends Controller
     // 修改之前的处理
     public function beforeUpdate(&$model)
     {
-        $model->roles = implode(',', $_POST['roles']);
+        $model->roles = post('roles') ? implode(',', post('roles')) : '';
         if (empty($model->password))
             unset($model->password);
         else

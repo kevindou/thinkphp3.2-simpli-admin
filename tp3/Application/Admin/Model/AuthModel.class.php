@@ -86,6 +86,13 @@ class AuthModel extends Model
         return M('auth_child')->add(['parent' => $role, 'child' => $auth]);
     }
 
+    // 判断用户是否有权限
+    public static function can($intUid, $items)
+    {
+        $arrItems = self::getUserItems($intUid);
+        return $arrItems && isset($arrItems[$items]);
+    }
+
     // 根据用户获取角色
     public static function getUserRoles($intUid)
     {
@@ -94,7 +101,7 @@ class AuthModel extends Model
         if ($intUid !== 1) {
             $where = ['name' => ''];
             $arrPowers = M('admin')->field(['roles'])->where(['id' => $intUid])->find();
-            if (false !== $arrPowers) $where['name'] = ['in', $arrPowers['roles']];
+            if (false !== $arrPowers && ! empty($arrPowers['roles'])) $where['name'] = ['in', $arrPowers['roles']];
         }
 
         $arrPowers = M('auth_item')->field(['name', 'desc'])->where($where)->select(['index' => 'name']);

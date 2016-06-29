@@ -23,6 +23,25 @@ class Controller extends \Common\Controller
     {
         // 判断是否已经登录
         parent::_initialize();
+
+        // 不是管理员需要验证权限
+
+        // 验证用户权限
+        if ( ! AuthModel::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
+        {
+            if (IS_AJAX)
+            {
+                $this->ajaxReturn([
+                    'status' => 0,
+                    'msg'    => '抱歉！你没有执行权限 :)',
+                    'data'   => [],
+                ]);
+            } else {
+                $this->error('抱歉！你没有执行权限 :)');
+            }
+        }
+
+
         // 注入导航栏
         $this->assign('menus', AuthModel::getUserMenus($this->user->id));
     }
