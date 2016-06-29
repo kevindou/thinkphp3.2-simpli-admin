@@ -22,10 +22,16 @@ class RoleController extends Controller
         ];
     }
 
+    // 首页显示
     public function index()
     {
-        $this->display('Admin/auth');
+        $this->display('Admin/role');
     }
 
+    // 分配权限信息
+    public function allocation()
+    {
+        $this->display();
+    }
 
 }

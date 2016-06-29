@@ -28,11 +28,11 @@ class IndexController extends Controller
     public function login()
     {
         // 定义错误信息
-        $arr = array(
+        $arr = [
             "status" => 0,
             "msg"    => '提交参数为空',
             "data"   => null,
-        );
+        ];
 
         // 如果已经登录
         if ($this->isLogin())

@@ -27,14 +27,12 @@ class AuthModel extends Model
         ['desc', '2, 255', '长度必须为2到255个字符', 1, 'length']
     ];
 
-//    // 验证数据是否存在
-//    protected function hasName($data)
-//    {
-//
-//    }
-
-
-    // 创建数据信息
+    /**
+     * handleItem() 处理数据信息
+     * @param  string $sType        操作类型('insert', 'update', 'delete')
+     * @param  int    $iType        数据类型 1 role 2 auth
+     * @return bool|mixed|string    操作成功返回true insertId 或者错误字符串
+     */
     public function handleItem($sType, $iType)
     {
         $maxData = $this->create();
@@ -54,7 +52,13 @@ class AuthModel extends Model
         return $isTrue;
     }
 
-    // 新增数据
+    /**
+     * createItem()新增数据信息
+     * @param  string $name   名称
+     * @param  string $desc   说明
+     * @param  int    $iType  类型 1 role 2 auth
+     * @return bool|mixed     成功返回 insert_id 失败返回false 或者错误字符串
+     */
     public function createItem($name, $desc, $iType)
     {
         // 添加数据
@@ -65,7 +69,12 @@ class AuthModel extends Model
         ]) ? ($iType === AuthModel::AUTH_TYPE ? $this->addRolePower('admin', $name) : true) : false;
     }
 
-    // 修改数据
+    /**
+     * updateItem() 修改数据
+     * @param  string $name 名称
+     * @param  string $desc 说明
+     * @return bool   成功返回 true
+     */
     public function updateItem($name, $desc)
     {
         return $this->where(['name' => $name])->save(['desc' => $desc]);

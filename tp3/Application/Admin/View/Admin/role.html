@@ -16,13 +16,21 @@
     </div>
 </div>
 <script type="text/javascript">
-    var myTable = new MeTable({sTitle:"权限管理"},{
+    // 设置表单信息
+    function setMeOperate(td, data, rowArr, row, col)
+    {
+        $(td).html('<a href="{:U('admin/role/allocation')}" class="btn btn-warning" ><i class="icon-flag"></i>分配权限</a> \
+			<a href="javascript:;" class="btn btn-info me-table-edit" table-data="' + row + '"><i class="icon-edit "></i></a> \
+			<a href="javascript:;" class="btn btn-danger me-table-del" table-data="' + row + '"><i class="icon-trash "></i></a>');
+    }
+
+    var myTable = new MeTable({sTitle:"角色信息"},{
         "aoColumns":[
-			{"data":"name", "sName":"name", "title":"权限名称", "edit":{"options":{"required":true,"rangelength":"[2, 50]"}}, "search":{"type":"text"}},
-			{"data":"desc", "sName":"desc", "title":"说明信息", "edit":{"options":{"required":true,"rangelength":"[2, 255]"}}},
-			{"data":"create_time", "sName":"create_time", "title":"创建时间", "createdCell":dateTimeString},
-			{"data":"update_time", "sName":"update_time", "title":"修改时间", "createdCell":dateTimeString},
-			oOperate
+			{"data":"name", "sName":"name", "title":"角色名称", "edit":{"options":{"required":true,"rangelength":"[2, 50]"}}, },
+			{"data":"desc", "sName":"desc", "bSortable":false, "title":"说明", "edit":{"options":{"required":true,"rangelength":"[2, 255]"}}, },
+			{"data":"create_time", "sName":"create_time", "title":"创建时间", "createdCell":dateTimeString,},
+			{"data":"update_time", "sName":"update_time", "title":"修改时间", "createdCell":dateTimeString,},
+            {"data": null, "title":"操作", "bSortable":false, "createdCell":setMeOperate}
         ],
 
         // 设置隐藏和排序信息

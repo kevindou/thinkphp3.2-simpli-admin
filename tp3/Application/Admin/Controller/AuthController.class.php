@@ -14,6 +14,12 @@ class AuthController extends Controller
     // 定义查询数据
     public $model = 'auth_item';
 
+    // 显示首页
+    public function index()
+    {
+        $this->display('Admin/auth');
+    }
+
     // 查询处理
     public function where($params)
     {

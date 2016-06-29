@@ -25,22 +25,23 @@ class Controller extends \Common\Controller
         parent::_initialize();
 
         // 不是管理员需要验证权限
-
-        // 验证用户权限
-        if ( ! AuthModel::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
+        if ($this->user->id !== 1)
         {
-            if (IS_AJAX)
+            // 验证用户权限
+            if ( ! AuthModel::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
             {
-                $this->ajaxReturn([
-                    'status' => 0,
-                    'msg'    => '抱歉！你没有执行权限 :)',
-                    'data'   => [],
-                ]);
-            } else {
-                $this->error('抱歉！你没有执行权限 :)');
+                if (IS_AJAX)
+                {
+                    $this->ajaxReturn([
+                        'status' => 0,
+                        'msg'    => '抱歉！你没有执行权限 :)',
+                        'data'   => [],
+                    ]);
+                } else {
+                    $this->error('抱歉！你没有执行权限 :)');
+                }
             }
         }
-
 
         // 注入导航栏
         $this->assign('menus', AuthModel::getUserMenus($this->user->id));
