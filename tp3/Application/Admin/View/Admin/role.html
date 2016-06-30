@@ -18,7 +18,8 @@
     // 设置表单信息
     function setMeOperate(td, data, rowArr, row, col)
     {
-        $(td).html('<a href="{:U('admin/role/allocation')}?name=' + data.name + '" class="btn btn-warning" ><i class="icon-flag"></i>分配权限</a> \
+        $(td).html('<a href="{:U('admin/role/view')}?name=' + data.name + '" class="btn btn-success"><i class="icon-zoom-in "></i></a> \
+                <a href="{:U('admin/role/allocation')}?name=' + data.name + '" class="btn btn-warning" ><i class="icon-flag"></i>分配权限</a> \
 			<a href="javascript:;" class="btn btn-info me-table-edit" table-data="' + row + '"><i class="icon-edit "></i></a> \
 			<a href="javascript:;" class="btn btn-danger me-table-del" table-data="' + row + '"><i class="icon-trash "></i></a>');
     }

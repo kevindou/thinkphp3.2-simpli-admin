@@ -42,6 +42,27 @@ class RoleController extends Controller
         $this->display('Admin/role');
     }
 
+    // 查看角色信息
+    public function view()
+    {
+        // 查询当前角色权限
+        $strName = get('name');
+        if ($strName)
+        {
+            // 角色信息存在
+            $arrRole = Auth::getRole($strName);
+            if ($arrRole && $arrRole['name'] && ($this->user->id == 1 || Auth::hasRole($this->user->id, $arrRole['name'])))
+            {
+                // 获取用户所有权限
+                $this->assign([
+                    'role'      => $arrRole,                                                 // 角色信息
+                    'roleItems' => Auth::getItemDesc(Auth::getRoleItems($arrRole['name'])),  // 角色自带权限
+                ]);
+                $this->display();
+            }
+        }
+    }
+
     // 分配权限信息
     public function allocation()
     {
@@ -55,8 +76,8 @@ class RoleController extends Controller
             {
                 // 获取用户所有权限
                 $this->assign([
-                    'role'      => $arrRole,                                                           // 角色信息
-                    'roleItems' => array_keys(Auth::getRoleItems($arrRole['name'])),              // 角色自带权限
+                    'role'      => $arrRole,                                                 // 角色信息
+                    'roleItems' => array_keys(Auth::getRoleItems($arrRole['name'])),         // 角色自带权限
                     'powers'    => Auth::getItemDesc(Auth::getUserItems($this->user->id)),   // 用户权限
                 ]);
                 $this->display();
