@@ -6,7 +6,7 @@
 // 引入命名空间
 namespace Admin\Controller;
 
-use Admin\Model\AuthModel;
+use Common\Auth;
 
 // 引入命名空间
 class AdminController extends Controller
@@ -15,12 +15,25 @@ class AdminController extends Controller
     public $model = 'admin';
     public function where($params)
     {
-        return [
+        // 默认查询
+        $where = [
             'id'      => 'eq',
+            'status'  => 'eq',
             'email'   => 'like',
             'orderBy' => 'id',
         ];
 
+        // 不是管理员只能看到自己和自己添加的用户
+        if ($this->user->id !== 1)
+        {
+            $where['where']['_complex'] = [
+                'id'        => ['eq', $this->user->id],
+                'create_id' => ['eq', $this->user->id],
+                '_logic'    => 'or',
+            ];
+        }
+
+        return $where;
     }
 
     // 显示进入首页
@@ -30,7 +43,7 @@ class AdminController extends Controller
     public function index()
     {
         // 获取用户的角色信息
-        $this->assign('roles', AuthModel::getUserRoles($this->user->id));
+        $this->assign('roles', Auth::getUserRoles($this->user->id));
         $this->display('Admin/admin');
     }
 

@@ -7,7 +7,7 @@
 namespace Admin\Controller;
 
 // 引入命名空间
-use Admin\Model\AuthModel;
+use Common\Auth;
 
 class AuthController extends Controller
 {
@@ -38,25 +38,30 @@ class AuthController extends Controller
             // 接收参数
             $sType = post('actionType');                  // 操作类型
             $aType = ['delete', 'insert', 'update'];      // 可执行操作
+            $iType = (int)get('type');                    // 角色和权限类型 1 角色 2 权限
             $this->arrMsg['msg'] = "操作类型错误";
 
             // 操作类型判断
-            if (in_array($sType, $aType))
+            if (in_array($sType, $aType, true))
             {
-                $isTrue = (new AuthModel())->handleItem($sType, AuthModel::AUTH_TYPE);
-                $this->arrMsg['msg'] = $isTrue;
-                if ($isTrue === true || is_numeric($isTrue))
+                $this->arrMsg['msg'] = '抱歉你没有操作权限';
+                if ($this->user->id === 1 || $aType !== 'delete' || Auth::can($this->user->id, 'deleteAuth'))
                 {
-                    $this->arrMsg = [
-                        'status' => 1,
-                        'msg'    => '操作成功 ^.^',
-                        'data'   => $isTrue,
-                    ];
+                    // 验证用户删除的权限
+                    $isTrue = Auth::handleItem($sType, Auth::AUTH_TYPE, $this->user->id);
+                    $this->arrMsg['msg'] = '服务器繁忙, 请稍候再试...';
+                    if ($isTrue === true || is_numeric($isTrue))
+                    {
+                        $this->arrMsg = [
+                            'status' => 1,
+                            'msg'    => '操作成功 ^.^',
+                            'data'   => $isTrue,
+                        ];
+                    }
                 }
             }
         }
 
         $this->ajaxReturn($this->arrMsg);
     }
-
 }

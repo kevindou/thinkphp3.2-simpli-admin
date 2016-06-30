@@ -10,7 +10,7 @@
 namespace Admin\Controller;
 
 // 引入命名空间
-use Admin\Model\AuthModel;
+use Common\Auth;
 
 class Controller extends \Common\Controller
 {
@@ -28,7 +28,7 @@ class Controller extends \Common\Controller
         if ($this->user->id !== 1)
         {
             // 验证用户权限
-            if ( ! AuthModel::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
+            if ( ! Auth::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
             {
                 if (IS_AJAX)
                 {
@@ -44,7 +44,7 @@ class Controller extends \Common\Controller
         }
 
         // 注入导航栏
-        $this->assign('menus', AuthModel::getUserMenus($this->user->id));
+        $this->assign('menus', Auth::getUserMenus($this->user->id));
     }
 
     // 获取数据页面
@@ -115,6 +115,7 @@ class Controller extends \Common\Controller
             // 查询数据
             $count = $model->where($aSearch['where'])->count();
             $data  = $model->where($aSearch['where'])->limit($start, $length)->order($aSearch['orderBy'])->select();
+            // echo $model->getLastSql();
             $this->arrMsg = array(
                 'status' => 1,
                 'msg'    => 'success',
@@ -141,7 +142,7 @@ class Controller extends \Common\Controller
             $this->arrMsg['msg'] = "操作类型错误";
 
             // 操作类型判断
-            if (in_array($type, $arrType))
+            if (in_array($type, $arrType, true))
             {
                 // 数据验证
                 $model  = D($this->model);
@@ -154,10 +155,15 @@ class Controller extends \Common\Controller
                     $isTrue = false;
                     $this->arrMsg['msg'] = '服务器繁忙,请稍候再试...';
 
-                    switch($type)
-                    {
+                    switch($type) {
                         case 'delete':
-                            if ($this->beforeDelete($model)) $isTrue = $model->delete();
+                            // 如果是管理员删除 验证权限 或者添加 者
+                            $this->arrMsg['msg'] = '你没有权限操作';
+                            if (CONTROLLER_NAME !== 'Admin' || $this->user->id === 1 || Auth::can($this->user->id, 'deleteUser'))
+                            {
+                                $this->arrMsg['msg'] = '服务器繁忙,请稍候再试...';
+                                if ($this->beforeDelete($model)) $isTrue = $model->delete();
+                            }
                             break;
                         case 'update':
                             if ($this->beforeUpdate($model)) $isTrue = $model->save();
@@ -172,7 +178,7 @@ class Controller extends \Common\Controller
                     if ($isTrue)
                     {
                         // 查询数据
-                        $intId =  $type == 'insert' ? $isTrue : $_POST['id'];
+                        $intId =  $type == 'insert' ? $isTrue : post('id');
 
                         // 返回
                         $this->arrMsg = array(
