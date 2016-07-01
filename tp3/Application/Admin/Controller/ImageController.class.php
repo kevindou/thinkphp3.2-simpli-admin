@@ -3,7 +3,7 @@
  * file: ImageController.class.php
  * desc: 图片管理 执行操作控制器
  * user: liujx
- * date: 2016-07-01 19:07:26
+ * date: 2016-07-01 19:44:42
  */
 
 // 引入命名空间
@@ -12,7 +12,7 @@ namespace Admin\Controller;
 class ImageController extends Controller
 {
     // model
-    protected $model = 'image';
+    protected $model = 'my_image';
 
     // 查询方法
     public function where($params)

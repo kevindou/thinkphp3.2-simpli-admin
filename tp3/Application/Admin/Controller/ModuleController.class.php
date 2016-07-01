@@ -25,18 +25,19 @@ class ModuleController extends Controller
         if (IS_AJAX && IS_POST)
         {
             $sH2        = post('h2');             // h2标题
-            $sFileName  = post('filename');       // 生成文件名
             $sTableName = post('tablename');      // 表名字
             $bCreate    = (int)post('isCreate');  // 是否生成文件
-            $controller = post('controller');     // 生成控制器
             $auth       = post('auth');           // 生成权限
+            $menu       = post('menu');           // 生成导航栏信息
+            $cont       = post('cont');           // 生成控制器
 
             // 数据不能为空
-            if ($sH2 && $sFileName && $sTableName)
+            if ($sH2 && $sTableName)
             {
+                $sName  = trim($sTableName, 'my_');
                 // 查询表信息
                 $aData  = (new Model())->query('SHOW FULL COLUMNS FROM `'.$sTableName.'`');
-                $html  = '';
+                $html   = '';
                 if ($aData) {
                     foreach ($aData as $value)
                     {
@@ -57,12 +58,11 @@ class ModuleController extends Controller
                 }
 
                 // 生成控制器信息
-                if ( ! empty($controller) && $bCreate === 1)
+                if ( ! empty($cont) && $bCreate === 1)
                 {
-                    $controller     = ucfirst($controller).'Controller';
+                    $controller     = ucfirst($sName).'Controller';
                     $fileName       = $controller.'.class.php';
                     $date           = date('Y-m-d H:i:s');
-                    $sTableName     = trim($sTableName, 'my_');
                     $strControllers = <<<Html
 <?php
 /**
@@ -147,14 +147,22 @@ html;
                     // 生成权限
                     if (! empty($auth)) $this->createAuth($auth, $sH2);
 
+                    $time = time();
                     // 生成导航栏目
                     if (! empty($menu)) M('menu')->add([
-                        'menu_name' => $sH2,
-                        ''
+                        'menu_name'   => $sH2,
+                        'pid'         => 0,
+                        'icons'       => 'icon-cog',
+                        'url'         => '/admin/'.$sName.'/index',
+                        'status'      => 1,
+                        'create_time' => $time,
+                        'create_id'   => $this->user->id,
+                        'update_time' => $time,
+                        'update_id'   => $this->user->id,
                     ]);
 
                     $sMsg = '生成文件成功 ^.^';
-                    file_put_contents(APP_PATH.'/Admin/View/Admin/'.$sFileName, $sHtml);
+                    file_put_contents(APP_PATH.'/Admin/View/Admin/'.$sName, $sHtml);
                 }
 
                 // 返回数据
@@ -172,6 +180,7 @@ html;
     // 生成权限操作
     private function createAuth($prefix, $title)
     {
+        $prefix = '/'.trim($prefix, '/').'/';
         $auth = ['index' => '显示', 'search' => '搜索', 'update' => '编辑'];
         foreach ($auth as $key => $value) Auth::createItem($prefix.$key, $title.$value, Auth::AUTH_TYPE);
     }

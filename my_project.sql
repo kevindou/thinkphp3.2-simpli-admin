@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2016-06-30 19:29:22
+Date: 2016-07-01 19:45:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -35,14 +35,14 @@ CREATE TABLE `my_admin` (
   `update_time` int(11) NOT NULL DEFAULT '1' COMMENT '修改时间',
   `update_id` int(11) NOT NULL DEFAULT '1' COMMENT '修改用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='后台管理员信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='后台管理员信息表';
 
 -- ----------------------------
 -- Records of my_admin
 -- ----------------------------
-INSERT INTO `my_admin` VALUES ('1', 'gongyan', 'eda3d8cb5282a4522ad1f1209891ba8a9b321d6f', '610455122@qq.com', 'admin', '', '', '1', '0', '1457604078', '1467279537', '127.0.0.1', '1', '1');
-INSERT INTO `my_admin` VALUES ('2', 'liujinxing', 'e74057e4af210894e68ae86918e051929bb6d85f', '821901008@qq.com', 'tourist,user', '', '', '1', '0', '1457606311', '1467280828', '127.0.0.1', '1', '1');
-INSERT INTO `my_admin` VALUES ('3', 'admin', 'f865b53623b121fd34ee5426c792e5c33af8c227', '1136261505@qq.com', 'tourist', null, null, '1', '2', '1467104350', '1467280820', '127.0.0.1', '1467104350', '2');
+INSERT INTO `my_admin` VALUES ('1', 'admin', 'f865b53623b121fd34ee5426c792e5c33af8c227', 'admin@qq.com', '', '', '', '1', '0', '1457604078', '1467279537', '127.0.0.1', '1', '1');
+INSERT INTO `my_admin` VALUES ('2', 'liujinxing', 'e74057e4af210894e68ae86918e051929bb6d85f', '821901008@qq.com', 'admin', '', '', '1', '0', '1457606311', '1467368469', '127.0.0.1', '1', '1');
+INSERT INTO `my_admin` VALUES ('3', 'admin123', 'e74057e4af210894e68ae86918e051929bb6d85f', '1136261505@qq.com', 'user', null, null, '1', '1', '1467367735', '1467367735', '127.0.0.1', '1467367735', '1');
 
 -- ----------------------------
 -- Table structure for my_article
@@ -106,6 +106,9 @@ CREATE TABLE `my_auth_child` (
 -- ----------------------------
 -- Records of my_auth_child
 -- ----------------------------
+INSERT INTO `my_auth_child` VALUES ('admin', '/1/index');
+INSERT INTO `my_auth_child` VALUES ('admin', '/1/search');
+INSERT INTO `my_auth_child` VALUES ('admin', '/1/update');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/admin/index');
 INSERT INTO `my_auth_child` VALUES ('user', '/admin/admin/index');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/admin/login');
@@ -118,6 +121,10 @@ INSERT INTO `my_auth_child` VALUES ('user', '/admin/admin/update');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/auth/index');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/auth/search');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/auth/update');
+INSERT INTO `my_auth_child` VALUES ('user', '/admin/auth/update');
+INSERT INTO `my_auth_child` VALUES ('admin', '/admin/image/index');
+INSERT INTO `my_auth_child` VALUES ('admin', '/admin/image/search');
+INSERT INTO `my_auth_child` VALUES ('admin', '/admin/image/update');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/menu/index');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/menu/search');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/menu/update');
@@ -133,9 +140,13 @@ INSERT INTO `my_auth_child` VALUES ('admin', '/admin/role/search');
 INSERT INTO `my_auth_child` VALUES ('user', '/admin/role/search');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/role/update');
 INSERT INTO `my_auth_child` VALUES ('user', '/admin/role/update');
+INSERT INTO `my_auth_child` VALUES ('admin', '/admin/role/view');
+INSERT INTO `my_auth_child` VALUES ('user', '/admin/role/view');
 INSERT INTO `my_auth_child` VALUES ('admin', 'deleteAuth');
 INSERT INTO `my_auth_child` VALUES ('admin', 'deleteRole');
 INSERT INTO `my_auth_child` VALUES ('admin', 'deleteUser');
+INSERT INTO `my_auth_child` VALUES ('user', 'deleteUser');
+INSERT INTO `my_auth_child` VALUES ('admin', 'updateAuth');
 
 -- ----------------------------
 -- Table structure for my_auth_item
@@ -154,6 +165,9 @@ CREATE TABLE `my_auth_item` (
 -- ----------------------------
 -- Records of my_auth_item
 -- ----------------------------
+INSERT INTO `my_auth_item` VALUES ('/1/index', '2', '图片管理显示', null, '1467373482', '1467373482');
+INSERT INTO `my_auth_item` VALUES ('/1/search', '2', '图片管理搜索', null, '1467373482', '1467373482');
+INSERT INTO `my_auth_item` VALUES ('/1/update', '2', '图片管理编辑', null, '1467373482', '1467373482');
 INSERT INTO `my_auth_item` VALUES ('/admin/admin/index', '2', '管理员信息显示', null, '1467103547', '1467103547');
 INSERT INTO `my_auth_item` VALUES ('/admin/admin/login', '2', '管理员欢迎页面显示', null, '1467191163', '1467191163');
 INSERT INTO `my_auth_item` VALUES ('/admin/admin/search', '2', '管理员信息搜索', null, '1467103592', '1467103592');
@@ -161,22 +175,27 @@ INSERT INTO `my_auth_item` VALUES ('/admin/admin/update', '2', '管理员信息�
 INSERT INTO `my_auth_item` VALUES ('/admin/auth/index', '2', '权限管理显示', null, '1467103726', '1467103726');
 INSERT INTO `my_auth_item` VALUES ('/admin/auth/search', '2', '权限信息搜索', null, '1467103781', '1467103781');
 INSERT INTO `my_auth_item` VALUES ('/admin/auth/update', '2', '权限信息编辑', null, '1467103757', '1467103757');
+INSERT INTO `my_auth_item` VALUES ('/admin/image/index', '2', '图片管理显示', null, '1467372709', '1467372709');
+INSERT INTO `my_auth_item` VALUES ('/admin/image/search', '2', '图片管理搜索', null, '1467372709', '1467372709');
+INSERT INTO `my_auth_item` VALUES ('/admin/image/update', '2', '图片管理编辑', null, '1467372709', '1467372709');
 INSERT INTO `my_auth_item` VALUES ('/admin/menu/index', '2', '导航栏目显示', null, '1467082001', '1467082001');
 INSERT INTO `my_auth_item` VALUES ('/admin/menu/search', '2', '导航栏目搜索', null, '1467082050', '1467082050');
 INSERT INTO `my_auth_item` VALUES ('/admin/menu/update', '2', '导航栏目编辑', null, '1467082073', '1467082073');
 INSERT INTO `my_auth_item` VALUES ('/admin/module/create', '2', '模块生成编辑', null, '1467103886', '1467103886');
 INSERT INTO `my_auth_item` VALUES ('/admin/module/index', '2', '模块生成显示', null, '1467103861', '1467103861');
 INSERT INTO `my_auth_item` VALUES ('/admin/role/allocation', '2', '角色权限分配', null, '1467279058', '1467279058');
-INSERT INTO `my_auth_item` VALUES ('/admin/role/create', '2', '角色分配权限操作', null, '1467280201', '1467280201');
+INSERT INTO `my_auth_item` VALUES ('/admin/role/create', '2', '角色分配权限操作', null, '1467280201', '1467347971');
 INSERT INTO `my_auth_item` VALUES ('/admin/role/index', '2', '角色管理显示', null, '1467103645', '1467103645');
 INSERT INTO `my_auth_item` VALUES ('/admin/role/search', '2', '角色信息搜索', null, '1467103694', '1467103694');
-INSERT INTO `my_auth_item` VALUES ('/admin/role/update', '2', '角色管理编辑', null, '1467103674', '1467103674');
+INSERT INTO `my_auth_item` VALUES ('/admin/role/update', '2', '角色管理编辑', null, '1467103674', '1467351824');
+INSERT INTO `my_auth_item` VALUES ('/admin/role/view', '2', '角色信息详情', null, '1467351856', '1467351856');
 INSERT INTO `my_auth_item` VALUES ('admin', '1', '超级管理员', null, '1467081917', '1467081917');
 INSERT INTO `my_auth_item` VALUES ('deleteAuth', '2', '删除权限的权限', null, '1467274356', '1467274356');
 INSERT INTO `my_auth_item` VALUES ('deleteRole', '2', '删除角色信息权限', null, '1467274307', '1467274307');
 INSERT INTO `my_auth_item` VALUES ('deleteUser', '2', '删除管理员权限', null, '1467274151', '1467274151');
-INSERT INTO `my_auth_item` VALUES ('tourist', '1', '普通游客', null, '1467279464', '1467280762');
-INSERT INTO `my_auth_item` VALUES ('user', '1', '普通管理员', null, '1467081958', '1467280420');
+INSERT INTO `my_auth_item` VALUES ('tourist', '1', '普通游客', null, '1467279464', '1467367815');
+INSERT INTO `my_auth_item` VALUES ('updateAuth', '2', '权限信息操作', null, '1467351871', '1467351871');
+INSERT INTO `my_auth_item` VALUES ('user', '1', '普通管理员', null, '1467081958', '1467366334');
 
 -- ----------------------------
 -- Table structure for my_category
@@ -261,7 +280,7 @@ CREATE TABLE `my_menu` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '修改时间',
   `update_id` int(11) NOT NULL DEFAULT '0' COMMENT '修改用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='使用SimpliQ的样式的导航栏样式';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='使用SimpliQ的样式的导航栏样式';
 
 -- ----------------------------
 -- Records of my_menu
@@ -272,3 +291,4 @@ INSERT INTO `my_menu` VALUES ('3', '1', '管理员信息', ' icon-user', '/admin
 INSERT INTO `my_menu` VALUES ('4', '1', '权限管理', 'icon-fire', '/admin/auth/index', '1', '3', '1467009344', '2', '1467104026', '2');
 INSERT INTO `my_menu` VALUES ('5', '1', '角色管理', 'icon-flag', '/admin/role/index', '1', '2', '1467009415', '2', '1467009415', '2');
 INSERT INTO `my_menu` VALUES ('6', '1', '模块生成', ' icon-magic', '/admin/module/index', '1', '101', '1467010590', '2', '1467010590', '2');
+INSERT INTO `my_menu` VALUES ('12', '0', '图片管理', 'icon-cog', '/admin/image/index', '1', '100', '1467372709', '1', '1467372709', '1');
