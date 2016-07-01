@@ -247,44 +247,68 @@ class Auth
 
     /**
      * getUserMenus() 根据用户权限获取到导航栏信息
-     * @param  int $intUid 用户ID
+     * @param  int   $uid 用户ID
      * @return array 返回导航栏信息
      */
-    public static function getUserMenus($intUid)
+    public static function getUserMenus($uid)
     {
-        // 获取用户权限
-        $arrPowers = self::getUserItems($intUid);
-        $arrMenus  = $arrParents = $arrAllMenus =  [];
-        $objModel  = M('menu');
+        return self::getItemMenus(self::getUserItems($uid));
+    }
 
-        // 查询栏目数据
-        if ($arrPowers) $arrMenus  = $objModel->field(['id', 'pid', 'menu_name', 'icons', 'url'])->where(['url' => ['in', array_keys($arrPowers)]])->order(['sort' => 'asc'])->select();
-        if ($arrMenus)
+    /**
+     * getRoleMenus() 获取角色对应的权限信息
+     * @access static
+     * @param  string $name 角色名称
+     * @return array  返回导航栏信息
+     */
+    public static function getRoleMenus($name)
+    {
+        return self::getItemMenus(self::getRoleItems($name));
+    }
+
+    /**
+     * getItemMenus() 获取权限对应的导航栏信息
+     * @access static
+     * @param  array $items 权限信息
+     * @return array 返回导航栏信息
+     */
+    public static function getItemMenus($items)
+    {
+        $arrAllMenus =  [];
+        if ($items)
         {
-            foreach ($arrMenus as $value) if ($value['pid'] != 0) $arrParents[] = (int)$value['pid'];
-            // 查询父类
-            if ($arrParents)
+            $arrParents = $arrAllMenus;
+            $objModel   = M('menu');
+
+            // 查询栏目数据
+            $arrMenus   = $objModel->field(['id', 'pid', 'menu_name', 'icons', 'url'])->where(['url' => ['in', array_keys($items)]])->order(['sort' => 'asc'])->select();
+            if ($arrMenus)
             {
-                $arrParents = $objModel->field(['id', 'pid', 'menu_name', 'icons', 'url'])->where(['id' => ['in', array_unique($arrParents)]])->order(['sort' => 'asc'])->select();
-                if ($arrParents) $arrMenus = array_merge($arrMenus, $arrParents);
+                foreach ($arrMenus as $value) if ($value['pid'] != 0) $arrParents[] = (int)$value['pid'];
+                // 查询父类
+                if ($arrParents)
+                {
+                    $arrParents = $objModel->field(['id', 'pid', 'menu_name', 'icons', 'url'])->where(['id' => ['in', array_unique($arrParents)]])->order(['sort' => 'asc'])->select();
+                    if ($arrParents) $arrMenus = array_merge($arrMenus, $arrParents);
+                }
             }
-        }
 
-        // 处理栏目数据
-        if ($arrMenus)
-        {
-            foreach ($arrMenus as $key => $value)
+            // 处理栏目数据
+            if ($arrMenus)
             {
-                $pid = $value['pid'];
-                $id  = $value['id'];
-                if ($pid == 0) {
-                    // 一级栏目
-                    if(isset($arrAllMenus[$id])) $value['child'] =  $arrAllMenus[$id]['child'];
-                    $arrAllMenus[$id] = $value;
-                } else {
-                    // 不存在创建父类数组
-                    if (!isset($arrAllMenus[$pid])) $arrAllMenus[$pid] = array();
-                    $arrAllMenus[$pid]['child'][] = $value;
+                foreach ($arrMenus as $key => $value)
+                {
+                    $pid = $value['pid'];
+                    $id  = $value['id'];
+                    if ($pid == 0) {
+                        // 一级栏目
+                        if(isset($arrAllMenus[$id])) $value['child'] =  $arrAllMenus[$id]['child'];
+                        $arrAllMenus[$id] = $value;
+                    } else {
+                        // 不存在创建父类数组
+                        if (!isset($arrAllMenus[$pid])) $arrAllMenus[$pid] = array();
+                        $arrAllMenus[$pid]['child'][] = $value;
+                    }
                 }
             }
         }

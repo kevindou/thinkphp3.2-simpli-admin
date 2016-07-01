@@ -47,12 +47,12 @@ class IndexController extends Controller
             if (isset($_POST) && ! empty($_POST))
             {
                 // 定义数据验证规则
-                $validate = array(
-                    array('username', 'require', '登录名不能为空', 1),
-                    array('username', '/\S{2,12}/', '登录名需要为2到12个字符', 1),
-                    array('password', 'require', '登录密码不能为空', 1),
-                    array('password', '/\S{2,12}/', '登录密码需要为6到16个字符', 1),
-                );
+                $validate = [
+                    ['username', 'require', '登录名不能为空', 1],
+                    ['username', '/\S{2,12}/', '登录名需要为2到12个字符', 1],
+                    ['password', 'require', '登录密码不能为空', 1],
+                    ['password', '/\S{2,12}/', '登录密码需要为6到16个字符', 1],
+                ];
 
                 // 创建模型对象
                 $model  = M('admin');
@@ -61,10 +61,10 @@ class IndexController extends Controller
                 if ($isTrue)
                 {
                     // 查询数据是否存在
-                    $admin    = $model->where(array(
+                    $admin    = $model->where([
                         'username' => $model->username,
                         'password' => sha1($model->password)
-                    ))->find();
+                    ])->find();
                     $arr['msg'] = '登录账号或者密码错误!';
                     if ($admin)
                     {
@@ -86,10 +86,10 @@ class IndexController extends Controller
         // 查询用户数据
         if ($this->isLogin())
         {
-            M('admin')->where(array('id' => (int)$_SESSION['my_admin']['id']))->save(array(
+            M('admin')->where(['id' => (int)$_SESSION['my_admin']['id']])->save([
                 'last_time' => time(),
                 'last_ip'   => get_client_ip(),
-            ));
+            ]);
         }
 
         // 清楚数据

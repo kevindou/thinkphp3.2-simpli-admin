@@ -10,11 +10,11 @@ namespace Common;
 class Controller extends \Think\Controller
 {
     // 定义ajaxReturn 返回的数据
-    public $arrMsg = array(
+    public $arrError = [
         'status' => 0,              // 状态 1 成功 2 失败
         'msg'    => '提交数据为空',   // 提示信息
-        'data'   => array(),        // 返回数据
-    );
+        'data'   => null,           // 返回数据
+    ];
 
     // 定义session 的名称
     protected $_admin = 'my_admin';
@@ -32,8 +32,8 @@ class Controller extends \Think\Controller
         // 判断是否已经登录
         if (!$this->isLogin()) {
             if (IS_AJAX) {
-                $this->arrMsg['msg'] = '请先登录...';
-                $this->ajaxReturn($this->arrMsg);
+                $this->arrError['msg'] = '请先登录...';
+                $this->ajaxReturn();
             } else {
                 $this->redirect('Index/index');
             }
@@ -43,26 +43,12 @@ class Controller extends \Think\Controller
         $this->user = (object)['id' => (int)$_SESSION[$this->_admin]['id'], 'name' => $_SESSION[$this->_admin]['username']];
     }
 
-    // 删除图片
-    protected function deleteImage($file)
-    {
-        if (!empty($file))
-        {
-            // 判读图片的信息
-            if (strrops($file, '://mylx-') == false)
-            {
-                if (file_exists('.'.$file)) @unlink('.'.$file);
-            }
-        }
-    }
-
     // 图片上传
     public function fileUpload()
     {
         // 判断数据上传
         if (IS_POST)
         {
-            $strOld = get('fileurl');
             $upload = new \Think\Upload();                          // 实例化上传类
             $upload->maxSize  = 1024 * 1024 * 2;                    // 上传文件大小
             $upload->rootPath = './public/';                        // 图片保存绝对路径
@@ -81,43 +67,65 @@ class Controller extends \Think\Controller
                 if ( ! isset($info['url']) || empty($info['url'])) $info['url'] = '/Public/'.$info['savepath'].$info['savename'];
 
                 // 删除之前的图片
-                $this->deleteImage($strOld);
-                $this->arrMsg = array(
+                $this->arrError = [
                     'status' => 1,
                     'msg'    => '上传成功',
                     'data'   => $info['url'],
-                );
+                ];
             }
         }
         // 获取上传的Url
-        $this->ajaxReturn($this->arrMsg);
+        $this->ajaxReturn();
     }
 
     /**
-     * map() 生成键值对数组
-     * @param array  $array 需要处理的数组
-     * @param string $key   生成数组的键
-     * @param string $value 生成数组的值
-     * @return array 返回处理好的数组
+     * ajaxReturn()   重新父类的ajax返回数据
+     * @access public
+     * @param  string $message 提示信息
+     * @param  mixed  $data    返回数据
+     * @param  int    $status  返回状态
+     * @return void   没有返回值
      */
-    protected function map($array, $key, $value)
+    public function ajaxReturn($message = '', $data = [], $status = 0)
     {
-        $arrNew = array();
-        if ( ! empty($array) && is_array($array)) foreach ($array as $arr) $arrNew[$arr[$key]] = $arr[$value];
-        return $arrNew;
+        if (!empty($message)) $this->arrError['msg']    = $message;
+        if (!empty($data))    $this->arrError['data']   = $data;
+        if ($status === 1)    $this->arrError['status'] = 1;
+        header('Content-Type:application/json; charset=utf-8');
+        exit(json_encode($this->arrError));
     }
 
     /**
-     * success() 成功函数
+     * go执行跳转页面操作
      * @access protected
-     * @param  string  $msg  成功提示语句
-     * @param  mixed   $data 成功返回数据
-     * @return void
+     * @param  string $message 提示信息
+     * @param  int    $type    类型 0 失败 1 成功
+     * @param  array  $param   其他参数信息
      */
-    protected function s($msg, $data){$this->arrMsg = array('status' => 1, 'msg' => $msg, 'data' => $data);}
+    protected function go($message, $type = 0, $url = '', $auto = true)
+    {
+        $this->assign([
+            'title'   => $type == 0 ? '操作出现错误' : '操作成功',   // 提示标题
+            'content' => $message,                                // 提示信息
+            'url'     => $url,                                    // 跳转页面
+            'type'    => $type,                                   // 跳转类型
+            'auto'    => $auto,                                   // 是否自动跳转
+        ]);
+
+        $this->display('Layout/error');
+    }
 
     /**
-     * emptyPost() 判断提交的post数据是否
+     * render() 视图渲染
+     * @access protected
+     * @params string      $file   视图文件
+     * @param  mixed|array $params 注入的变量
+     * @return true 返回true
      */
-    protected function emptyPost(){return ! isset($_POST) || empty($_POST);}
+    protected function render($file = null, $params = [])
+    {
+        if ($params) $this->assign($params);
+        $this->display($file);
+        return true;
+    }
 }

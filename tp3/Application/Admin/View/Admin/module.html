@@ -28,6 +28,30 @@
                     <input class="input-xlarge focused"  required="true" rangelength="[2, 50]" type="text" name="tablename" value=""  />
                 </div>
             </div>
+            <div class="control-group">
+                <label class="control-label"> 控制器名称 </label>
+                <div class="controls">
+                    <input class="input-xlarge focused"   rangelength="[2, 50]" type="text" name="controller" value=""  />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"> 权限生成前缀 </label>
+                <div class="controls">
+                    <input class="input-xlarge focused"   rangelength="[2, 50]" type="text" name="auth" value="/admin/"  />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label"> 导航栏目 </label>
+                <div class="controls">
+                    <label class="radio">
+                        <input type="radio" name="menu" checked="true" value="1" /> 生成
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="menu"  value="0" /> 不生成
+                    </label>
+
+                </div>
+            </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary me-preview"> 生成预览 </button>
                 <button type="submit" class="btn btn-success me-create"> 生成文件 </button>

@@ -42,9 +42,7 @@ class AdminController extends Controller
     // 首页显示
     public function index()
     {
-        // 获取用户的角色信息
-        $this->assign('roles', Auth::getUserRoles($this->user->id));
-        $this->display('Admin/admin');
+        $this->render('Admin/admin', ['roles' => Auth::getUserRoles($this->user->id)]);
     }
 
     // 新增之前的处理

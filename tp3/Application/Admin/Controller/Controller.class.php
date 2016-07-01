@@ -14,9 +14,19 @@ use Common\Auth;
 
 class Controller extends \Common\Controller
 {
+    // 定义验证数据、模型、主键
+    protected $validate = [], $model = 'admin', $pk = 'id';
 
-    // 定义验证字段
-    private $validate = array();
+    /**
+     * where() 查询方法
+     * @access protected
+     * @param  array $params 页面提交过来的查询条件信息
+     * @return array 返回查询数据信息(默认没有查询条件)
+     */
+    protected function where($params)
+    {
+        return [];
+    }
 
     // 初始化判断定义
     public function _initialize()
@@ -30,16 +40,8 @@ class Controller extends \Common\Controller
             // 验证用户权限
             if ( ! Auth::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
             {
-                if (IS_AJAX)
-                {
-                    $this->ajaxReturn([
-                        'status' => 0,
-                        'msg'    => '抱歉！你没有执行权限 :)',
-                        'data'   => [],
-                    ]);
-                } else {
-                    $this->error('抱歉！你没有执行权限 :)');
-                }
+                $strMsg = '抱歉！你没有执行权限 :)';
+                IS_AJAX ? $this->ajaxReturn($strMsg) : $this->go($strMsg);
             }
         }
 
@@ -105,10 +107,9 @@ class Controller extends \Common\Controller
         if (IS_AJAX)
         {
             $model   = M($this->model);
-
             // 接收参数
             $intNum  = (int)post('sEcho');               // 第几页
-            $start   = (int)post('iDisplayStart', 0);    // 开始位置
+            $start   = (int)post('iDisplayStart',  0);   // 开始位置
             $length  = (int)post('iDisplayLength', 10);  // 查询长度
             $aSearch = $this->query();
 
@@ -116,19 +117,19 @@ class Controller extends \Common\Controller
             $count = $model->where($aSearch['where'])->count();
             $data  = $model->where($aSearch['where'])->limit($start, $length)->order($aSearch['orderBy'])->select();
             // echo $model->getLastSql();
-            $this->arrMsg = array(
+            $this->arrError = [
                 'status' => 1,
                 'msg'    => 'success',
-                'data'   => array(
-                    'sEcho'                => $intNum,
-                    'iTotalRecords'        => count($data),
-                    'iTotalDisplayRecords' => (int)$count,
-                    'aaData'               => $data,
-                ),
-            );
+                'data'   => [
+                    'sEcho'                => $intNum,      // 请求次数
+                    'iTotalRecords'        => count($data), // 当前页面条数
+                    'iTotalDisplayRecords' => (int)$count,  // 数据总条数
+                    'aaData'               => $data,        // 数据信息
+                ],
+            ];
         }
 
-        $this->ajaxReturn($this->arrMsg);
+        $this->ajaxReturn();
     }
 
     // 修改数据
@@ -139,65 +140,69 @@ class Controller extends \Common\Controller
             // 接收参数
             $type    = post('actionType');                  // 操作类型
             $arrType = ['delete', 'insert', 'update'];      // 可执行操作
-            $this->arrMsg['msg'] = "操作类型错误";
+            $this->arrError['msg'] = "操作类型错误";
 
             // 操作类型判断
             if (in_array($type, $arrType, true))
             {
                 // 数据验证
                 $model  = D($this->model);
-                $isTrue = $model->validate($this->validate)->create();
-                $this->arrMsg['msg'] = $model->getError();
 
-                // 数据验证通过
-                if ($isTrue || $type === 'delete')
+                // 修改和删除验证数据存在
+                $this->arrError['msg'] = '将要操作的数据不存在';
+                if ($type === 'insert' || ($data = $model->find(post($this->pk))))
                 {
-                    $isTrue = false;
-                    $this->arrMsg['msg'] = '服务器繁忙,请稍候再试...';
-
-                    switch($type) {
-                        case 'delete':
-                            // 如果是管理员删除 验证权限 或者添加 者
-                            $this->arrMsg['msg'] = '你没有权限操作';
-                            if (CONTROLLER_NAME !== 'Admin' || $this->user->id === 1 || Auth::can($this->user->id, 'deleteUser'))
-                            {
-                                $this->arrMsg['msg'] = '服务器繁忙,请稍候再试...';
-                                if ($this->beforeDelete($model)) $isTrue = $model->delete();
-                            }
-                            break;
-                        case 'update':
-                            if ($this->beforeUpdate($model)) $isTrue = $model->save();
-                            break;
-                        case 'insert':
-                            if ($this->beforeInsert($model)) $isTrue = $model->add();
-                            break;
-                    }
-
-                    $this->arrMsg['data'] = $model->getLastSql();
-                    // 判断操作成功
-                    if ($isTrue)
+                    // 数据的验证
+                    $isTrue = $model->validate($this->validate)->create();
+                    $this->arrError['msg'] = $model->getError();
+                    if ($isTrue || $type === 'delete')
                     {
-                        // 查询数据
-                        $intId =  $type == 'insert' ? $isTrue : post('id');
+                        $isTrue = false;
+                        $this->arrError['msg'] = '服务器繁忙,请稍候再试...';
 
-                        // 返回
-                        $this->arrMsg = array(
-                            'status' => 1,
-                            'msg'    => '恭喜您,操作成功 ^.^',
-                            'data'   => $model->where(['id' => $intId])->find(),
-                        );
+                        // 根据类型操作数据
+                        switch($type)
+                        {
+                            case 'delete':
+                                // 如果是管理员删除 验证权限 或者添加 者
+                                $this->arrError['msg'] = '你没有权限操作';
+                                if (CONTROLLER_NAME !== 'Admin' || $this->user->id === 1 || (Auth::can($this->user->id, 'deleteUser') && post('create_id') == $this->user->id))
+                                {
+                                    $this->arrError['msg'] = '服务器繁忙,请稍候再试...';
+                                    if ($this->beforeDelete($model)) $isTrue = $model->delete();
+                                }
+                                break;
+                            case 'update':
+                                if ($this->beforeUpdate($model)) $isTrue = $model->save();
+                                break;
+                            case 'insert':
+                                if ($this->beforeInsert($model) && ($isTrue = $model->add())) $data = $model->find($isTrue);
+                                break;
+                        }
+
+                        $this->arrError['data'] = $model->getLastSql();
+                        // 判断操作成功
+                        if ($isTrue)
+                        {
+                            // 返回数据信息
+                            $this->arrError = [
+                                'status' => 1,
+                                'msg'    => '恭喜您,操作成功 ^.^',
+                                'data'   => $data,
+                            ];
+                        }
                     }
                 }
             }
         }
 
-        $this->ajaxReturn($this->arrMsg);
+        $this->ajaxReturn();
     }
 
     // 新增之前的处理
     protected function beforeInsert(&$model)
     {
-        $model->update_id   = $model->create_id   = $_SESSION[$this->_admin]['id'];
+        $model->update_id   = $model->create_id   = $this->user->id;
         $model->update_time = $model->create_time = time();
         return true;
     }
@@ -205,14 +210,11 @@ class Controller extends \Common\Controller
     // 修改之前的处理
     protected function beforeUpdate(&$model)
     {
-        $model->update_id   = $_SESSION[$this->_admin]['id'];
+        $model->update_id   = $this->user->id;
         $model->update_time = time();
         return true;
     }
 
     // 删除之前的处理
     protected function beforeDelete(&$model) {return true;}
-
-    // 图片处理函数
-    protected function handleImage($path){ return true; }
 }

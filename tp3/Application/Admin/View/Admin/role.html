@@ -24,7 +24,7 @@
 			<a href="javascript:;" class="btn btn-danger me-table-del" table-data="' + row + '"><i class="icon-trash "></i></a>');
     }
 
-    var myTable = new MeTable({sTitle:"角色信息"},{
+    var myTable = new MeTable({sTitle:"角色信息",sBaseUrl:"/admin/auth/update/type/1.html"},{
         "aoColumns":[
 			{"data":"name", "sName":"name", "title":"角色名称", "edit":{"options":{"required":true,"rangelength":"[2, 50]"}}, 'search':{"type":"text"}},
 			{"data":"desc", "sName":"desc", "bSortable":false, "title":"说明", "edit":{"options":{"required":true,"rangelength":"[2, 255]"}}, },

@@ -14,7 +14,7 @@
     <table class="table table-striped table-bordered table-hover" id="showTable"></table>
 </div>
 <script type="text/javascript">
-    var myTable = new MeTable({sTitle:"权限管理"},{
+    var myTable = new MeTable({sTitle:"权限管理", sBaseUrl:"/admin/auth/update/type/2.html"},{
         "aoColumns":[
 			{"data":"name", "sName":"name", "title":"权限名称", "edit":{"options":{"required":true,"rangelength":"[2, 50]"}}, "search":{"type":"text"}},
 			{"data":"desc", "sName":"desc", "bSortable":false, "title":"说明信息", "edit":{"options":{"required":true,"rangelength":"[2, 255]"}}},

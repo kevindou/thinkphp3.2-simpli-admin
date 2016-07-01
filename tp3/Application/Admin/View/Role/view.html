@@ -5,24 +5,38 @@
     <div class="alert-success me-alert">
         <strong> 导航栏信息  </strong>
     </div>
-    <ul class="list">
-        <li>
-            <img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />
-            <span class="name">Łukasz Holeczek</span>
-            <span class="status online"></span>
-            <span class="important">4</span>
-        </li>
-        <li>
-            <img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />
-            <span class="name">Łukasz Holeczek</span>
-            <span class="status offline"></span>
-        </li>
-        <li>
-            <img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />
-            <span class="name">Łukasz Holeczek</span>
-            <span class="status busy"></span>
-        </li>
-    </ul>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <foreach name="allMenus" item="value" key="key">
+        <div class="panel panel-blue">
+            <div class="panel-heading" role="tab" id="heading{$value.id}">
+                <h4 class="panel-title me-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{$value.id}" aria-expanded="true" aria-controls="collapse{$value.id}">
+                        <ul class="list me-list">
+                            <li>
+                                <span class="name">{$value['menu_name']}</span>
+                                <span class="status online"></span>
+                            </li>
+                        </ul>
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse{$value.id}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading{$value.id}">
+                <div class="panel-body">
+                    <if condition="(0 lt count($value['child']))" >
+                    <ul class="list me-list">
+                        <foreach name="value.child" item="val">
+                        <li>
+                            <span class="name">{$val.menu_name}</span>
+                            <span class="status offline"></span>
+                        </li>
+                        </foreach>
+                    </ul>
+                    </if>
+                </div>
+            </div>
+        </div>
+        </foreach>
+    </div>
 </div>
 <div class="conversation">
     <div class="alert-error me-alert">
@@ -30,79 +44,8 @@
     </div>
     <ul class="talk">
         <foreach name="roleItems" item="value" key="key">
-        <li>
-            <img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />
-            <span class="name">Łukasz Holeczek</span>
-            <span class="time">1:32PM</span>
-            <div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>
-        </li>
+        <li> <div>{$value}({$key})</div> </li>
         </foreach>
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<img class="avatar" src="/Public/img/avatar.jpg" alt="avatar" />-->
-            <!--<span class="name">Łukasz Holeczek</span>-->
-            <!--<span class="time">1:32PM</span>-->
-            <!--<div class="message">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.</div>-->
-        <!--</li>-->
     </ul>
 </div>
 <script type="text/javascript">

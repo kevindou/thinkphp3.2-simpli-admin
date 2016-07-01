@@ -54,13 +54,16 @@ class RoleController extends Controller
             if ($arrRole && $arrRole['name'] && ($this->user->id == 1 || Auth::hasRole($this->user->id, $arrRole['name'])))
             {
                 // 获取用户所有权限
-                $this->assign([
+                return $this->render('view', [
                     'role'      => $arrRole,                                                 // 角色信息
                     'roleItems' => Auth::getItemDesc(Auth::getRoleItems($arrRole['name'])),  // 角色自带权限
+                    'allMenus'  => Auth::getRoleMenus($arrRole['name']),                     // 角色导航栏信息
                 ]);
-                $this->display();
             }
         }
+
+        // 跳转提示页面
+        $this->go('角色信息不存在');
     }
 
     // 分配权限信息
@@ -75,14 +78,16 @@ class RoleController extends Controller
             if ($arrRole && $arrRole['name'] && ($this->user->id == 1 || Auth::hasRole($this->user->id, $arrRole['name'])))
             {
                 // 获取用户所有权限
-                $this->assign([
+                return $this->render('allocation', [
                     'role'      => $arrRole,                                                 // 角色信息
                     'roleItems' => array_keys(Auth::getRoleItems($arrRole['name'])),         // 角色自带权限
                     'powers'    => Auth::getItemDesc(Auth::getUserItems($this->user->id)),   // 用户权限
                 ]);
-                $this->display();
             }
         }
+
+        // 跳转提示页面
+        $this->go('角色信息不存在');
     }
 
     // 修改角色权限
@@ -100,43 +105,12 @@ class RoleController extends Controller
                 Auth::updateItem($arrRoles['name'], $desc);           // 修改角色
                 if (Auth::updateRoleItems($arrRoles['name'], $arrPowers))
                 {
-                    $this->success('成功！');
-                }
-            }
-        }
-    }
-
-    // 修改数据
-    public function update()
-    {
-        if (IS_AJAX)
-        {
-            // 接收参数
-            $sType = post('actionType');                  // 操作类型
-            $aType = ['delete', 'insert', 'update'];      // 可执行操作
-            $this->arrMsg['msg'] = "操作类型错误";
-
-            // 操作类型判断
-            if (in_array($sType, $aType, true))
-            {
-                $this->arrMsg['msg'] = '抱歉你没有操作权限';
-                if ($this->user->id === 1 || $aType !== 'delete' || (Auth::can($this->user->id, 'deleteRole')))
-                {
-                    // 验证用户删除的权限
-                    $isTrue = Auth::handleItem($sType, Auth::ROLE_TYPE, $this->user->id);
-                    $this->arrMsg['msg'] = '服务器繁忙, 请稍候再试...';
-                    if ($isTrue === true || is_numeric($isTrue))
-                    {
-                        $this->arrMsg = [
-                            'status' => 1,
-                            'msg'    => '操作成功 ^.^',
-                            'data'   => $isTrue,
-                        ];
-                    }
+                    $this->redirect('/admin/role/view', ['name' => $arrRoles['name']]);
                 }
             }
         }
 
-        $this->ajaxReturn($this->arrMsg);
+        // 跳转提示页面
+        $this->go('提交信息为空');
     }
 }

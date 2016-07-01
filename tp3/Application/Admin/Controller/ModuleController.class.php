@@ -6,11 +6,13 @@
 // 引入命名空间
 namespace Admin\Controller;
 
+use Common\Auth;
 use Think\Model;
 
 // 引入命名空间
 class ModuleController extends Controller
 {
+    private $dir = '';
     // 首页显示
     public function index()
     {
@@ -26,6 +28,8 @@ class ModuleController extends Controller
             $sFileName  = post('filename');       // 生成文件名
             $sTableName = post('tablename');      // 表名字
             $bCreate    = (int)post('isCreate');  // 是否生成文件
+            $controller = post('controller');     // 生成控制器
+            $auth       = post('auth');           // 生成权限
 
             // 数据不能为空
             if ($sH2 && $sFileName && $sTableName)
@@ -50,6 +54,58 @@ class ModuleController extends Controller
                     }
 
                     $html .= "\t\t\t".'oOperate';
+                }
+
+                // 生成控制器信息
+                if ( ! empty($controller) && $bCreate === 1)
+                {
+                    $controller     = ucfirst($controller).'Controller';
+                    $fileName       = $controller.'.class.php';
+                    $date           = date('Y-m-d H:i:s');
+                    $sTableName     = trim($sTableName, 'my_');
+                    $strControllers = <<<Html
+<?php
+/**
+ * file: {$fileName}
+ * desc: {$sH2} 执行操作控制器
+ * user: liujx
+ * date: {$date}
+ */
+
+// 引入命名空间
+namespace Admin\Controller;
+
+class {$controller} extends Controller
+{
+    // model
+    protected \$model = '{$sTableName}';
+
+    // 查询方法
+    public function where(\$params)
+    {
+        return [
+            'orderBy' => 'id',
+        ];
+    }
+
+    // 新增之前的处理
+    protected function beforeInsert(&\$model)
+    {
+        \$model->update_id   = \$model->create_id   = \$this->user->id;
+        \$model->update_time = \$model->create_time = time();
+        return true;
+    }
+
+    // 修改之前的处理
+    protected function beforeUpdate(&\$model)
+    {
+        \$model->update_id   = \$this->user->id;
+        \$model->update_time = time();
+        return true;
+    }
+}
+Html;
+                    file_put_contents(APP_PATH.'/Admin/Controller/'.$fileName, $strControllers);
                 }
 
                 $sHtml = <<<html
@@ -88,12 +144,21 @@ html;
                 $sMsg = '生成预览文件成功';
                 if ($bCreate === 1)
                 {
+                    // 生成权限
+                    if (! empty($auth)) $this->createAuth($auth, $sH2);
+
+                    // 生成导航栏目
+                    if (! empty($menu)) M('menu')->add([
+                        'menu_name' => $sH2,
+                        ''
+                    ]);
+
                     $sMsg = '生成文件成功 ^.^';
                     file_put_contents(APP_PATH.'/Admin/View/Admin/'.$sFileName, $sHtml);
                 }
 
                 // 返回数据
-                $this->arrMsg = [
+                $this->arrError = [
                     'status' => 1,
                     'msg'    => $sMsg,
                     'data'   => highlight_string($sHtml, true),
@@ -101,6 +166,13 @@ html;
             }
         }
 
-        $this->ajaxReturn($this->arrMsg);
+        $this->ajaxReturn();
+    }
+
+    // 生成权限操作
+    private function createAuth($prefix, $title)
+    {
+        $auth = ['index' => '显示', 'search' => '搜索', 'update' => '编辑'];
+        foreach ($auth as $key => $value) Auth::createItem($prefix.$key, $title.$value, Auth::AUTH_TYPE);
     }
 }
