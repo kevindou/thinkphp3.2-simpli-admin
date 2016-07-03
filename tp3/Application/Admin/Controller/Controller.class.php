@@ -199,6 +199,84 @@ class Controller extends \Common\Controller
         $this->ajaxReturn();
     }
 
+    // 文件上传
+    public function upload()
+    {
+        // 删除图片处理
+        $strOldName = get('sOldName');
+        if ($strOldName && file_exists('.'.$strOldName)) unlink('.'.$strOldName);
+
+        // 接收上传文件信息
+        $upload = new \Think\Upload();                     // 实例化上传文件类
+        $upload->maxSize  = 1024 * 1024 * 1;               // 上传文件大小
+        $upload->exts     = ['jpg', 'gif', 'png', 'jpeg']; // 上传文件类型
+        $upload->rootPath = './Public/Uploads/';           // 上传文件保存的根目录
+        $upload->subName  = ['date', 'Ymd'];               // 上传保存子目录
+        $upload->saveName = ['uniqid', CONTROLLER_NAME];   // 文件名称
+
+        // 文件上传
+        $info = $upload->upload();
+        $this->arrError['msg'] = $upload->getError();
+
+        // 上传成功
+        if ($info)
+        {
+            $arrInfo = [];
+            foreach ($info as $value)
+            {
+                $arrInfo[] = [
+                    'sOldName' => $value['name'],                                           // 旧文件名
+                    'sNewName' => $value['savename'],                                       // 新文件名
+                    'sPath'    => '/Public/Uploads/'.$value['savepath'].$value['savename'], // 文件路径
+                ];
+            }
+
+            $this->arrError = [
+                'status' => 1,
+                'msg'    => '文件上传成功',
+                'data'   => $arrInfo,
+            ];
+        }
+
+        $this->ajaxReturn();
+    }
+
+    // 图片裁剪
+    public function clipping()
+    {
+        $intX    = (int)post('x');  // x轴
+        $intY    = (int)post('y');  // y轴
+        $intW    = (int)post('w');  // 宽度
+        $intH    = (int)post('h');  // 高度
+        $strPath = post('path');    // 图片路径
+        if ($strPath && ($intX || $intY || $intW || $intH))
+        {
+            // 判读图片存在
+            $this->arrError['msg'] = '处理图片不存在';
+            $strPath = '.'. trim($strPath, '.');
+            if (file_exists($strPath))
+            {
+                $image = new \Think\Image();
+                $image->open($strPath);
+                $this->arrError['msg'] = '图片裁剪失败';
+                if ($image->crop($intW, $intH, $intX, $intY)->save($strPath))
+                {
+                    $image->open($strPath);
+                    $this->arrError['msg'] = '图片缩放失败';
+                    if ($image->thumb(160, 160, \Think\Image::IMAGE_THUMB_SCALE)->save($strPath))
+                    {
+                        $this->arrError = [
+                            'status' => 1,
+                            'msg'    => '图片裁剪成功',
+                            'data'   => trim($strPath, '.'),
+                        ];
+                    }
+                }
+            }
+        }
+        $this->ajaxReturn();
+    }
+
     // 新增之前的处理
     protected function beforeInsert(&$model)
     {

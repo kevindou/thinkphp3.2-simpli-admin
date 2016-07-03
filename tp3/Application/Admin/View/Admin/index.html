@@ -1,4 +1,19 @@
 <div class="box-content">
+
+    <div id="container">
+        <div style="padding:10px;">
+            <button class="btn btn-warning" type="button" id="select-file">
+                <i class="icon-picture"></i>
+                选择文件
+            </button>
+
+            <button class="btn btn-success"  type="button" style="margin-left:10px;" id="exec-upload">
+                上传文件
+                <i class="icon-upload-alt"></i>
+            </button>
+        </div>
+    </div>
+
     <table class="table table-bordered table-striped">
         <tbody>
         <tr>
@@ -20,4 +35,280 @@
         </tbody>
     </table>
 </div>
-<script type="text/javascript">var myTable; $('.dtime').each(function(){$(this).html(timeFormat(parseInt($(this).html()), "yyyy-MM-dd hh:mm:ss"))})</script>
+<script type="text/javascript">
+
+    /**
+     * 添加显示信息
+     * @param file 上传文件对象
+     * @returns {string} 返回字符串
+     */
+    function addFiles(file)
+    {
+        return '<div class="alert alert-success" id="' + file.id + '"> \
+                    <input type="hidden" name="avatar">\
+                    <button class="close" data-dismiss="alert" type="button">×</button> \
+                    <strong> ' + file.name + ' </strong> size:' + plupload.formatSize(file.size) + '<span class="pull-right"> status : <strong class="text-warning"> begin add </strong></span>\
+                    <div class="progress progress-striped progress-success active mt-10 white"> \
+                        <div class="bar" style="width: 0;"></div> \
+                    </div> \
+                </div>';
+    }
+
+    /**
+     * addImage() 添加图片
+     * @param id  唯一ID
+     * @param src 图片地址
+     * @returns {string} 返回字符串
+     */
+    function addImage(id, src)
+    {
+        return '<div  class="alert alert-info"> \
+            <img id="' + id + 'image" src="'+ src +'" alt="上传图片" class="img-rounded me-image"> \
+            <div class="pull-right"> \
+                <div class="me-jcrop"> \
+                    <div> \
+                        <button  class="btn btn-info me-clipping" form="#' + id + 'form" type="button"> \
+                            确定裁剪 <i class="icon-retweet"></i> \
+                        </button> \
+                        <button  class="btn btn-warning ml-5 me-cancel" type="button"> \
+                            取消 <i class="icon-remove"></i> \
+                        </button> \
+                    </div> \
+                    <p class="mt-10 mb-10">预览：</p> \
+                    <div class="me-xian"> \
+                        <img src="' + src + '" alt="上传图片" class="img-thumbnail"/> \
+                    </div> \
+                </div> \
+            </div> \
+            <form name="'+id+'form" id="'+id+'form" action="clipping" method="POST">\
+                <input type="hidden" name="x" id="'+ id + '-x">\
+                <input type="hidden" name="y" id="'+ id + '-y">\
+                <input type="hidden" name="w" id="'+ id + '-w">\
+                <input type="hidden" name="h" id="'+ id + '-h">\
+                <input type="hidden" name="path" value="' + src + '">\
+            </form>\
+        </div>';
+    }
+
+    function MeJcorP(file)
+    {
+        var jcrop_api,
+            boundx,
+            boundy,
+            // Grab some information about the preview pane
+            $preview = $('#' + file.id + 'image').parent().find('.me-jcrop'),
+            $pimg = $preview.find('img'),
+            xsize = 160,
+            ysize = 160,
+            sId   = '#' + file.id + '-';
+        $('#' + file.id + 'image').Jcrop({
+            onChange: function(c){
+                if (parseInt(c.w) > 0)
+                {
+                    var rx = xsize / c.w;
+                    var ry = ysize / c.h;
+
+                    $pimg.css({
+                        width: Math.round(rx * boundx) + 'px',
+                        height: Math.round(ry * boundy) + 'px',
+                        marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                        marginTop: '-' + Math.round(ry * c.y) + 'px'
+                    });
+                }
+
+                $('input[name=x]').val(c.x);
+
+                // 复值
+                $(sId + 'x').val(c.x);
+                $(sId + 'y').val(c.y);
+                $(sId + 'w').val(c.w);
+                $(sId + 'h').val(c.h);
+            },
+            onSelect: function(c){
+                if (parseInt(c.w) > 0)
+                {
+                    var rx = xsize / c.w;
+                    var ry = ysize / c.h;
+
+                    $pimg.css({
+                        width: Math.round(rx * boundx) + 'px',
+                        height: Math.round(ry * boundy) + 'px',
+                        marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                        marginTop: '-' + Math.round(ry * c.y) + 'px'
+                    });
+                }
+
+                $('input[name=x]').val(c.x);
+
+                // 复值
+                $(sId + 'x').val(c.x);
+                $(sId + 'y').val(c.y);
+                $(sId + 'w').val(c.w);
+                $(sId + 'h').val(c.h);
+            },
+            aspectRatio: xsize / ysize
+        },function(){
+            // Use the API to get the real image size
+            var bounds = this.getBounds();
+            boundx = bounds[0];
+            boundy = bounds[1];
+            // Store the API in the jcrop_api variable
+            jcrop_api = this;
+
+            // Move the preview into the jcrop container for css positioning
+            $preview.appendTo(jcrop_api.ui.holder);
+        });
+
+        function updatePreview(c)
+        {
+            if (parseInt(c.w) > 0)
+            {
+                var rx = xsize / c.w;
+                var ry = ysize / c.h;
+
+                $pimg.css({
+                    width: Math.round(rx * boundx) + 'px',
+                    height: Math.round(ry * boundy) + 'px',
+                    marginLeft: '-' + Math.round(rx * c.x) + 'px',
+                    marginTop: '-' + Math.round(ry * c.y) + 'px'
+                });
+            }
+        };
+    }
+
+    $(function(){
+        $('.dtime').each(function(){$(this).html(timeFormat(parseInt($(this).html()), "yyyy-MM-dd hh:mm:ss"))});
+        var uploader = new plupload.Uploader({
+            runtimes :            'html5,flash,silverlight,html4',          // 上传文件方式
+            browse_button :       'select-file',                            // 上传文件按钮.
+            container:            $('#container').get(0),                   // 上传文件核心DIV
+            url :                 'upload',                                 // 上传文件处理页面
+            flash_swf_url :       '/Public/js/plupload/Moxie.swf',          // swf上传文件
+            silverlight_xap_url : '/Public/js/plupload/js/Moxie.xap',
+
+            // 文件限制
+            filters : {
+                max_file_size : '1mb',                                       // 文件大小
+                mime_types: [
+                    {title : "Image files", extensions : "jpg,gif,png"},     // 文件类型
+                ],
+                prevent_duplicates : true                                    // 不允许选取重复文件
+            },
+
+            init: {
+
+                PostInit: function() {
+                    $('#exec-upload').click(function(){
+                        uploader.start();
+                    });
+                },
+
+                // 添加上传文件成功
+                FilesAdded: function(up, files) {
+                    plupload.each(files, function(file) {
+                        // 添加显示
+                        $('#container').append(addFiles(file));
+
+                        // 添加事件
+                        $('#' + file.id).on('closed.bs.alert', function(){
+                            // 确定删除数据
+                            $.get('upload', {'sOldName':$(this).attr('img')});
+                        });
+                    });
+                },
+
+                // 上传进度显示
+                UploadProgress: function(up, file) {
+                    $('#'+ file.id + ' div.bar').css('width', file.percent + '%');
+                    if (file.percent == 100) $('#' + file.id + ' strong.text-warning').html('Complete');
+                },
+
+                // 错误处理
+                Error: function(up, err) {
+                    $.gritter.add({
+                        title:  "上传文件出现错误!",
+                        text:   'code:' + err.code + ', message:' + err.message + ', file:' + err.file.name,
+                        image:  "/Public/img/avatar.jpg",
+                        sticky: false,
+                        time:   "",
+                    });
+                },
+
+                // 文件上传成功
+                FileUploaded: function(up, file, response) {
+                    // 监听文件上传服务器返回
+                    if (response.status == 200)
+                    {
+                        try {
+                            // 解析json
+                            var json = $.parseJSON(response.response);
+                            layer.msg(json.msg, {icon:json.status == 1 ? 6 : 5, end:function(){
+                                if (json.status != 1) $('#' + file.id).remove();
+                                uploader.removeFile(file);
+                            }});
+
+                            // 上传成功的处理
+                            if (json.status == 1)
+                            {
+                                for (var i in json.data) {
+                                    $('#' + file.id).attr('img', json.data[i].sPath).append(addImage(file.id, json.data[i].sPath)).find('input[name=avatar]').val(json.data[i].sPath);
+                                    MeJcorP(file);
+                                }
+                            }
+                        } catch (e) {
+                            uploader.removeFile(file);
+                            $('#' + file.id + ' strong.text-warning').html('server error');
+                            layer.msg('服务器响应失败');
+                        }
+                    }
+                }
+            }
+        });
+
+        uploader.init();
+
+        $(document).on('click', '.me-cancel', function(){
+            $(this).parentsUntil('.alert-info').slideUp(1000, function(){
+                $(this).parent().remove().empty();
+            });
+        });
+
+        $(document).on('click', '.me-clipping', function(){
+            var f = $($(this).attr('form')),
+                l = layer.load(),
+                s = $(this);
+            if (f.find('input[name=x]').val() && f.find('input[name=y]').val() && f.find('input[name=w]').val() && f.find('input[name=h]').val())
+            {
+                $.ajax({
+                    type:       "POST",
+                    url:        f.attr('action'),
+                    data:       f.serialize(),
+                    dataType:   "json",
+                }).always(function(){
+                    layer.close(l)
+                }).done(function(json){
+                    if (json.status == 1)
+                    {
+                        s.parentsUntil('.alert-info').slideUp(1000, function(){
+                            $(this).parent().before('<img src="'+ json.data  +'?url=' + Math.random() + '"/>').remove().empty();
+                        });
+                    } else {
+                        $.gritter.add({
+                            title:  "图片裁剪出现问题：",
+                            text:   json.msg,
+                            image:  "/Public/img/avatar.jpg",
+                            sticky: false,
+                            time:   "",
+                        });
+                    }
+
+                }).fail(ajaxFail)
+            } else {
+                layer.msg('需要确定裁剪位置');
+            }
+
+            return false;
+        })
+    });
+
+</script>

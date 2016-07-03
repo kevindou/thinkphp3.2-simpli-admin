@@ -16,17 +16,17 @@
 <script type="text/javascript">
     var myTable = new MeTable({sTitle:"图片管理"},{
         "aoColumns":[
-			{"data":"id", "sName":"id", "title":"id", "edit":{"options":{"required":true,"number":true,}}, },
-			{"data":"title", "sName":"title", "title":"图片标题", "edit":{"options":{"rangelength":"[2, 50]"}}, },
-			{"data":"desc", "sName":"desc", "title":"图片描述", "edit":{"options":{"rangelength":"[2, 255]"}}, },
-			{"data":"url", "sName":"url", "title":"图片地址", "edit":{"options":{"rangelength":"[2, 100]"}}, },
-			{"data":"type", "sName":"type", "title":"图片类型（1 首页轮播图片 2 首页广告图片）", "edit":{"options":{"number":true,}}, },
-			{"data":"status", "sName":"status", "title":"图片状态", "edit":{"options":{"required":true,"number":true,}}, },
-			{"data":"sort", "sName":"sort", "title":"图片排序", "edit":{"options":{"required":true,"number":true,}}, },
-			{"data":"create_time", "sName":"create_time", "title":"创建时间", "edit":{"options":{"required":true,"number":true,}}, "createdCell":dateTimeString,},
-			{"data":"create_id", "sName":"create_id", "title":"创建用户", "edit":{"options":{"required":true,"number":true,}}, },
-			{"data":"update_time", "sName":"update_time", "title":"修改时间", "edit":{"options":{"required":true,"number":true,}}, "createdCell":dateTimeString,},
-			{"data":"update_id", "sName":"update_id", "title":"修改用户", "edit":{"options":{"required":true,"number":true,}}, },
+			{"title": "图片ID", "data": "id", "sName": "id", "edit": {"type": "hidden", "options": {"required":true,"number":true,}}, "search": {"type": "text"}},
+			{"title": "图片标题", "data": "title", "sName": "title", "edit": {"type": "text", "options": {"rangelength":"[2, 50]"}}, "search": {"type": "text"}, "bSortable": false}, 
+			{"title": "图片描述", "data": "desc", "sName": "desc", "edit": {"type": "text", "options": {"rangelength":"[2, 255]"}}, "bSortable": false}, 
+			{"title": "图片地址", "data": "url", "sName": "url", "edit": {"type": "text", "options": {"rangelength":"[2, 100]"}}, "bSortable": false}, 
+			{"title": "图片类型", "data": "type", "sName": "type", "edit": {"type": "text", "options": {"number":true,}}, "search": {"type": "text"}},
+			{"title": "图片状态", "data": "status", "sName": "status", "edit": {"type": "text", "options": {"required":true,"number":true,}}, "search": {"type": "text"}}, 
+			{"title": "图片排序", "data": "sort", "sName": "sort", "edit": {"type": "text", "options": {"required":true,"number":true,}}}, 
+			{"title": "创建时间", "data": "create_time", "sName": "create_time", "createdCell" : dateTimeString}, 
+			{"title": "创建用户", "data": "create_id", "sName": "create_id"}, 
+			{"title": "修改时间", "data": "update_time", "sName": "update_time", "createdCell" : dateTimeString}, 
+			{"title": "修改用户", "data": "update_id", "sName": "update_id"}, 
 			oOperate
         ],
 
