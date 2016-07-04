@@ -23,6 +23,20 @@ function createText(params) {return createInput(params, 'text')}
 function createPassword(params) {return createInput(params, 'password')}
 // 生成textarea
 function createTextarea(params){if(empty(params)){params={"class":" form-control","rows":5}}else{params["class"]+=" form-control";params["rows"]=5}return"<textarea "+handleParams(params)+"></textarea>"}
+
+// upload 上传文件
+function createImage(params)
+{
+    return '<div id="handle' + params['name'] + '"> \
+            <input type="hidden" '+handleParams(params)+'> \
+            <div class="mp-10"> \
+                <button class="btn btn-success file-select" type="button"> \
+                    上传文件 <i class="icon-upload-alt"></i>\
+                </button> \
+            </div> \
+        </div>';
+}
+
 // 生成radio
 function createRadio(params, data, checked){
     var html="",params=handleParams(params);
@@ -411,4 +425,211 @@ function viewTable(object, data, tClass, row)
         if (k.edit != undefined && k.edit.type == 'password') tmpValue = "******";
         (k.createdCell != undefined && typeof k.createdCell == "function") ? k.createdCell(dataInfo, tmpValue, data, row, undefined) : dataInfo.html(tmpValue);
     });
+}
+
+/**
+ * 添加显示信息
+ * @param file 上传文件对象
+ * @returns {string} 返回字符串
+ */
+function addFiles(file)
+{
+    return '<div class="alert alert-success" id="' + file.id + '"> \
+                <button class="close" data-dismiss="alert" type="button">×</button> \
+                <strong> ' + file.name + ' </strong> size:' + plupload.formatSize(file.size) + '<span class="pull-right"> status : <strong class="text-warning"> begin add </strong></span>\
+                <div class="progress progress-striped progress-success active mt-10 white"> \
+                    <div class="bar" style="width: 0;"></div> \
+                </div> \
+            </div>';
+}
+
+/**
+ * MeHandleImage()
+ * @param select 选择器字符串
+ * @param width  裁剪指定宽度
+ * @param height 裁剪指定高度
+ * @constructor
+ */
+function MeHandleImage(select, width, height)
+{
+    var bounds  = [],
+    // Grab some information about the preview pane
+        $oView  = $(select).parent().find('.me-view'),
+        $oImg   = $oView.find('img'),
+        $oInput =  $(select).parent().find('form input');
+    $(select).Jcrop({
+        onChange: handleCutOut,
+        onSelect: handleCutOut,
+        aspectRatio: width / height
+    },function(){
+        bounds = this.getBounds();          // 获取图片信息
+        $oView.appendTo(this.ui.holder);    // 移动显示
+    });
+
+    function handleCutOut(c)
+    {
+        if (parseInt(c.w) > 0)
+        {
+            var obj = [width / c.w, height / c.h];
+            $oImg.css({
+                width: Math.round(obj[0] * bounds[0]) + 'px',
+                height: Math.round(obj[1] * bounds[1]) + 'px',
+                marginLeft: '-' + Math.round(obj[0] * c.x) + 'px',
+                marginTop: '-' + Math.round(obj[1] * c.y) + 'px'
+            });
+        }
+
+        // 表单赋值
+        $oInput.attr({
+            x: c.x,
+            Y: c.y,
+            w: c.w,
+            h: c.h,
+        });
+    }
+}
+
+/**
+ * CutOutImage() 添加图片
+ * @param id  唯一ID
+ * @param src 图片地址
+ * @returns {string} 返回字符串
+ */
+function CutOutImage(select, id,  src, obj)
+{
+    $(select + ' .alert-success').append('<div  class="alert alert-info me-image-alert"> \
+            <img id="' + id + 'image" src="'+ src +'" alt="上传图片" class="img-rounded me-image"> \
+            <div class="pull-right"> \
+                <div class="me-view"> \
+                    <div> \
+                        <button  class="btn btn-info me-clipping" form="#' + id + 'form" type="button"> \
+                            确定裁剪 <i class="icon-retweet"></i> \
+                        </button> \
+                        <button  class="btn btn-warning ml-5 me-cancel" type="button"> \
+                            取消 <i class="icon-remove"></i> \
+                        </button> \
+                    </div> \
+                    <p class="mt-10 mb-10">预览：</p> \
+                    <div class="me-xian"> \
+                        <img src="' + src + '" alt="上传图片" class="img-thumbnail"/> \
+                    </div> \
+                </div> \
+            </div> \
+            <form name="'+id+'form" id="'+id+'form" action="clipping" method="POST">\
+                <input type="hidden" name="path" value="' + src + '" >\
+            </form>\
+        </div>');
+
+    return MeHandleImage('#' + id + 'image', obj[0], obj[1]);
+}
+
+/**
+ * MeUpload() 使用plupload.Uploader()上传文件
+ * @param select   上传文件域（DIV）选择器
+ * @param options  参数配置
+ * @param params   init 参数配置
+ * @param success  成功执行函数
+ * @returns {o.Uploader}
+ * @constructor
+ */
+function MeUpload(select)
+{
+    var success = typeof arguments[1] == 'function' ? arguments[1] : (typeof arguments[2] == 'function' ? arguments[2] : arguments[3]);
+    var obj = {
+        browse_button :       $(select + ' .file-select').get(0),       // 上传文件按钮.
+        container :           $(select).get(0),                         // 上传文件核心DIV
+        runtimes :            'html5,flash,silverlight,html4',          // 上传文件方式
+        flash_swf_url :       '/Public/js/plupload/Moxie.swf',          // swf上传文件
+        silverlight_xap_url : '/Public/js/plupload/js/Moxie.xap',       // 使用xap
+        url :                 'upload',                                 // 上传文件处理页面
+        // 文件限制
+        filters : {
+            max_file_size : '2mb',                                       // 文件大小
+            mime_types: [
+                {title : "Image files", extensions : "jpg,gif,png,jpeg"},// 文件类型
+            ],
+            prevent_duplicates : true                                    // 不允许选取重复文件
+        },
+
+        // 初始化
+        init:{
+            // 添加上传文件成功
+            FilesAdded: function(up, files) {
+                plupload.each(files, function(file) {
+                    // 添加显示
+                    $(select).append(addFiles(file)).find('.file-select').attr('disabled', true);
+
+                    // 添加事件
+                    $('#' + file.id).on('closed.bs.alert', function(){
+                        $(select + ' .file-select').attr('disabled', false);
+                        // 确定删除数据
+                        $.get('upload', {'sOldName':$(this).attr('img')}, function(){
+                            $(select + ' input[type=hidden]:first').val('');
+                        });
+                    });
+                });
+
+                // 开始上传
+                up.start();
+            },
+
+            // 文件上传
+            PostInit: function() {
+
+            },
+
+            // 上传进度显示
+            UploadProgress: function(up, file) {
+                $('#'+ file.id + ' div.bar').css('width', file.percent + '%');
+                if (file.percent == 100) $('#' + file.id + ' strong.text-warning').html('Complete');
+            },
+
+            // 文件上传成功
+            FileUploaded: function(up, file, response) {
+                // 监听文件上传服务器返回
+                if (response.status == 200)
+                {
+                    try {
+                        // 解析json
+                        var json = $.parseJSON(response.response);
+                        layer.msg(json.msg, {icon:json.status == 1 ? 6 : 5, end:function(){
+                            if (json.status != 1) $('#' + file.id).remove();
+                            up.removeFile(file);
+                        }});
+
+                        // 上传成功的处理
+                        if (json.status == 1)
+                        {
+                            for (var i in json.data)
+                            {
+                                $(select + ' input[type=hidden]:first').val(json.data[i].sPath);
+                                if (typeof success == 'function') success(file, json.data[i]);
+                            }
+                        }
+                    } catch (e) {
+                        up.removeFile(file);
+                        $('#' + file.id + ' strong.text-warning').html('server error');
+                        layer.msg('服务器响应失败...');
+                    }
+                }
+            },
+
+            // 错误处理
+            Error: function(up, err) {
+                $(select + ' .file-select').attr('disabled', false);
+                $.gritter.add({
+                    title:  "上传文件出现错误!",
+                    text:   'code:' + err.code + ', message:' + err.message + ', file:' + err.file.name,
+                    image:  "/Public/img/avatar.jpg",
+                    sticky: false,
+                    time:   ""
+                });
+            }
+        }
+    };
+
+    // 继承
+    if (typeof arguments[1] == 'object') obj      = $.extend(obj, typeof arguments[1]);
+    if (typeof arguments[2] == 'object') obj.init = $.extend(obj.init, typeof arguments[2]);
+    return new plupload.Uploader(obj);
 }
