@@ -24,9 +24,8 @@ class AuthController extends Controller
     public function where($params)
     {
         return [
-            'name'    => 'like',
-            'orderBy' => 'create_time',
-            'where'   => ['type' => ['eq', 2]], // 查询权限
+            'name'  => 'like',
+            'where' => ['type' => ['eq', 2]], // 查询权限
         ];
     }
 

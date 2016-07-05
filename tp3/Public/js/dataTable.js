@@ -123,9 +123,10 @@ var MeTable = (function($) {
                 aoData.push({"name":"params[" + data[i]['name'] + "]", "value":data[i]["value"]});
             }
 
-
             // 添加排序字段信息
-            if (aoData[mSort].value != undefined && aoData[mSort].value != "") aoData.push({"name":'params[orderBy]', "value": attributes[parseInt(aoData[mSort].value)]});
+            if (aoData[mSort].value !== undefined && aoData[mSort].value !== "") aoData.push({"name":'params[orderBy]', "value": attributes[parseInt(aoData[mSort].value)]});
+
+
 
             // ajax请求
             $.ajax({

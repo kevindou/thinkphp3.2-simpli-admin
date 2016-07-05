@@ -19,7 +19,6 @@ class MenuController extends Controller
             'id'      => 'eq',
             'url'     => 'like',
             'status'  => 'eq',
-            'orderBy' => 'id',
         ];
     }
 

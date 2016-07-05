@@ -20,7 +20,6 @@ class AdminController extends Controller
             'id'      => 'eq',
             'status'  => 'eq',
             'email'   => 'like',
-            'orderBy' => 'id',
         ];
 
         // 不是管理员只能看到自己和自己添加的用户

@@ -281,7 +281,6 @@ HTML;
                     $strWhere .= "\t\t\t'{$key}' => 'eq', \n";
                 }
 
-
                 // 排序
                 if ($value['bSortable'] == 0) $html .= '"bSortable": false, ';
 

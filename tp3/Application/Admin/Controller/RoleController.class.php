@@ -31,8 +31,7 @@ class RoleController extends Controller
         }
 
         return [
-            'orderBy' => 'create_time',
-            'where'   => $where, // 查询角色
+            'where' => $where, // 查询角色
         ];
     }
 

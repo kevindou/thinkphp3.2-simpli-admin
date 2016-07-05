@@ -58,17 +58,18 @@ class Controller extends \Common\Controller
         // 接收参数
         $aParams = post('params');                   // 查询参数
         $sOrder  = post('sSortDir_0', 'desc');       // 排序类型
+        $aWhere  = $this->where($aParams);           // 查询条件信息
+        $sFile   = isset($aParams['orderBy']) && ! empty($aParams['orderBy']) ? $aParams['orderBy'] : 'id'; // 排序字段
         $aSearch = [
-            'orderBy' => ['id' => 'desc'],           // 默认排序
+            'orderBy' => [$sFile => $sOrder],
             'where'   => [],                         // 查询条件
         ];
 
-        $aWhere = $this->where($aParams);            // 查询条件信息
-
-        // 处理排序字段
+        // 自定义了排序
         if (isset($aWhere['orderBy']) && ! empty($aWhere['orderBy']))
         {
-            $aSearch['orderBy'] = [$aWhere['orderBy'] => $sOrder];
+            // 判断自定义排序字段还是方式
+            $aSearch['orderBy'] = is_array($aWhere['orderBy']) ? $aSearch['orderBy'] : [$aSearch['orderBy'] => $sOrder];
             unset($aWhere['orderBy']);
         }
 
@@ -83,12 +84,10 @@ class Controller extends \Common\Controller
             {
                 foreach ($aParams as $key => $value)
                 {
-                    if (empty($value) || ! isset($aWhere[$key])) continue;
+                    if (! isset($aWhere[$key])) continue;
                     $tmpKey = $aWhere[$key];
                     if (is_array($tmpKey))
-                    {
                         $aSearch['where'][$key] = $tmpKey;
-                    }
                     else
                     {
                         if ($tmpKey == 'like') $value = "%{$value}%";
