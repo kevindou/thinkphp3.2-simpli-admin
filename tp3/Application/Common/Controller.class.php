@@ -106,10 +106,10 @@ class Controller extends \Think\Controller
     {
         $this->assign([
             'title'   => $type == 0 ? '操作出现错误' : '操作成功',   // 提示标题
-            'content' => $message,                                // 提示信息
-            'url'     => $url,                                    // 跳转页面
-            'type'    => $type,                                   // 跳转类型
-            'auto'    => $auto,                                   // 是否自动跳转
+            'content' => $message,                                   // 提示信息
+            'url'     => $url,                                       // 跳转页面
+            'type'    => $type,                                      // 跳转类型
+            'auto'    => $auto,                                      // 是否自动跳转
         ]);
 
         $this->display('Layout/error');
