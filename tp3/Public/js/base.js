@@ -608,6 +608,7 @@ function MeUpload(select)
                         }
                     } catch (e) {
                         up.removeFile(file);
+                        $(select + ' .file-select').attr('disabled', false);
                         $('#' + file.id + ' strong.text-warning').html('server error');
                         layer.msg('服务器响应失败...');
                     }
