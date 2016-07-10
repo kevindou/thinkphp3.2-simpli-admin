@@ -8,12 +8,16 @@
 
 namespace Common;
 
-use Think\Exception;
-
 class Auth
 {
+    // 类常量
     const ROLE_TYPE = 1;
     const AUTH_TYPE = 2;
+
+    // 类定义表名字
+    const ADMIN_TABLE = 'admin';
+    const AUTH_TABLE  = 'auth_item';
+    const CHILD_TABLE = 'auth_child';
 
     /**
      * handleItem() 处理数据信息
@@ -24,7 +28,7 @@ class Auth
      */
     public static function handleItem($sType, $iType, $uid = 0)
     {
-        $model   = M('auth_item');
+        $model   = M(self::AUTH_TABLE);
         $maxData = $model->validate([
             ['name', 'require', '名称不能为空'],
             ['name', '2,50', '长度必须为2到50个字符', 1, 'length'],
@@ -58,7 +62,7 @@ class Auth
     {
         // 添加数据
         $time = time();
-        return M('auth_item')->add([
+        return M(self::AUTH_TABLE)->add([
             'name'        => $name,
             'desc'        => $desc,
             'type'        => $iType,
@@ -75,7 +79,7 @@ class Auth
      */
     public static function updateItem($name, $desc)
     {
-        return M('auth_item')->where(['name' => $name])->save(['desc' => $desc, 'update_time' => time()]);
+        return M(self::AUTH_TABLE)->where(['name' => $name])->save(['desc' => $desc, 'update_time' => time()]);
     }
 
     /**
@@ -88,7 +92,7 @@ class Auth
     {
         return ($iType === self::ROLE_TYPE
             &&
-            (M('auth_child')->where(['parent' => $name])->count()) > 0)
+            (M(self::CHILD_TABLE)->where(['parent' => $name])->count()) > 0)
             ? '这个角色正在使用,不能删除' : (M('auth_item')->where(['name' => $name])->delete());
     }
 
@@ -100,7 +104,7 @@ class Auth
      */
     public static function addRoleItem($role, $auth)
     {
-        return M('auth_child')->add(['parent' => $role, 'child' => $auth]);
+        return M(self::CHILD_TABLE)->add(['parent' => $role, 'child' => $auth]);
     }
 
     /**
@@ -117,7 +121,7 @@ class Auth
         if ($uid !== 1)
         {
             // 查询用户信息
-            $objModel = M('admin');
+            $objModel = M(self::ADMIN_TABLE);
             $arrUser  = $objModel->where(['id' => $uid])->find();
             $isTrue   = false;
             if ($arrUser)
@@ -144,7 +148,7 @@ class Auth
         {
             try {
                 // 删除之前的权限
-                M('auth_child')->where(['parent' => $name])->delete();
+                M(self::CHILD_TABLE)->where(['parent' => $name])->delete();
                 // 添加权限
                 if ($items && is_array($items)) foreach ($items as $value) self::addRoleItem($name, $value);
                 return true;
@@ -175,7 +179,7 @@ class Auth
      */
     public static function getRole($name)
     {
-        return M('auth_item')->field(['name', 'desc'])->where(['name' => $name, 'type' => self::ROLE_TYPE])->find();
+        return M(self::AUTH_TABLE)->field(['name', 'desc'])->where(['name' => $name, 'type' => self::ROLE_TYPE])->find();
     }
 
     /**
@@ -186,7 +190,7 @@ class Auth
      */
     public static function hasRole($intUid, $name)
     {
-        $arrUser = M('admin')->field('roles')->where(['id' => $intUid])->find();
+        $arrUser = M(self::ADMIN_TABLE)->field('roles')->where(['id' => $intUid])->find();
         return  ($arrUser && ! empty($arrUser['roles'])) ? in_array($name, explode(',', $arrUser['roles']), true) : false;
     }
 
@@ -198,14 +202,14 @@ class Auth
     public static function getUserRoles($intUid)
     {
         // 判断是否为管理员
-        $where = ['type' => ['eq', Auth::ROLE_TYPE]];
+        $where = ['type' => ['eq', self::ROLE_TYPE]];
         if ($intUid !== 1) {
             $where = ['name' => ''];
-            $arrPowers = M('admin')->field(['roles'])->where(['id' => $intUid])->find();
+            $arrPowers = M(self::ADMIN_TABLE)->field(['roles'])->where(['id' => $intUid])->find();
             if (false !== $arrPowers && ! empty($arrPowers['roles'])) $where['name'] = ['in', $arrPowers['roles']];
         }
 
-        $arrPowers = M('auth_item')->field(['name', 'desc'])->where($where)->select(['index' => 'name']);
+        $arrPowers = M(self::AUTH_TABLE)->field(['name', 'desc'])->where($where)->select(['index' => 'name']);
         return Helper::map($arrPowers, 'name', 'desc');
     }
 
@@ -216,7 +220,7 @@ class Auth
      */
     public static function getRoleItems($name)
     {
-        $arrPowers = M('auth_child')->where(['parent' => $name])->select();
+        $arrPowers = M(self::CHILD_TABLE)->where(['parent' => $name])->select();
         return Helper::map($arrPowers, 'child', 'parent');
     }
 
@@ -241,7 +245,7 @@ class Auth
     public static function getItemDesc($arrPowers)
     {
         $arrDesc = [];
-        if ($arrPowers) $arrDesc = M('auth_item')->field(['name', 'desc'])->where(['name' => ['in', array_keys($arrPowers)]])->select();
+        if ($arrPowers) $arrDesc = M(self::AUTH_TABLE)->field(['name', 'desc'])->where(['name' => ['in', array_keys($arrPowers)]])->select();
         return Helper::map($arrDesc, 'name', 'desc');
     }
 
