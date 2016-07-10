@@ -11,6 +11,14 @@ function empty(val){return val==undefined||val==""}
 function in_array(val,arr){for(var i in arr){if(arr[i]===val){return true}}return false}
 // 首字母大写
 function ucfirst(str){return str.substr(0, 1).toUpperCase() + str.substr(1)}
+// array_unique
+function array_unique(arr)
+{
+    var array = [];
+    for (var i in arr) { if ( ! in_array(arr[i], array)) array.push(arr[i]);}
+    return array
+}
+
 // 连接参数为字符串
 function handleParams(params, prefix){var other=""; prefix = prefix ? prefix : '';if(params!=undefined&&typeof params=="object"){for(var i in params){other+=" "+i+'="'+prefix + params[i]+'" '}}return other}
 // 生成label
@@ -378,9 +386,14 @@ function InitForm(select, data) {
     objForm = $(select).get(0); // 获取表单对象
     if (objForm != undefined)
     {
+        var radios = [];
         $(objForm).find('input[type=hidden]').val('');                                  // 隐藏按钮充值
-        $(objForm).find('input[type=checkbox]').each(function(){$(this).attr('checked', false);if ($(this).get(0)) $(this).get(0).checked = false;});                                                                             // 多选菜单
+        $(objForm).find('input[type=checkbox]').each(function(){$(this).attr('checked', false).parent('span').removeClass('checked');if ($(this).get(0)) $(this).get(0).checked = false;});                                                                             // 多选菜单
+        $(objForm).find('input[type=radio]').each(function(){$(this).attr('checked', false).parent('span').removeClass('checked');radios.push($(this).attr('name')); if ($(this).get(0)) $(this).get(0).checked = false;});                                                                             // 多选菜单
         objForm.reset();                                                                // 表单重置
+        console.info(radios);
+        radios = array_unique(radios);
+        console.info(radios)
         if (data != undefined)
         {
             for (var i in data)
@@ -397,7 +410,7 @@ function InitForm(select, data) {
                         else {
                             // 多选按钮
                             if (parseInt(data[i][x]) > 0) {
-                                $('input[type=checkbox][value=' + data[i][x] + ']').attr('checked', true).each(function(){this.checked=true});
+                                $('input[type=checkbox][value=' + data[i][x] + ']').attr('checked', true).each(function(){this.checked=true; $(this).parent('span').addClass('checked')});
                             }
                         }
                     }
@@ -410,6 +423,7 @@ function InitForm(select, data) {
                     // 时间处理
                     if (obj.hasClass('time')) tmp = timeFormat(parseInt(tmp), 'yyyy/MM/dd hh:mm:ss');
                     objForm[i].value = tmp;
+                    if (in_array(i, radios)) $(objForm).find('input[type=radio][name=' + i + '][value=' + tmp + ']').parent('span').addClass('checked')
                 }
             }
         }
