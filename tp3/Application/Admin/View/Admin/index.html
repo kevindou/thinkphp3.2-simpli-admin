@@ -1,24 +1,104 @@
+<style type="text/css">
+    .mt-text span {padding-left: 10px;}
+</style>
+<div class="box-header">
+    <h2><i class="icon-list"></i>管理员信息</h2>
+</div>
 <div class="box-content">
-    <table class="table table-bordered table-striped my-table">
-        <tbody>
-        <tr>
-            <td width="20%">登录账号</td>
-            <td>{$Think.session.my_admin.username}</td>
-        </tr>
-        <tr>
-            <td>注册时间</td>
-            <td class="dtime">{$Think.session.my_admin.create_time}</td>
-        </tr>
-        <tr>
-            <td>上次登录时间</td>
-            <td class="dtime">{$Think.session.my_admin.last_time}</td>
-        </tr>
-        <tr>
-            <td>上次登录IP</td>
-            <td>{$Think.session.my_admin.last_ip}</td>
-        </tr>
-        </tbody>
-    </table>
+    <ul class="nav tab-menu nav-tabs" id="myTab">
+        <li class="active"><a href="#messages">登录信息</a></li>
+        <li><a href="#info">修改密码</a></li>
+    </ul>
+
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane" id="info">
+
+        </div>
+        <div class="tab-pane active" id="messages">
+            <ul class="dashboard-list">
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-user green"></i>
+                            <span class="green">账号</span>
+                        </div>
+                        <div class="span10">
+                            {$Think.session.my_admin.username}
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-arrow-up green"></i>
+                            <span class="green">邮箱</span>
+                        </div>
+                        <div class="span10">
+                            {$Think.session.my_admin.email}
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-arrow-up green"></i>
+                            <span class="green">头像</span>
+                        </div>
+                        <div class="span10">
+                            <img src="{$Think.session.my_admin.face}" style="width:160px; height:160px;">
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-arrow-up green"></i>
+                            <span class="green">注册时间</span>
+                        </div>
+                        <div class="span10 me-time">
+                            {$Think.session.my_admin.create_time}
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-arrow-up green"></i>
+                            <span class="green">上次登录时间</span>
+                        </div>
+                        <div class="span10 me-time">
+                            {$Think.session.my_admin.last_time}
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-arrow-up green"></i>
+                            <span class="green">上次登录IP</span>
+                        </div>
+                        <div class="span10 me-time">
+                            {$Think.session.my_admin.last_ip}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="myModal">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h3>Settings</h3>
+    </div>
+    <div class="modal-body">
+        <p>Here settings can be configured...</p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <a href="#" class="btn btn-primary">Save changes</a>
+    </div>
 </div>
 <script type="text/javascript">
     $(function()

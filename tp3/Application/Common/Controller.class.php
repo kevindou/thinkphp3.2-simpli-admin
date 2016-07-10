@@ -40,7 +40,11 @@ class Controller extends \Think\Controller
         }
 
         // 将用户信息转换为对象
-        $this->user = (object)['id' => (int)$_SESSION[$this->_admin]['id'], 'name' => $_SESSION[$this->_admin]['username']];
+        $this->user = (object)[
+            'id'   => (int)$_SESSION[$this->_admin]['id'],  // 用户ID
+            'name' => $_SESSION[$this->_admin]['username'], // 用户名
+            'face' => $_SESSION[$this->admin]['face'],      // 用户头像
+        ];
     }
 
     // 图片上传
