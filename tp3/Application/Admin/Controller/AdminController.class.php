@@ -36,7 +36,17 @@ class AdminController extends Controller
     }
 
     // 显示进入首页
-    public function login() {$this->display('Admin/index');}
+    public function login()
+    {
+        // 角色信息
+        $roles = Auth::getUserRoles($this->user->id);
+        $roles = empty($roles) ? ($this->user->id == 1 ? '超级管理员' : '普通游客') : implode(',', $roles);
+
+        $this->render('Admin/index', [
+            'roles' => $roles,
+            'user'  => $_SESSION[$this->_admin],
+        ]);
+    }
 
     // 首页显示
     public function index()
@@ -63,6 +73,21 @@ class AdminController extends Controller
             unset($model->password);
         else
            $model->password = sha1($model->password);
+        return true;
+    }
+
+    // 修改之后的处理
+    public function afterSave($old, $new, $type)
+    {
+        if (isset($new['face']) && ! empty($new['face'])) $_SESSION[$this->_admin]['face'] = $new['face'];
+        return true;
+    }
+
+    // 上传图片之后的处理
+    public function afterUpload($info)
+    {
+        $path = '/Public/Uploads/'.$info['file']['savepath'].$info['file']['savename'];
+        if (M('admin')->where(['id' => $this->user->id])->save(['face' => $path])) $_SESSION[$this->_admin]['face'] = $path;
         return true;
     }
 }

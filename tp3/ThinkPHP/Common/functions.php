@@ -1556,10 +1556,18 @@ function in_array_case($value,$array){
  * @param  mixed   $defualt 为空的默认值
  * @return mixed  返回接收到的参数信息
  */
-function post($name, $default = '')
+function post($name = '', $default = '')
 {
-    if (isset($_POST[$name]) && ! empty($_POST[$name])) $default = $_POST[$name];
-    if ( ! empty($default) && is_string($default)) $default = trim($default);
+    if (empty($name))
+    {
+        $default = $_POST;
+    }
+    else
+    {
+        if (isset($_POST[$name]) && ! empty($_POST[$name])) $default = $_POST[$name];
+        if ( ! empty($default) && is_string($default)) $default = trim($default);
+    }
+
     return $default;
 }
 
@@ -1570,10 +1578,18 @@ function post($name, $default = '')
  * @param  mixed   $defualt 为空的默认值
  * @return mixed  返回接收到的参数信息
  */
-function get($name, $default = '')
+function get($name = '', $default = '')
 {
-    if (isset($_GET[$name]) && ! empty($_GET[$name])) $default = $_GET[$name];
-    if ( ! empty($default) && is_string($default)) $default = trim($default);
+    if (empty($name))
+    {
+        $default = $_GET;
+    }
+    else
+    {
+        if (isset($_GET[$name]) && ! empty($_GET[$name])) $default = $_GET[$name];
+        if ( ! empty($default) && is_string($default)) $default = trim($default);
+    }
+
     return $default;
 }
 

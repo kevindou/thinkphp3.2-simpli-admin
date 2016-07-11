@@ -19,66 +19,78 @@
                 <li>
                     <div class="row-fluid">
                         <div class="span2 mt-text">
-                            <i class="icon-user green"></i>
-                            <span class="green">账号</span>
+                            <i class="icon-user blue"></i>
+                            <span class="blue">账号</span>
                         </div>
-                        <div class="span10">
-                            {$Think.session.my_admin.username}
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div class="row-fluid">
-                        <div class="span2 mt-text">
-                            <i class="icon-arrow-up green"></i>
-                            <span class="green">邮箱</span>
-                        </div>
-                        <div class="span10">
-                            {$Think.session.my_admin.email}
+                        <div class="span10 text-success">
+                            {$users.name}
                         </div>
                     </div>
                 </li>
                 <li>
                     <div class="row-fluid">
                         <div class="span2 mt-text">
-                            <i class="icon-arrow-up green"></i>
-                            <span class="green">头像</span>
+                            <i class="icon-fire red"></i>
+                            <span class="red">角色信息</span>
                         </div>
-                        <div class="span10">
-                            <img src="{$Think.session.my_admin.face}" style="width:160px; height:160px;">
+                        <div class="span10 text-success">
+                            {$roles}
                         </div>
                     </div>
                 </li>
                 <li>
                     <div class="row-fluid">
                         <div class="span2 mt-text">
-                            <i class="icon-arrow-up green"></i>
-                            <span class="green">注册时间</span>
+                            <i class="icon-envelope-alt blue"></i>
+                            <span class="blue">邮箱</span>
+                        </div>
+                        <div class="span10 text-success">
+                            {$user.email}
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-picture blue"></i>
+                            <span class="blue">头像</span>
+                        </div>
+                        <div class="span10" id="handlefile">
+                            <img src="{$users.face}" class="file-select" style="width:160px; height:160px;">
+                            <p class="red"> ( * 点击图片更换头像 ) </p>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="row-fluid">
+                        <div class="span2 mt-text">
+                            <i class="icon-time red"></i>
+                            <span class="red">注册时间</span>
                         </div>
                         <div class="span10 me-time">
-                            {$Think.session.my_admin.create_time}
+                            {$user.create_time}
                         </div>
                     </div>
                 </li>
                 <li>
                     <div class="row-fluid">
                         <div class="span2 mt-text">
-                            <i class="icon-arrow-up green"></i>
-                            <span class="green">上次登录时间</span>
+                            <i class="icon-calendar blue"></i>
+                            <span class="blue">上次登录时间</span>
                         </div>
                         <div class="span10 me-time">
-                            {$Think.session.my_admin.last_time}
+                            {$user.last_time}
                         </div>
                     </div>
                 </li>
                 <li>
                     <div class="row-fluid">
                         <div class="span2 mt-text">
-                            <i class="icon-arrow-up green"></i>
-                            <span class="green">上次登录IP</span>
+                            <i class="icon-coffee blue"></i>
+                            <span class="blue">上次登录IP</span>
                         </div>
-                        <div class="span10 me-time">
-                            {$Think.session.my_admin.last_ip}
+                        <div class="span10">
+                            {$user.last_ip}
                         </div>
                     </div>
                 </li>
@@ -86,28 +98,14 @@
         </div>
     </div>
 </div>
-
-<div class="modal hide fade" id="myModal">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h3>Settings</h3>
-    </div>
-    <div class="modal-body">
-        <p>Here settings can be configured...</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
-        <a href="#" class="btn btn-primary">Save changes</a>
-    </div>
-</div>
 <script type="text/javascript">
     $(function()
     {
-        $('.dtime').each(function(){$(this).html(timeFormat(parseInt($(this).html()), "yyyy-MM-dd hh:mm:ss"))});
-        $('.my-table').before(createImage({'name':'file'}));
+        $('.me-time').each(function(){$(this).html(timeFormat(parseInt($(this).html()), "yyyy-MM-dd hh:mm:ss"))});
 
         // 文件上传
         var uploader = MeUpload('#handlefile', function(file, data){
+            $('#handlefile img').attr('src', data.sPath);
             CutOutImage('#handlefile', file.id, data.sPath, [160, 160]);
         });
         uploader.init();
@@ -115,7 +113,7 @@
         // 取消图片裁剪
         $(document).on('click', '.me-cancel', function(){
             $(this).parentsUntil('.alert-info').slideUp(1000, function(){
-                $(this).parent().remove().empty();
+                $(this).parent().parent().parent().remove().empty();
             });
         });
 
@@ -142,9 +140,9 @@
                 }).done(function(json){
                     if (json.status == 1)
                     {
-                        $('#handlefile .alert-info').slideUp(1000, function(){
-                            $(this).remove().empty();
-                            $('#handlefile .alert-success').append('<img src="'+ json.data  +'?url=' + Math.random() + '"/>');
+                        $('#handlefile .alert-info').slideUp(1000, function() {
+                            $(this).parent().remove().empty();
+                            $('#handlefile img').attr('src', $('#handlefile img').attr('src') + '?time=' + Math.random());
                         });
                     } else {
                         $.gritter.add({

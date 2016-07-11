@@ -18,18 +18,16 @@
                     <!-- start: User Dropdown -->
                     <li class="dropdown">
                         <a class="btn account dropdown-toggle" data-toggle="dropdown" href="#">
-                            <div class="avatar"><img src="__PUBLIC__/img/avatar.jpg" alt="Avatar" /></div>
+                            <div class="avatar"><img src="{$users.face}" alt="Avatar" /></div>
                             <div class="user">
                                 <span class="hello">欢迎登录!</span>
-                                <span class="name">{$Think.session.my_admin.username}</span>
+                                <span class="name">{$users.name}</span>
                             </div>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="dropdown-menu-title"></li>
-                            <!--<li><a href="#"><i class="icon-user"></i> Profile</a></li>
-                            <li><a href="#"><i class="icon-cog"></i> Settings</a></li>
-                            <li><a href="#"><i class="icon-envelope"></i> Messages</a></li>-->
-                            <li><a href="{:U('Index/logout')}"><i class="icon-off"></i> 退出</a></li>
+                            <li><a href="{:U('admin/login')}"><i class="icon-cog"></i> 修改密码 </a></li>
+                            <li><a href="{:U('index/logout')}"><i class="icon-off"></i> 退出 </a></li>
                         </ul>
                     </li>
                     <!-- end: User Dropdown -->

@@ -33,7 +33,7 @@ class Controller extends \Common\Controller
     {
         // 判断是否已经登录
         parent::_initialize();
-
+        
         // 不是管理员需要验证权限
         if ($this->user->id !== 1)
         {
@@ -45,8 +45,11 @@ class Controller extends \Common\Controller
             }
         }
 
-        // 注入导航栏
-        $this->assign('menus', Auth::getUserMenus($this->user->id));
+        // 初始化注入变量
+        $this->assign([
+            'users' => ['name' => $this->user->name, 'face' => $this->user->face],
+            'menus' => Auth::getUserMenus($this->user->id)
+        ]);
     }
 
     // 获取数据页面
@@ -181,7 +184,7 @@ class Controller extends \Common\Controller
 
                         $this->arrError['data'] = $model->getLastSql();
                         // 判断操作成功
-                        if ($isTrue)
+                        if ($isTrue && $this->afterSave($data, post(), $type))
                         {
                             // 返回数据信息
                             $this->arrError = [
@@ -207,7 +210,7 @@ class Controller extends \Common\Controller
 
         // 接收上传文件信息
         $upload = new \Think\Upload();                     // 实例化上传文件类
-        $upload->maxSize  = 1024 * 1024 * 1;               // 上传文件大小
+        $upload->maxSize  = 1048576;                       // 上传文件大小
         $upload->exts     = ['jpg', 'gif', 'png', 'jpeg']; // 上传文件类型
         $upload->rootPath = './Public/Uploads/';           // 上传文件保存的根目录
         $upload->subName  = ['date', 'Ymd'];               // 上传保存子目录
@@ -218,7 +221,7 @@ class Controller extends \Common\Controller
         $this->arrError['msg'] = $upload->getError();
 
         // 上传成功
-        if ($info)
+        if ($info && $this->afterUpload($info))
         {
             $arrInfo = [];
             foreach ($info as $value)
@@ -294,4 +297,21 @@ class Controller extends \Common\Controller
 
     // 删除之前的处理
     protected function beforeDelete(&$model) {return true;}
+
+    /**
+     * afterSave() 修改之后(新增\修改\删除)
+     * @access protected
+     * @param  array  $old  旧的数据
+     * @param  array  $new  新的数据
+     * @param  string $type 修改类型
+     * @return bool
+     */
+    protected function afterSave($old, $new, $type) {return true;}
+
+    /**
+     * afterUpload() 上传图片之后的处理
+     * @param  array $info 上传图片信息
+     * @return bool  处理完成返回true
+     */
+    protected function afterUpload($info) {return true;}
 }

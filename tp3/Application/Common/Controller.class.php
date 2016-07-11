@@ -23,19 +23,20 @@ class Controller extends \Think\Controller
     // 用户登录验证
     public function isLogin()
     {
-        return isset($_SESSION[$this->_admin]) && !empty($_SESSION[$this->_admin]);
+        return isset($_SESSION[$this->_admin]) && isset($_SESSION[$this->_admin]['id']) && ! empty($_SESSION[$this->_admin]['id']);
     }
 
     // 初始化验证用户登录
     public function _initialize()
     {
         // 判断是否已经登录
-        if (!$this->isLogin()) {
+        if (!$this->isLogin())
+        {
             if (IS_AJAX) {
                 $this->arrError['msg'] = '请先登录...';
                 $this->ajaxReturn();
             } else {
-                $this->redirect('Index/index');
+                $this->redirect('index/index');
             }
         }
 
@@ -43,7 +44,7 @@ class Controller extends \Think\Controller
         $this->user = (object)[
             'id'   => (int)$_SESSION[$this->_admin]['id'],  // 用户ID
             'name' => $_SESSION[$this->_admin]['username'], // 用户名
-            'face' => $_SESSION[$this->admin]['face'],      // 用户头像
+            'face' => $_SESSION[$this->_admin]['face'],     // 用户头像
         ];
     }
 
@@ -78,6 +79,7 @@ class Controller extends \Think\Controller
                 ];
             }
         }
+
         // 获取上传的Url
         $this->ajaxReturn();
     }
@@ -110,10 +112,10 @@ class Controller extends \Think\Controller
     {
         $this->assign([
             'title'   => $type == 0 ? '操作出现错误' : '操作成功',   // 提示标题
-            'content' => $message,                                   // 提示信息
-            'url'     => $url,                                       // 跳转页面
-            'type'    => $type,                                      // 跳转类型
-            'auto'    => $auto,                                      // 是否自动跳转
+            'content' => $message,                               // 提示信息
+            'url'     => $url,                                   // 跳转页面
+            'type'    => $type,                                  // 跳转类型
+            'auto'    => $auto,                                  // 是否自动跳转
         ]);
 
         $this->display('Layout/error');
