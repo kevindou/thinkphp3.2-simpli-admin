@@ -106,6 +106,7 @@ var MeTable = (function($) {
 			iViewLoading: 0, 				// 详情加载Loading
 			iLoading:     0, 				// 页面加载Loading
 			bViewFull: 	  false,			// 详情打开的方式 1 2 打开全屏
+            bColResize:   true,             // 列宽可拖拽
 		};
 
         // 服务器数据处理
@@ -348,13 +349,17 @@ var MeTable = (function($) {
 		}
 
 		// 判断开启editTable
-		if (self.options.bEditTable) {
+		if (self.options.bEditTable)
+		{
 			$.fn.editable.defaults.mode = 'inline';
 			$.fn.editableform.loading = "<div class='editableform-loading'><i class='ace-icon fa fa-spinner fa-spin fa-2x light-blue'></i></div>";
 			$.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>'+
 					'<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
 			$.fn.editable.defaults.ajaxOptions = {type: "POST", dataType:'json'};
 		}
+
+        // 判断开启列宽拖拽
+        // if (self.options.bColResize) $(self.options.sTable).colResizable();
 	};
 
 	// 表格搜索

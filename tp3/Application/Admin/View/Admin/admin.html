@@ -45,7 +45,7 @@
             {"data":"last_ip", "sName":"last_ip", "bSortable":false, "title":"最后登录IP"},
             {"data": null, "title":"操作", "bSortable":false, "createdCell":setOperate, "width":"120px"}
         ],
-
+        dom: 'Zlfrtip',
         "columnDefs":[{"targets":[2,3], "visible":false}],
     });
 
@@ -66,7 +66,6 @@
 
     $(function(){
         myTable.init();
-        $(".table").colResizable();
         uploader = MeUpload('#handleface');
         uploader.init();
     })
