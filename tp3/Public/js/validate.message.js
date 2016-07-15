@@ -17,7 +17,12 @@ jQuery.extend(jQuery.validator.messages, {
     max: jQuery.validator.format("请输入一个最大为{0}的值"),
     min: jQuery.validator.format("请输入一个最小为{0}的值"),
     checkPass:'密码必须为字母和数组组合字符串',
-    neqTo:'填写新值出现重复',
+    neqTo: '填写新值出现重复',
+});
+
+// 添加验证值不能相同
+jQuery.validator.addMethod('neqTo', function(value, element, params){
+    return value != $(params).val();
 });
 
 var isHave = false

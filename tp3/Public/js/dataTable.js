@@ -62,9 +62,6 @@ var oTableLanguage = {
 	}
 };
 
-// ajax出现错误调用
-function ajaxFail(){ return layer.msg("服务器繁忙,请稍候再试...", {time:1000, icon:2})}
-
 var MeTable = (function($) {
 	// 构造函数初始化配置
 	function MeTable(options, tableOptions, detailOptions) {
