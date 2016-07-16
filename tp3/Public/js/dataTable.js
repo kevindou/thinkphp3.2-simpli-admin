@@ -100,6 +100,7 @@ var MeTable = (function($) {
 			oEditTable:   {},				// 行内编辑对象信息
 			sEditUrl:	  "inline",			// 行内编辑请求地址
 			sEditPk: 	  "id",				// 行内编辑pk索引值
+			sExportUrl:	  "export",			// 数据导出地址
 			iViewLoading: 0, 				// 详情加载Loading
 			iLoading:     0, 				// 页面加载Loading
 			bViewFull: 	  false,			// 详情打开的方式 1 2 打开全屏
@@ -319,7 +320,8 @@ var MeTable = (function($) {
 		$(document).on('click', '.me-table-view', function(evt){evt.preventDefault();self.view($(this).attr('table-data'))});
 		$('.me-table-delete').click(function(evt){evt.preventDefault();self.deleteAll();});
 		$('.me-table-save').click(function(evt){evt.preventDefault();self.save();});
-		$('.me-table-reload').click(function(evt){evt.preventDefault();self.search();});
+		$('.me-table-reload').click(function(evt){evt.preventDefault();self.search(false);});
+		$('.me-table-export').click(function(evt){evt.preventDefault();self.export();});
 
 		// 行选择
         $(document).on('click', self.options.sTable + ' th input:checkbox' , function(){
@@ -356,11 +358,11 @@ var MeTable = (function($) {
 		}
 
         // 判断开启列宽拖拽
-        // if (self.options.bColResize) $(self.options.sTable).colResizable();
+        if (self.options.bColResize) $(self.options.sTable).colResizable();
 	};
 
 	// 表格搜索
-	MeTable.prototype.search = function() {this.table.draw();};
+	MeTable.prototype.search = function() {this.table.draw(false);};
 
 	// 初始化表单对象
 	MeTable.prototype.initForm = function(data, isDetail)
@@ -503,5 +505,33 @@ var MeTable = (function($) {
 		}).fail(ajaxFail);
 		return false;
 	};
+
+	// 数据导出
+	MeTable.prototype.export = function(bAll) {
+		var self = this,
+			html = '<form action="' + self.options.sExportUrl + '" method="POST" style="display:none">';
+		html += '<input type="hidden" name="iSize" value="' + (bAll ? 0 : $('select[name=' + self.options.sTable.replace('#', '') + '_length]').val()) + '"/>';
+		html += '<input type="hidden" name="sTitle" value="' + self.options.sTitle + '"/>';
+
+
+		// 添加字段信息
+		this.tableOptions.aoColumns.forEach(function(k, v){
+			if (k.data != null && (k.isExport == undefined)) html += '<input type="hidden" name="aFields[' + k.data + ']" value="' + k.title + '"/>';
+		});
+
+		// 添加查询条件
+		var value = $(self.options.sSearchForm).serializeArray();
+		for (var i in value)
+		{
+			if (empty(value[i]["value"]) || value[i]["value"] == "All") continue;
+			html += '<input type="hidden" name="params[' + value[i]['name'] + ']" value="' + value[i]["value"] + '"/>';
+		}
+
+		// 表单提交
+		var form = $(html);
+		$('body').append(form);
+		form.submit();
+	};
+
 	return MeTable;
 })($);

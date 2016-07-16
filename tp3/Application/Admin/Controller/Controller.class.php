@@ -15,7 +15,7 @@ use Common\Auth;
 class Controller extends \Common\Controller
 {
     // 定义验证数据、模型、主键
-    protected $validate = [], $model = 'admin', $pk = 'id';
+    protected $validate = [], $model = 'admin', $pk = 'id', $thumb = [160, 160];
 
     /**
      * where() 查询方法
@@ -201,13 +201,108 @@ class Controller extends \Common\Controller
         $this->ajaxReturn();
     }
 
-    // 文件上传
-    public function upload()
+    // 数据导出
+    public function export()
     {
-        // 删除图片处理
-        $strOldName = get('sOldName');
-        if ($strOldName && file_exists('.'.$strOldName)) unlink('.'.$strOldName);
+        // 接收参数
+        $arrFields = post('aFields'); // 字段信息
+        $intSize   = (int)post('iSize');   // 查询数据条数
+        $strTitle  = post('sTitle');  // 标题信息
 
+        // 数据验证
+        if (IS_POST && $arrFields && $strTitle)
+        {
+            set_time_limit(0);
+            // 查询信息
+            $aSearch = $this->query();
+            $arrKeys = array_keys($arrFields); // 所有的字段
+
+            // 查询数据
+            $objQuery = M($this->model)->field($arrKeys)->where($aSearch['where']);
+            if ($intSize > 0) $objQuery = $objQuery->limit($intSize);
+            $data     = $objQuery->select();
+            $this->arrError['msg'] = '没有需要导出的数据';
+            if ($data)
+            {
+                // 1 引入phpExcel类
+                import('Org.Util.PHPExcel'); // 没有命名空间使用 import 引入
+
+                // 实例化一个phpExcel类
+                $objPHPExcel = new \PHPExcel();
+
+                $objPHPExcel->getProperties()->setCreator("Liujx Admin")
+                ->setLastModifiedBy("Liujx Admin")
+                ->setTitle("Office 2007 XLSX Test Document")
+                ->setSubject("Office 2007 XLSX Test Document")
+                ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                ->setKeywords("office 2007 openxml php")
+                ->setCategory("Test result file");
+
+                $objPHPExcel->setActiveSheetIndex(0);
+
+                // 获取显示列的信息
+                $intLength = count($arrFields);
+                $arrLetter = range('A', 'Z');
+                if ($intLength > 26)
+                {
+                    $arrLetters = array_slice($arrLetter, 0, $intLength - 26);
+                    if ($arrLetters) foreach ($arrLetters as $value) array_push($arrLetter, 'A'.$value);
+                }
+
+                $arrLetter = array_slice($arrLetter, 0, $intLength);
+
+
+                // 确定第一行信息
+                foreach ($arrLetter as $key => $value)
+                {
+                    $objPHPExcel->getActiveSheet()->setCellValue($value.'1', $arrFields[$arrKeys[$key]]);
+                }
+
+                // 写入数据信息
+                $intNum = 2;
+                foreach ($data as $value)
+                {
+                    // 写入信息数据
+                    foreach ($arrLetter as $intKey => $strValue)
+                    {
+                        $objPHPExcel->getActiveSheet()->setCellValue($strValue.$intNum, $value[$arrKeys[$intKey]]);
+                    }
+
+                    $intNum ++;
+                }
+
+
+                // 设置sheet 标题信息
+                $objPHPExcel->getActiveSheet()->setTitle($strTitle);
+                $objPHPExcel->setActiveSheetIndex(0);
+
+                // 设置头信息
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                header('Content-Disposition: attachment;filename="'.$strTitle.'.xlsx"');
+                header('Cache-Control: max-age=0');
+                header('Cache-Control: max-age=1');
+                header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+                header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+                header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+                header('Pragma: public'); // HTTP/1.0
+
+                // 直接输出文件
+                $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+                $objWriter->save('php://output');
+                exit;
+            }
+        }
+
+        $this->redirect('index');
+    }
+
+    /**
+     * beforeUpload() 文件上传之前 对文件的一些验证
+     * @access protected
+     * @return object 返回上传对象
+     */
+    protected function beforeUpload()
+    {
         // 接收上传文件信息
         $upload = new \Think\Upload();                     // 实例化上传文件类
         $upload->maxSize  = 1048576;                       // 上传文件大小
@@ -215,6 +310,18 @@ class Controller extends \Common\Controller
         $upload->rootPath = './Public/Uploads/';           // 上传文件保存的根目录
         $upload->subName  = ['date', 'Ymd'];               // 上传保存子目录
         $upload->saveName = ['uniqid', CONTROLLER_NAME];   // 文件名称
+        return $upload;
+    }
+
+    // 文件上传
+    public function upload()
+    {
+        // 删除图片处理
+        $strOldName = get('sOldName');
+        if ($strOldName && file_exists('.'.$strOldName)) unlink('.'.$strOldName);
+
+        // 获取上传对象
+        $upload = $this->beforeUpload();
 
         // 文件上传
         $info = $upload->upload();
@@ -229,7 +336,7 @@ class Controller extends \Common\Controller
                 $arrInfo[] = [
                     'sOldName' => $value['name'],                                           // 旧文件名
                     'sNewName' => $value['savename'],                                       // 新文件名
-                    'sPath'    => '/Public/Uploads/'.$value['savepath'].$value['savename'], // 文件路径
+                    'sPath'    => trim($upload->rootPath, '.').$value['savepath'].$value['savename'], // 文件路径
                 ];
             }
 
@@ -265,7 +372,7 @@ class Controller extends \Common\Controller
                 {
                     $image->open($strPath);
                     $this->arrError['msg'] = '图片缩放失败';
-                    if ($image->thumb(160, 160, \Think\Image::IMAGE_THUMB_SCALE)->save($strPath))
+                    if ($image->thumb($this->thumb[0], $this->thumb[1], \Think\Image::IMAGE_THUMB_SCALE)->save($strPath))
                     {
                         $this->arrError = [
                             'status' => 1,
@@ -309,8 +416,8 @@ class Controller extends \Common\Controller
     protected function afterSave($old, $new, $type) {return true;}
 
     /**
-     * afterUpload() 上传图片之后的处理
-     * @param  array $info 上传图片信息
+     * afterUpload() 上传文件之后的处理
+     * @param  array $info 上传文件信息
      * @return bool  处理完成返回true
      */
     protected function afterUpload($info) {return true;}

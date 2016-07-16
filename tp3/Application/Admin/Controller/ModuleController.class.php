@@ -298,9 +298,10 @@ HTML;
 <div class="box-header" data-original-title="">
     <h2><i class="icon-desktop"></i><span class="break"></span></h2>
     <div class="box-icon">
-        <a title="添加" href="#" class="me-table-insert"><i class="icon-plus"></i></a>
-        <a id="table-refresh" class="me-table-reload" title="刷新" href="#"><i class="icon-refresh"></i></a>
-        <a id="toggle-fullscreen" class="hidden-phone hidden-tablet" title="全屏" href="#"><i class="icon-fullscreen"></i></a>
+        <a title="导出" class="me-table-export"><i class="icon-download-alt"></i></a>
+        <a title="添加" class="me-table-insert"><i class="icon-plus"></i></a>
+        <a title="刷新" class="me-table-reload" id="table-refresh"  ><i class="icon-refresh"></i></a>
+        <a title="全屏" id="toggle-fullscreen" class="hidden-phone hidden-tablet"  href="#"><i class="icon-fullscreen"></i></a>
         <a class="btn-minimize" title="隐藏" href="#"><i class="icon-chevron-up"></i></a>
         <a class="btn-close" title="删除" href="#"><i class="icon-remove"></i></a>
     </div>

@@ -20,7 +20,10 @@ class AdminController extends Controller
             'id'      => 'eq',
             'status'  => 'eq',
             'email'   => 'like',
+            'where'   => [],
         ];
+
+        $where['where']['_complex']['id'] = ['neq', 1];
 
         // 不是管理员只能看到自己和自己添加的用户
         if ($this->user->id !== 1)

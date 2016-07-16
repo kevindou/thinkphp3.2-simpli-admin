@@ -2,7 +2,10 @@
 <div class="box-header" data-original-title="">
     <h2><i class="icon-desktop"></i><span class="break"></span></h2>
     <div class="box-icon">
-        <a title="添加" href="javascript:myTable.insert()">
+        <a title="导出" class="me-table-export">
+            <i class="icon-download-alt"></i>
+        </a>
+        <a title="添加" class="me-table-insert">
             <i class="icon-plus"></i>
         </a>
         <a id="table-refresh" title="刷新" href="#" onclick="return myTable.search();">
@@ -32,7 +35,7 @@
             {"data":"id", "title":"id", "sName":"id", "edit":{"type":"hidden"}, "search":{"type":"text"}},
             {"data":"username", "sName":"username","title":"管理员账号", "edit":{"options":{"required":1, "rangelength":"[2, 15]"}}},
             {"data":"password", "sName":"password", "title":"管理员密码","edit":{"type":"password", "options":{"rangelength":"[6, 20]"}}},
-            {"data":"truepass", "sName":"truepass", "title":"确认密码","edit":{"type":"password", "options":{"rangelength":"[6, 20]", "equalTo":"input[name=password]:first"}}, "defaultContent":""},
+            {"data":"truepass", "sName":"truepass", "title":"确认密码","edit":{"type":"password", "options":{"rangelength":"[6, 20]", "equalTo":"input[name=password]:first"}}, "defaultContent":"", "isExport": false},
             {"data":"email", "sName":"email","title":"管理员Email", "edit":{"type":"text", "options":{"required":1, "rangelength":"[2, 50]", "email":1}}, "search":{"type":"text"}},
             {"data":"face", "sName":"face","title":"使用头像", "edit":{"type":"image", "options":{"required":1, "rangelength":"[2, 100]"}}},
             {"data":"status", "sName":"status","title":"状态","value":{"1":"启用", "0":"待审核", "-1":"停用"}, "createdCell":function(td, data, rowdatas, row, col) {
@@ -45,7 +48,7 @@
             {"data":"last_ip", "sName":"last_ip", "bSortable":false, "title":"最后登录IP"},
             {"data": null, "title":"操作", "bSortable":false, "createdCell":setOperate, "width":"120px"}
         ],
-        dom: 'Zlfrtip',
+
         "columnDefs":[{"targets":[2,3], "visible":false}],
     });
 
