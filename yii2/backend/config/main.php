@@ -7,16 +7,25 @@ $params = array_merge(
 );
 
 return [
-    'id' => 'app-backend',
+    'id'       => 'app-backend',
+    'name'     => 'Yii2 Admin',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap' => ['log'],
-    'modules' => [],
+    'bootstrap'  => ['log'],
+    'modules'    => [],
     'components' => [
+        // 权限管理
+        'authManager' => [
+            'class'             => 'yii\rbac\DbManager',
+        ],
+
+        // 用户信息
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'common\models\Admin',
             'enableAutoLogin' => true,
         ],
+
+        // 日志
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
@@ -26,17 +35,12 @@ return [
                 ],
             ],
         ],
+
+        // 错误页面
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-            ],
-        ],
-        */
     ],
+
     'params' => $params,
 ];

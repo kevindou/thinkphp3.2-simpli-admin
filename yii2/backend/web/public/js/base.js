@@ -5,6 +5,11 @@
  * date: 2016-6-15
  * 注 ： create开头函数用来配合生成HTML 第一个参数接收配置信息, 第二个接收值, 第三个接收默认值
  */
+var oLoading = null;
+// 关闭全局的loading
+function alwaysClose(){layer.close(oLoading)}
+// ajax出现错误调用
+function ajaxFail(){ return layer.msg("服务器繁忙,请稍候再试...", {time:1000, icon:2})}
 // 验证数据是否为空
 function empty(val){return val==undefined||val==""}
 // 判断值是否存在数组或者对象中

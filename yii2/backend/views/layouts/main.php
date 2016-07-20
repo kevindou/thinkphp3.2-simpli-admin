@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use common\widgets\Alert;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -37,11 +37,11 @@ AppAsset::register($this);
     <!-- inline styles related to this page -->
 
     <!-- ace settings handler -->
-    <script src="/static/assets/js/ace-extra.min.js"></script>
+    <script src="/public/assets/js/ace-extra.min.js"></script>
     <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
     <!--[if lte IE 8]>
-    <script src="/static/assets/js/html5shiv.min.js"></script>
-    <script src="/static/assets/js/respond.min.js"></script>
+    <script src="/public/assets/js/html5shiv.min.js"></script>
+    <script src="/public/assets/js/respond.min.js"></script>
     <![endif]-->
 
 
@@ -88,7 +88,7 @@ AppAsset::register($this);
         </button>
 
         <div class="navbar-header pull-left">
-            <a href="/admin/site" class="navbar-brand">
+            <a href="/site" class="navbar-brand">
                 <small>Yii2 Admin 后台管理</small>
             </a>
         </div>
@@ -98,9 +98,9 @@ AppAsset::register($this);
                 <!-- 用户信息显示 -->
                 <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" src="/static/assets/avatars/avatar.jpg" alt="Jason's Photo" />
+                        <img class="nav-user-photo" src="/public/assets/avatars/avatar.jpg" alt="Jason's Photo" />
                             <span class="user-info">
-                                <small>欢迎登录</small>{{$.admin.Username}}
+                                <small>欢迎登录</small><?=Yii::$app->user->identity->username?>
                             </span>
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -114,7 +114,7 @@ AppAsset::register($this);
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="/admin/logout"><i class="ace-icon fa fa-power-off"></i>退出</a>
+                            <a href="<?=Url::toRoute(['site/logout'])?>" id="user-logout"><i class="ace-icon fa fa-power-off"></i>退出</a>
                         </li>
                     </ul>
                 </li>
@@ -164,29 +164,27 @@ AppAsset::register($this);
 
         <!--左侧导航栏信息-->
         <ul class="nav nav-list">
-            {{range .navigation}}
-            <li>
-                <a {{if .IsChild}}href="javascript:;" class="dropdown-toggle" {{else}}href="{{.Url}}"{{end}}>
-                    <i class="menu-icon {{.Icons}}"></i>
-                    <span class="menu-text"> {{.MenuName}} </span>
-                    {{if .IsChild}}<b class="arrow fa fa-angle-down"></b>{{end}}
-                </a>
-                {{if .IsChild}}
-                <b class="arrow"></b>
-                <!--第二级别-->
-                <ul class="submenu">
-                    {{range $index, $value := .Child}}
-                    <li>
-                        <a  href="{{$value.Url}}"  >
-                            <i class="menu-icon {{$value.Icons}}"></i>
-                            {{$value.MenuName}}
-                        </a>
-                    </li>
-                    {{end}}
-                </ul>
-                {{end}}
-            </li>
-            {{end}}
+            <?php foreach ($this->params['menus'] as $value) : ?>
+                <li>
+                    <a <?php if ($value['pid'] == 0 && ! empty($value['child'])) : ?> class="dropdown-toggle" <?php endif; ?> href="<?php echo !empty($value['url']) ? Url::to([$value['url']]) : '#'; ?>">
+                        <i class="menu-icon fa <?=$value['icons']?>"></i>
+                        <span class="menu-text"> <?=$value['menu_name']?> </span>
+                        <?php if ($value['pid'] == 0 && ! empty($value['child'])) : ?><b class="arrow fa fa-angle-down"></b><?php endif;?>
+                    </a>
+                    <?php if ($value['pid'] == 0 && ! empty($value['child'])) : ?>
+                        <ul class="submenu">
+                            <?php foreach ($value['child'] as $val) : ?>
+                                <li>
+                                    <a href="<?=Url::toRoute([$val['url']])?>">
+                                        <i class="menu-icon fa fa-caret-right"></i>
+                                        <?=$val['menu_name']?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
         </ul>
 
         <div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
@@ -209,11 +207,17 @@ AppAsset::register($this);
 
             <!--面包屑信息-->
             <ul class="breadcrumb">
-                <li>
-                    <i class="ace-icon fa fa-home home-icon"></i>
-                    <a href="/site">首页</a>
-                </li>
-                <li class="active"></li>
+                <?= Breadcrumbs::widget(
+                    [
+                        'homeLink' => [
+                            'label' => '<i class="ace-icon fa fa-home home-icon"></i> 首页',
+                            'url' => ['/']
+                        ],
+                        'encodeLabels' => false,
+                        'tag' => 'ol',
+                        'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : []
+                    ]
+                ); ?>
             </ul>
 
             <!--搜索-->
@@ -300,16 +304,16 @@ AppAsset::register($this);
             <!--主要内容信息-->
             <div class="page-content-area">
                 <div class="page-header">
-                    <h1> 我的信息
-                        <small>
-                            <i class="ace-icon fa fa-angle-double-right"></i>
-                            编辑我的信息
-                        </small>
+                    <h1> <?=$this->title;?>
+<!--                        <small>-->
+<!--                            <i class="ace-icon fa fa-angle-double-right"></i>-->
+<!--                            编辑我的信息-->
+<!--                        </small>-->
                     </h1>
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        {{.LayoutContent}}
+                        <?= $content ?>
                     </div>
                 </div>
             </div>
@@ -350,7 +354,15 @@ AppAsset::register($this);
                 $(this).unbind('click').find('span:last').remove();
                 return false;
             });
-        })
+        });
+
+        // 用户退出
+        $('#user-logout').click(function(e){
+            e.preventDefault();
+            $.post($(this).attr('href'), function(json){
+                window.location.reload();
+            }, 'json');
+        });
 
         // 用户页面
         $('.me-user,.me-set').click(function(){ window.location.href = "/admin/admin/site";})

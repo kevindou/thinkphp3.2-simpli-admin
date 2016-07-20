@@ -48,9 +48,7 @@ class Auth extends \yii\db\ActiveRecord
             ['name', 'match', 'pattern' => '/^([a-zA-Z0-9_-]|([a-zA-z0-9_-]\\/[0-9_-a-zA-z]))+$/'],
             ['name', 'string', 'min' => 3, 'max' => 64],
             ['name', 'validatePermission'],
-
             ['description', 'string', 'min' => 1, 'max' => 400],
-            ['menus', 'string'],
         ];
     }
 
@@ -60,9 +58,8 @@ class Auth extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'name'        => Yii::t('app', 'Name'),
-            'description' => Yii::t('app', 'Description'),
-            'menus'       => Yii::t('app', 'Description'),
+            'name'        => '名称',
+            'description' => '说明',
             'created_at'  => '创建时间',
             'updated_at'  => '修改时间',
         ];
@@ -88,7 +85,6 @@ class Auth extends \yii\db\ActiveRecord
             $permission = $auth->createPermission($this->name);
             $permission->description = $this->description;
             $auth->add($permission);
-
             $admin = $auth->getRole('admin');
             return $auth->addChild($admin, $permission);
         }

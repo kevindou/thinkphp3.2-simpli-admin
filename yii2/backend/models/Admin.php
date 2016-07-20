@@ -118,8 +118,8 @@ class Admin extends \common\models\Admin
         return array_merge(
             $labels,
             [
-                'password' => Yii::t('app', 'Password'),
-                'repassword' => Yii::t('app', 'Repassword')
+                'password'   => '密码',
+                'repassword' => '确认密码',
             ]
         );
     }

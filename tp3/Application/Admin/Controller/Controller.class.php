@@ -69,7 +69,7 @@ class Controller extends \Common\Controller
         ];
 
         // 自定义了排序
-        if (isset($aWhere['orderBy']) && ! empty($aWhere['orderBy']))
+        if ( ! empty($aWhere) && isset($aWhere['orderBy']) && ! empty($aWhere['orderBy']))
         {
             // 判断自定义排序字段还是方式
             $aSearch['orderBy'] = is_array($aWhere['orderBy']) ? $aSearch['orderBy'] : [$aSearch['orderBy'] => $sOrder];
@@ -77,25 +77,25 @@ class Controller extends \Common\Controller
         }
 
         // 处理默认查询条件
-        if (isset($aWhere['where']) && ! empty($aWhere)) $aSearch['where'] = array_merge($aSearch['where'], $aWhere['where']);
-
-        // 处理查询条件
-        if ( ! empty($aParams))
+        if ( ! empty($aWhere) && isset($aWhere['where']) && ! empty($aWhere['where']))
         {
-            // 处理其他查询条件
-            if ( ! empty($aParams))
+            $aSearch['where'] = array_merge($aSearch['where'], $aWhere['where']);
+            unset($aWhere['where']);
+        }
+
+        // 处理其他查询条件
+        if ( ! empty($aParams) && ! empty($aWhere))
+        {
+            foreach ($aParams as $key => $value)
             {
-                foreach ($aParams as $key => $value)
+                if (! isset($aWhere[$key])) continue;
+                $tmpKey = $aWhere[$key];
+                if (is_array($tmpKey))
+                    $aSearch['where'][$key] = $tmpKey;
+                else
                 {
-                    if (! isset($aWhere[$key])) continue;
-                    $tmpKey = $aWhere[$key];
-                    if (is_array($tmpKey))
-                        $aSearch['where'][$key] = $tmpKey;
-                    else
-                    {
-                        if ($tmpKey == 'like') $value = "%{$value}%";
-                        $aSearch['where'][$key] = [$tmpKey, $value];
-                    }
+                    if ($tmpKey == 'like') $value = "%{$value}%";
+                    $aSearch['where'][$key] = [$tmpKey, $value];
                 }
             }
         }

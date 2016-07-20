@@ -72,13 +72,8 @@ class SiteController extends \yii\web\Controller
         $model = new AdminForm();
         if ($model->load(Yii::$app->request->post()) && $model->login())
         {
-
-            // 生成缓存导航栏文件
-            Menu::setNavigation();
-
-            // 到首页去
-            return $this->goBack();
-
+            Menu::setNavigation();  // 生成缓存导航栏文件
+            return $this->goBack(); // 到首页去
         } else {
             return $this->render('login', [
                 'model' => $model,

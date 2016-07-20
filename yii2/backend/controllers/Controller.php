@@ -6,7 +6,6 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use backend\models\Admin;
-use backend\models\Init;
 use backend\models\UploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\ArrayHelper;
@@ -20,22 +19,15 @@ use yii\helpers\ArrayHelper;
  */
 class Controller extends \yii\web\Controller
 {
-    public $enableCsrfValidation = false;    // 'enableCsrfValidation' => true // 配置文件关闭CSRF
+    public    $enableCsrfValidation = false, $admins = null;    // 'enableCsrfValidation' => true // 配置文件关闭CSRF
+    protected $sort                 = 'id';     // 默认排序字段
+
     // 定义响应请求的返回数据
     public $arrError = [
         'status' => 0,
-        'code'   => 201,
-        'msg'    => '',
+        'msg'    => '数据为空',
         'data'   => [],
     ];
-
-    // 定义查询数组
-    public $search = [
-        'orderBy' => 'id',
-    ];
-
-    // 游戏信息、语言版本、管理员信息、状态信息
-    protected $games, $lang, $admins, $status;
 
     // 初始化处理
     public function behaviors()
@@ -65,143 +57,139 @@ class Controller extends \yii\web\Controller
         // 主控制器验证
         if ( ! parent::beforeAction($action)) {return false;}
 
-        // 获取参数
-        $controller = Yii::$app->controller->id;            // 控制器名
-        $action     = Yii::$app->controller->action->id;    // 方法名
-        $permissionName = $controller.'/'.$action;          // 权限值
-
-        // 验证权限
-        if( ! \Yii::$app->user->can($permissionName) && Yii::$app->getErrorHandler()->exception === null)
-        {
-            // 没有权限AJAX返回
-            if (Yii::$app->request->isAjax)
-                exit(json_encode(['status' => 0, 'msg' => '对不起，您现在还没获得该操作的权限!', 'data' => [],]));
-            else
-                throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获得该操作的权限!');
-        }
+//        // 获取参数
+//        $controller = Yii::$app->controller->id;            // 控制器名
+//        $action     = Yii::$app->controller->action->id;    // 方法名
+//        $permissionName = $controller.'/'.$action;          // 权限值
+//
+//        // 验证权限
+//        if( ! \Yii::$app->user->can($permissionName) && Yii::$app->getErrorHandler()->exception === null)
+//        {
+//            // 没有权限AJAX返回
+//            if (Yii::$app->request->isAjax)
+//                exit(json_encode(['status' => 0, 'msg' => '对不起，您现在还没获得该操作的权限!', 'data' => [],]));
+//            else
+//                throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获得该操作的权限!');
+//        }
 
         // 查询导航栏信息
         $menus = Yii::$app->cache->get('navigation'.Yii::$app->user->id);
-        if ( ! $menus) throw new \yii\web\UnauthorizedHttpException('对不起，您还没获得显示导航栏目权限!');
+//        if ( ! $menus) throw new \yii\web\UnauthorizedHttpException('对不起，您还没获得显示导航栏目权限!');
 
         // 注入变量信息
-        Yii::$app->view->params['games'] = $this->games = Init::getAll();
-        Yii::$app->view->params['totalgames'] = Init::getGame();
         Yii::$app->view->params['menus'] = $menus;
-
         return true;
+    }
+
+    // 初始化处理函数
+    public function init()
+    {
+        parent::init();
+        // 查询后台管理员信息
+        $admin = Admin::find()->select(['id', 'username'])->all();
+        $this->admins = ArrayHelper::map($admin, 'id', 'username');
+        // 注入变量信息
+        Yii::$app->view->params['admins'] = $this->admins;
     }
 
     // 首页显示
     public function actionIndex() { return $this->render('index'); }
 
-    // 显示数据之前的查询
-    public function beforeShow(&$array){}
+    /**
+     * where() 获取查询的配置信息(查询参数)
+     * @access protected
+     * @param  array $params 查询的请求参数
+     * @return array 返回一个数组用来查询
+     */
+    protected function where($params)
+    {
+        return [];
+    }
 
     // 处理查询信息
-    protected function getQuery($params)
+    protected function query()
     {
-        $search = ['orderBy' => $this->search['orderBy'], 'where' => []];
+        $request = Yii::$app->request;
+        $params  = $request->post('params');                    // 接收查询参数
+        $sort    = $request->post('sSortDir_0', 'asc');         // 排序方式
+        $sort    = $sort == 'asc' ? SORT_ASC : SORT_DESC;       // 排序方式
 
-        // 默认添加查询条件
-        if (isset($this->search['where']) && ! empty($this->search['where'])) $search['where'][] = $this->search['where'];
+        // 接收参数
+        $aWhere  = $this->where($params);                       // 查询配置信息
+        $sFile   = isset($params['orderBy']) && ! empty($params['orderBy']) ? $params['orderBy'] : $this->sort; // 排序字段
+        $aSearch = [
+            'orderBy' => [$sFile => $sort],                     // 默认排序方式
+            'where'   => [],                                    // 查询条件
+            'offset'  => $request->post('iDisplayStart',  0),   // 查询开始位置
+            'limit'   => $request->post('iDisplayLength', 10),  // 查询数据条数
+            'echo'    => $request->post('sEcho',          1),   // 查询次数
+        ];
 
-        if ( ! empty($params))
+        // 自定义了排序
+        if ( ! empty($aWhere) && isset($aWhere['orderBy']) && ! empty($aWhere['orderBy']))
         {
-            // 处理排序字段
-            if (isset($params['orderBy']) && ! empty($params['orderBy']))
+            // 判断自定义排序字段还是方式
+            $aSearch['orderBy'] = is_array($aWhere['orderBy']) ? $aSearch['orderBy'] : [$aSearch['orderBy'] => $sort];
+            unset($aWhere['orderBy']);
+        }
+
+        // 处理默认查询条件
+        if ( ! empty($aWhere) && isset($aWhere['where']) && ! empty($aWhere['where']))
+        {
+            $aSearch['where'] = array_merge($aSearch['where'], $aWhere['where']);
+            unset($aWhere['where']);
+        }
+
+        // 处理其他查询条件
+        if ( ! empty($aWhere) && ! empty($params))
+        {
+            foreach ($params as $key => $value)
             {
-                $search['orderBy'] = $params['orderBy'];
-                unset($params['orderBy']);
-            }
-
-            // 处理查询条件
-            if (isset($params['search']) && ! empty($params['search']))
-            {
-                // 判断添加快速搜索条件
-                if (is_array($this->search['search']))
-                    $search['where'][] = [$this->search['search'][0], $this->search['search'][1], $params['search']];
-                else
-                    $search['where'][] = ['like', $this->search['search'], $params['search']];
-
-                unset($params['search']);
-            }
-
-            // 处理其他查询条件
-            if (! empty($params))
-            {
-                foreach ($params as $key => $value)
-                {
-                    if (empty($value) || ! isset($this->search[$key])) continue;
-                    $tmpKey = $this->search[$key];
-                    if (is_array($this->search[$key]))
-                    {
-                        // 如果数组个数大于等于2
-                        if (count($tmpKey) >= 2)
-                        {
-                            switch ($tmpKey['type'])
-                            {
-                                case 'date' : $v = date($tmpKey['format'], strtotime($value)); break;
-                                case 'time' : $v = strtotime($value); break;
-                                default     : $v = strtotime($value); break;
-                            }
-
-                            $search['where'][] = [$tmpKey[0], $tmpKey[1], $v];
-                        }
-                        else // 使用自己的函数处理
-                        {
-                            $funName           = $tmpKey[0];
-                            $search['where'][] = $this->$funName($value);
-                        }
-                    } else {
-                        $search['where'][] = [$tmpKey, $key, $value];
-                    }
-                }
+                if ( ! isset($aWhere[$key])) continue;
+                $tmpKey = $aWhere[$key];
+                $aSearch['where'][] = is_array($tmpKey) ? $tmpKey : [$tmpKey, $key, $value];
             }
         }
 
         // 添加查询条件
-        if (! empty($search['where'])) array_unshift($search['where'], 'and');
-        return $search;
+        if ( ! empty($aSearch['where'])) array_unshift($aSearch['where'], 'and');
+        return $aSearch;
     }
 
-    // 查询之前的处理
-    public function beforeSearch(&$query){ return true;}
+    /**
+     * afterSearch() 查询之后的数据处理函数
+     * @access protected
+     * @param  mixed $array 查询出来的数组对象
+     * @return void  对数据进行处理
+     */
+    protected function afterSearch(&$array){}
 
     // 查询方法
     public function actionSearch()
     {
         // 定义请求数据
-        $request = Yii::$app->request;
-        if ($request->isAjax)
+        if (Yii::$app->request->isAjax)
         {
-            // 接收参数
-            $params  = $request->post('params');                // 查询查收
-            $intEcho = $request->post('sEcho');                 // 请求次数
-            $sort    = $request->post('sSortDir_0',     'asc'); // 排序方式
-            $sort    = $sort == 'asc' ? SORT_ASC : SORT_DESC;   // 排序方式
-            $start   = $request->post('iDisplayStart',  0);     // 查询开始位置
-            $size    = $request->post('iDisplayLength', 10);    // 查询条数
-            $search  = $this->getQuery($params);                // 处理查询参数
-
-            // 开始查询数据
-            $query  = $this->getModel()->find()->where($search['where']);
+            $arrSearch = $this->query();                          // 处理查询参数
+            $objQuery  = $this->getModel()->find()->where($arrSearch['where']);
 
             // 查询之前的处理
-            $this->beforeSearch($query);
-            $objMod = clone $query;
-            $total  = $objMod->count();                          // 查询数据条数
-            $array  = $query->offset($start)->limit($size)->orderBy([$search['orderBy'] => $sort])->all();
-            if ($array) $this->beforeShow($array);
-            // $query->offset($start)->limit($size)->orderBy([$search['orderBy'] => $sort])->createCommand()->getRawSql();
+            $objMod    = clone $objQuery;
+            $intTotal  = $objMod->count();                        // 查询数据条数
+            $arrObject = $objQuery->offset($arrSearch['offset'])->limit($arrSearch['limit'])->orderBy($arrSearch['orderBy'])->all();
+            if ($arrObject) $this->afterSearch($arrObject);
 
             // 返回数据
-            $this->arrError['code'] = 0;
-            $this->arrError['data'] = [
-                'sEcho'                => $intEcho,
-                'iTotalRecords'        => count($array),
-                'iTotalDisplayRecords' => $total,
-                'aaData'               => $array,
+            $this->arrError = [
+                'status' => 1,
+                'msg'    => 'success',
+                'other'  => $objQuery->offset($arrSearch['offset'])->limit($arrSearch['limit'])->orderBy($arrSearch['orderBy'])->createCommand()->getRawSql(),
+                'data'   => [
+                    'sEcho'                => $arrSearch['echo'],     // 查询次数
+                    'iTotalRecords'        => count($arrObject),      // 本次查询数据条数
+                    'iTotalDisplayRecords' => $intTotal,              // 数据总条数
+                    'aaData'               => $arrObject,             // 本次查询数据信息
+                ]
             ];
         }
 
@@ -212,11 +200,11 @@ class Controller extends \yii\web\Controller
     public function actionUpdate()
     {
         $request = Yii::$app->request;
-
         if ($request->isAjax)
         {
             // 接收参数
             $type = $request->post('actionType'); // 操作类型
+            $this->arrError['msg'] = '操作类型错误';
             if ($type)
             {
                 $data  = $request->post();
@@ -230,23 +218,23 @@ class Controller extends \yii\web\Controller
                 // 删除数据
                 if ($type == 'delete')
                 {
+                    $this->arrError['msg'] = '服务器繁忙, 请稍候再试...';
                     $isTrue = $model->delete();
                 }
                 else
                 {
                     // 新增数据
+                    $this->arrError['msg'] = '数据加载失败...';
                     $isTrue = $model->load(['params' => $data], 'params');
-                    $this->arrError['code'] = 205;
                     if ($isTrue)
                     {
                         $isTrue = $model->save();
-                        $this->arrError['code'] = 206;
-                        $this->arrError['msg']  = $model->getErrorString();
+                        $this->arrError['msg'] = $model->getErrorString();
                     }
                 }
 
                 // 判断是否成功
-                if ($isTrue) $this->arrError['code'] = 0;
+                if ($isTrue) $this->arrError['status'] = 1;
                 $this->arrError['data'] = $model;
             }
         }
@@ -320,7 +308,8 @@ class Controller extends \yii\web\Controller
     {
         // 定义请求数据
         $request = Yii::$app->request;
-        if ($request->isPost) {
+        if ($request->isPost)
+        {
             // 接收参数
             $file  = $request->get('fileurl');
             $field = $request->get('field');
@@ -374,18 +363,8 @@ class Controller extends \yii\web\Controller
     // ajax返回
     protected function returnAjax($array = '')
     {
-        // 默认赋值
-        if (empty($array)) $array = $this->arrError;
-        if (empty($array['msg']))
-        {
-            $errCode      = Yii::t('error', 'errorCode');
-            $array['msg'] = $errCode[$array['code']];
-        }
-
-        if ($array['code'] <= 200) $array['status'] = 1;
-
-        // json 返回
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if (empty($array)) $array = $this->arrError;                    // 默认赋值
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;   // json 返回
         return $array;
     }
 

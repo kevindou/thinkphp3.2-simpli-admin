@@ -36,9 +36,9 @@ class AdminForm extends Model
     public function attributeLabels()
     {
         return [
-            'username' => Yii::t('app', 'Username'),
-            'password' => Yii::t('app', 'Password'),
-            'rememberMe' => Yii::t('app', 'Remember Me'),
+            'username'   => '管理员账号',
+            'password'   => '管理员密码',
+            'rememberMe' => '记住登录',
         ];
     }
 

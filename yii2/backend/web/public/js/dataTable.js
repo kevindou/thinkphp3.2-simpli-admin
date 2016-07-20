@@ -47,6 +47,7 @@ var oOperateDetails = {"data":null, "title":"操作", "bSortable":false, "create
 	]));
 }};
 
+// 配置的语言
 var oTableLanguage = {
 	// 显示
 	"sLengthMenu": 	 "每页 _MENU_ 条记录",
@@ -64,9 +65,12 @@ var oTableLanguage = {
 	}
 };
 
-// ajax出现错误调用
-function ajaxFail(){ return layer.msg("服务器繁忙,请稍候再试...", {time:1000, icon:2})}
-
+/**
+ * MeTable
+ * Desc: dataTables 表格操作
+ * User: liujinxing
+ * Date: 2016-07-20
+ */
 var MeTable = (function($) {
 	// 构造函数初始化配置
 	function MeTable(options, tableOptions, detailOptions) {
@@ -75,7 +79,7 @@ var MeTable = (function($) {
 			//"fnServerData": fnServerData,		// 获取数据的处理函数
 			"sAjaxSource": "search",			// 获取数据地址
 			"bLengthChange": true, 				// 是否可以调整分页
-			"bAutoWidth": false,           	 	// 是否自动计算列宽
+			"bAutoWidth": true,           	 	// 是否自动计算列宽
             "bPaginate": true,					// 是否使用分页
             "iDisplayStart": 0,
             "iDisplayLength": 10,
@@ -108,6 +112,7 @@ var MeTable = (function($) {
 			iViewLoading: 0, 				// 详情加载Loading
 			iLoading:     0, 				// 页面加载Loading
 			bViewFull: 	  false,			// 详情打开的方式 1 2 打开全屏
+			bColResize:   true,             // 列宽可拖拽
 		};
 
         // 服务器数据处理
@@ -355,6 +360,9 @@ var MeTable = (function($) {
 					'<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
 			$.fn.editable.defaults.ajaxOptions = {type: "POST", dataType:'json'};
 		}
+
+        // 判断开启列宽拖拽
+        //if (self.options.bColResize) $(self.options.sTable).colResizable();
 	};
 
 	// 表格搜索
@@ -481,14 +489,14 @@ var MeTable = (function($) {
         self.options.iLoading = layer.load();
 		// ajax提交数据
 		$.ajax({
-			url:        sBaseUrl,
-			type:       'POST',
-			data:       data,
-			dataType:   'json',
+			url:      sBaseUrl,
+			type:     'POST',
+			data:     data,
+			dataType: 'json'
 		}).always(function(){
 			layer.close(self.options.iLoading);
 		}).done(function(json){
-			layer.msg(json.msg, {icon:json.status == 1 ? 6 : 5})
+			layer.msg(json.msg, {icon:json.status == 1 ? 6 : 5});
 			// 判断操作成功
 			if (json.status == 1)
 			{
