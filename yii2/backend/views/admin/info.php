@@ -144,8 +144,8 @@
                                     <div class="widget-main padding-16">
                                         <div class="clearfix">
                                             <div class="grid3 center">
-                                                <div data-color="#CA5952" data-percent="45" class="easy-pie-chart percentage" style="height: 72px; width: 72px; line-height: 71px; color: rgb(202, 89, 82);">
-                                                    <span class="percent">45</span>%
+                                                <div data-color="#CA5952" data-percent="65" class="easy-pie-chart percentage" style="height: 72px; width: 72px; line-height: 71px; color: rgb(202, 89, 82);">
+                                                    <span class="percent">65</span>%
                                                     <canvas height="72" width="72"></canvas></div>
                                                 <div class="space-2"></div>
                                                 Gopher Go程序员

@@ -392,20 +392,19 @@
 
 
         // 修改用户名
-        $('#username')
-            .editable({
-                type: 'text',
-                name: 'username',
-                url: '/admin/update',
-                send:"always",
-                ajaxOptions:{type: "POST", dataType:'json'},
-                success:function(response, newValue) {
-                    if (response.status == 1) return true;
-                    layer.msg(response.msg, {icon: 5, time:1000});
-                    return false;
-                },
-                error:EditError,
-            });
+        $('#username').editable({
+            type: 'text',
+            name: 'username',
+            url:  '/admin/update',
+            send: "always",
+            ajaxOptions:{type: "POST", dataType:'json'},
+            success:function(response, newValue) {
+                if (response.status == 1) return true;
+                layer.msg(response.msg, {icon: 5, time:1000});
+                return false;
+            },
+            error:EditError,
+        });
 
         // 城市和地区联动
         var countries = [];
