@@ -4,10 +4,11 @@ namespace backend\controllers;
 
 use backend\models\Admin;
 use Yii;
-use yii\web\NotFoundHttpException;
-use yii\helpers\ArrayHelper;
 /**
- * AdminController implements the CRUD actions for Admin model.
+ * file: AdminController.php
+ * desc: 管理员操作控制器
+ * user: liujinxing
+ * date: 2016-0-21
  */
 class AdminController extends Controller
 {
@@ -141,5 +142,4 @@ class AdminController extends Controller
     {
         return $this->render('view', ['user' => Yii::$app->getUser()->identity]);
     }
-
 }

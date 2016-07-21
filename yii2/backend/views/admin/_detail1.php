@@ -226,7 +226,7 @@
 
                             <div class="profile-activity clearfix">
                                 <div>
-                                    <img class="pull-left" alt="David Palms's avatar" src="/static/assets/avatars/avatar4.png" />
+                                    <img class="pull-left" alt="David Palms's avatar" src="/public/assets/avatars/avatar4.png" />
                                     <a class="user" href="#"> David Palms </a>
 
                                     left a comment on Alex's wall.
@@ -273,7 +273,7 @@
 
                             <div class="profile-activity clearfix">
                                 <div>
-                                    <img class="pull-left" alt="Alex Doe's avatar" src="/static/assets/avatars/avatar5.png" />
+                                    <img class="pull-left" alt="Alex Doe's avatar" src="/public/assets/avatars/avatar5.png" />
                                     <a class="user" href="#"> Alex Doe </a>
 
                                     upgraded his skills.
@@ -395,7 +395,8 @@
         $('#username').editable({
             type: 'text',
             name: 'username',
-            url:  '/admin/update',
+            url:  '/admin/editable',
+            pk:    <?=$user->id?>,
             send: "always",
             ajaxOptions:{type: "POST", dataType:'json'},
             success:function(response, newValue) {

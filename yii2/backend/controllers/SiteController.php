@@ -61,7 +61,23 @@ class SiteController extends \yii\web\Controller
         $menus = Yii::$app->cache->get('navigation'.Yii::$app->user->id);
         if ( ! $menus) throw new UnauthorizedHttpException('对不起，您还没获得显示导航栏目权限!');
         Yii::$app->view->params['menus'] = $menus;
-        return $this->render('index');
+
+        // 系统信息
+        $system = explode(' ', php_uname());
+        $system = $system[0] .'&nbsp;' . ('/' == DIRECTORY_SEPARATOR ? $system[2] : $system[1]);
+
+        // MySql版本
+        $version = Yii::$app->db->createCommand('SELECT VERSION() AS `version`')->queryOne();
+
+        // 加载视图
+        return $this->render('index', [
+            'system' => $system,                                        // 系统信息
+            'yii'    => 'Yii '. Yii::getVersion(),                      // Yii 版本
+            'php'    => 'PHP '. PHP_VERSION,                            // PHP 版本
+            'server' => $_SERVER['SERVER_SOFTWARE'],                    // 服务器信息
+            'mysql'  => 'MySQL '.($version ? $version['version'] : ''), // Mysql版本
+            'upload' => ini_get('upload_max_filesize'),                 // 上传文件大小
+        ]);
     }
 
     // 用户登录

@@ -1,12 +1,6 @@
 <?php
-
-/* @var $this \yii\web\View */
-/* @var $content string */
-
 use backend\assets\AppAsset;
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use yii\helpers\Url;
 
@@ -18,7 +12,7 @@ AppAsset::register($this);
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta charset="<?= Yii::$app->charset ?>"/>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?=Yii::$app->name.Html::encode($this->title) ?></title>
     <meta name="description" content="3 styles with inline editable feature" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <?= Html::csrfMetaTags() ?>

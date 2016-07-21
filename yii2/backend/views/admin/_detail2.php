@@ -206,10 +206,10 @@
 
                 <div class="tab-pane" id="pictures">
                     <ul class="ace-thumbnails">
-                        {{range $k, $v := .image}}
+                        <?php for($i = 1; $i <= 5; $i++) : ?>
                         <li>
                             <a data-rel="colorbox" href="#">
-                                <img src="/static/assets/images/gallery/thumb-{{$v}}.jpg" alt="150x150">
+                                <img src="/public/assets/images/gallery/thumb-<?=$i?>.jpg" alt="150x150">
                                 <div class="text">
                                     <div class="inner">Sample Caption on Hover{{$v}}</div>
                                 </div>
@@ -233,7 +233,7 @@
                                 </a>
                             </div>
                         </li>
-                        {{end}}
+                        <?php endfor; ?>
                     </ul>
                     <ul class="pager pull-right">
                         <li class="previous disabled">

@@ -24,7 +24,7 @@ class Controller extends \yii\web\Controller
 
     // 定义响应请求的返回数据
     public $arrError = [
-        'code'   => 0,
+        'code'   => 201,
         'msg'    => '',
         'status' => 0,
         'data'   => [],
@@ -299,6 +299,37 @@ class Controller extends \yii\web\Controller
         return $this->returnAjax();
     }
 
+    // 行内编辑
+    public function actionEditable()
+    {
+        $request = Yii::$app->request;
+        if ($request->isAjax)
+        {
+            // 接收参数
+            $mixPk    = $request->post('pk');    // 主键值
+            $strAttr  = $request->post('name');  // 字段名
+            $mixValue = $request->post('value'); // 字段值
+            $this->arrError['code'] = 207;
+            if ($mixPk && $strAttr  && $mixValue != '')
+            {
+                // 查询到数据
+                $model = $this->getModel()->findOne($mixPk);
+                $this->arrError['code'] = 220;
+                if ($model)
+                {
+                    $model->$strAttr = $mixValue;
+                    $this->arrError['code'] = 206;
+                    if ($model->save())
+                    {
+                        $this->arrError['code'] = 0;
+                        $this->arrError['data'] = $model;
+                    }
+                }
+            }
+        }
+        return $this->returnAjax();
+    }
+
     // 查看详情信息
     public function actionViews()
     {
@@ -383,6 +414,7 @@ class Controller extends \yii\web\Controller
             $errCode      = Yii::t('error', 'errorCode');
             $array['msg'] = $errCode[$array['code']];
         }
+
         if ($array['code'] <= 200) $array['status'] = 1;
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;   // json 返回
         return $array;

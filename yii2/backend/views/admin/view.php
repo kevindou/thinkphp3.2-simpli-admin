@@ -5,6 +5,8 @@
  * Date: 2016/7/21
  * Time: 18:29
  */
+$this->title = '管理员个人信息';
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="clearfix">
     <div class="pull-left alert alert-success no-margin">
@@ -38,9 +40,9 @@
 
 <div class="hr dotted"></div>
 <!-- 用户信息的显示 -->
-<?php echo $this->render('detail', ['user' => $user]);?>
-<?php echo $this->render('info',   ['user' => $user]);?>
-<?php echo $this->render('edit',   ['user' => $user]);?>
+<?=$this->render('_detail1', ['user' => $user])?>
+<?=$this->render('_detail2', ['user' => $user])?>
+<?=$this->render('_detail3', ['user' => $user])?>
 <script type="text/javascript">
     $(function(){
         // 详情中图片上传

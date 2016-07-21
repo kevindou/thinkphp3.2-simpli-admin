@@ -51,7 +51,7 @@ return [
         // 数据库配置
         'db' => [
             'class'       => 'yii\db\Connection',
-            'dsn'         => 'mysql:host=127.0.0.1;dbname=my_yii2',
+            'dsn'         => 'mysql:host=127.0.0.1;dbname=yii2',
             'username'    => 'root',
             'password'    => 'gongyan',
             'charset'     => 'utf8',
