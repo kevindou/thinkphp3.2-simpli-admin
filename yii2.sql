@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2016-07-20 19:33:01
+Date: 2016-07-21 18:23:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,7 +29,7 @@ CREATE TABLE `my_admin` (
   `role` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user' COMMENT '角色',
   `status` smallint(6) NOT NULL DEFAULT '10' COMMENT '状态',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
-  `created_id` int(11) NOT NULL COMMENT '创建用户',
+  `create_id` int(11) NOT NULL COMMENT '创建用户',
   `update_time` int(11) NOT NULL COMMENT '修改时间',
   `update_id` int(11) DEFAULT NULL COMMENT '修改用户',
   PRIMARY KEY (`id`),
@@ -37,12 +37,14 @@ CREATE TABLE `my_admin` (
   KEY `role` (`role`),
   KEY `status` (`status`),
   KEY `created_at` (`create_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of my_admin
 -- ----------------------------
-INSERT INTO `my_admin` VALUES ('1', 'admin', '_6VUW2b54_ZU462nofkeSFTWJZmcrENT', '$2y$13$bpCp64LJlsiW.TvDC8pDmuZMS2pMVlyQfczzgmx5Dapo54PABf9Uy', '5lYi85syoP9V-uGaUA_w1TQD6nkSIXPJ_1463018816', 'Super@admin.com', 'admin', '1', '1457337222', '1', '1464258243', null);
+INSERT INTO `my_admin` VALUES ('1', 'admin', 'gKkLFMdB2pvIXOFNpF_Aeemvdf1j0YUM', '$2y$13$Nuf1mzDRoCMxrWI.rIjENu20QshJG41smdEeHFHxq0qdmS99YytHy', '5vLaPpUS-I-XxJaoGP-GZDk474WdnaK3_1469073015', 'Super@admin.com', 'admin', '1', '1457337222', '1', '1469076860', '1');
+INSERT INTO `my_admin` VALUES ('3', 'liujinxing', 'Ja4xO7lSPmj_4Gtshkiied-_8EolgX7b', '$2y$13$NUDMG9NMx0BpXotoTP9Xj.qDsFih94meRHuMBfWM8w28qpCzX3Hxm', 'ggsBHJf2nVtiG69i-Xn6H1E8TGVdcJmt_1469083899', '1136261505@qq.com', 'user', '1', '1469077822', '1', '1469095955', '3');
+INSERT INTO `my_admin` VALUES ('4', 'gongyan', 'GQFk-KpdJhYiyP4PTC9jnXE-BbiSmXRG', '$2y$13$k1ZD3/FL5LSmKulS3BPXme6a.IptIYqgcfsgoBNdFhPzLekgIHyzC', 'Z1APs8xqLv27wF_WRnyofu1yjRS9qw54_1469095775', '6104155122@qq.com', 'user', '1', '1469095775', '3', '1469095913', '3');
 
 -- ----------------------------
 -- Table structure for my_auth_assignment
@@ -59,6 +61,10 @@ CREATE TABLE `my_auth_assignment` (
 -- ----------------------------
 -- Records of my_auth_assignment
 -- ----------------------------
+INSERT INTO `my_auth_assignment` VALUES ('admin', '1', '1469076860');
+INSERT INTO `my_auth_assignment` VALUES ('OrdinaryUsers', '3', '1469096255');
+INSERT INTO `my_auth_assignment` VALUES ('user', '3', '1469095955');
+INSERT INTO `my_auth_assignment` VALUES ('user', '4', '1469095913');
 
 -- ----------------------------
 -- Table structure for my_auth_item
@@ -85,6 +91,26 @@ INSERT INTO `my_auth_item` VALUES ('admin', '1', '超级管理员', null, null, 
 INSERT INTO `my_auth_item` VALUES ('admin/index', '2', '管理员信息显示', null, null, '1469009816', '1469009816');
 INSERT INTO `my_auth_item` VALUES ('admin/search', '2', '管理员信息搜索', null, null, '1469009816', '1469009816');
 INSERT INTO `my_auth_item` VALUES ('admin/update', '2', '管理员信息编辑', null, null, '1469009816', '1469009816');
+INSERT INTO `my_auth_item` VALUES ('authority/index', '2', '权限信息显示', null, null, '1469078967', '1469080494');
+INSERT INTO `my_auth_item` VALUES ('authority/search', '2', '权限信息搜索', null, null, '1469078967', '1469080591');
+INSERT INTO `my_auth_item` VALUES ('authority/update', '2', '权限信息编辑', null, null, '1469094174', '1469094174');
+INSERT INTO `my_auth_item` VALUES ('deleteAdmin', '2', '管理员信息删除', null, null, '1469081818', '1469081818');
+INSERT INTO `my_auth_item` VALUES ('deleteAuthority', '2', '权限信息删除', null, null, '1469081803', '1469081803');
+INSERT INTO `my_auth_item` VALUES ('menu/deleteAll', '2', '导航信息多删除', null, null, '1469085213', '1469085213');
+INSERT INTO `my_auth_item` VALUES ('menu/index', '2', '导航信息显示', null, null, '1469081716', '1469081716');
+INSERT INTO `my_auth_item` VALUES ('menu/search', '2', '导航信息搜索', null, null, '1469081752', '1469081752');
+INSERT INTO `my_auth_item` VALUES ('menu/update', '2', '导航信息编辑', null, null, '1469081736', '1469081736');
+INSERT INTO `my_auth_item` VALUES ('module/create', '2', '模块生成预览表单', null, null, '1469091119', '1469091119');
+INSERT INTO `my_auth_item` VALUES ('module/index', '2', '模块生成显示', null, null, '1469091078', '1469091078');
+INSERT INTO `my_auth_item` VALUES ('module/produce', '2', '模块生成最终文件', null, null, '1469091179', '1469091179');
+INSERT INTO `my_auth_item` VALUES ('module/update', '2', '模块生成预览文件', null, null, '1469091147', '1469091147');
+INSERT INTO `my_auth_item` VALUES ('OrdinaryUsers', '1', '普通用户', null, null, '1469096255', '1469096255');
+INSERT INTO `my_auth_item` VALUES ('role/create', '2', '角色信息分配权限', null, null, '1469094244', '1469094244');
+INSERT INTO `my_auth_item` VALUES ('role/index', '2', '角色信息显示', null, null, '1469080022', '1469080022');
+INSERT INTO `my_auth_item` VALUES ('role/search', '2', '角色信息搜索', null, null, '1469081628', '1469081628');
+INSERT INTO `my_auth_item` VALUES ('role/update', '2', '角色信息编辑', null, null, '1469081575', '1469081575');
+INSERT INTO `my_auth_item` VALUES ('role/view', '2', '角色信息查看详情', null, null, '1469094284', '1469094284');
+INSERT INTO `my_auth_item` VALUES ('user', '1', '管理员', null, null, '1469083867', '1469096145');
 
 -- ----------------------------
 -- Table structure for my_auth_item_child
@@ -103,8 +129,38 @@ CREATE TABLE `my_auth_item_child` (
 -- Records of my_auth_item_child
 -- ----------------------------
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/index');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/index');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/search');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/search');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/update');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/update');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'authority/index');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'authority/search');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'authority/update');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'deleteAdmin');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'deleteAuthority');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'menu/deleteAll');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'menu/index');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'menu/search');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'menu/update');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'module/create');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'module/create');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'module/index');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'module/index');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'module/produce');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'module/produce');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'module/update');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'module/update');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'role/create');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'role/create');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'role/index');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'role/index');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'role/search');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'role/search');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'role/update');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'role/update');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'role/view');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'role/view');
 
 -- ----------------------------
 -- Table structure for my_auth_rule
@@ -139,7 +195,7 @@ CREATE TABLE `my_menu` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '修改时间',
   `update_id` int(11) NOT NULL DEFAULT '0' COMMENT '修改用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='导航栏信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='导航栏信息表';
 
 -- ----------------------------
 -- Records of my_menu
@@ -149,4 +205,4 @@ INSERT INTO `my_menu` VALUES ('2', '1', '导航栏目', '', 'menu/index', '1', '
 INSERT INTO `my_menu` VALUES ('3', '1', '模块生成', '', 'module/index', '1', '5', '1468994283', '1', '1468994860', '1');
 INSERT INTO `my_menu` VALUES ('4', '1', '角色管理', '', 'role/index', '1', '2', '1468994665', '1', '1468994676', '1');
 INSERT INTO `my_menu` VALUES ('5', '1', '管理员信息', '', 'admin/index', '1', '1', '1468994769', '1', '1468994769', '1');
-INSERT INTO `my_menu` VALUES ('6', '1', '权限管理', '', 'authority/index', '1', '3', '1468994819', '1', '1468994819', '1');
+INSERT INTO `my_menu` VALUES ('6', '1', '权限管理', '', 'authority/index', '1', '3', '1468994819', '1', '1469091044', '1');
