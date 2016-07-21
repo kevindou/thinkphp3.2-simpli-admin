@@ -20,12 +20,13 @@ use yii\helpers\ArrayHelper;
 class Controller extends \yii\web\Controller
 {
     public    $enableCsrfValidation = false, $admins = null;    // 'enableCsrfValidation' => true // 配置文件关闭CSRF
-    protected $sort                 = 'id';     // 默认排序字段
+    protected $sort                 = 'id';                     // 默认排序字段
 
     // 定义响应请求的返回数据
     public $arrError = [
+        'code'   => 0,
+        'msg'    => '',
         'status' => 0,
-        'msg'    => '数据为空',
         'data'   => [],
     ];
 
@@ -57,24 +58,24 @@ class Controller extends \yii\web\Controller
         // 主控制器验证
         if ( ! parent::beforeAction($action)) {return false;}
 
-//        // 获取参数
-//        $controller = Yii::$app->controller->id;            // 控制器名
-//        $action     = Yii::$app->controller->action->id;    // 方法名
-//        $permissionName = $controller.'/'.$action;          // 权限值
-//
-//        // 验证权限
-//        if( ! \Yii::$app->user->can($permissionName) && Yii::$app->getErrorHandler()->exception === null)
-//        {
-//            // 没有权限AJAX返回
-//            if (Yii::$app->request->isAjax)
-//                exit(json_encode(['status' => 0, 'msg' => '对不起，您现在还没获得该操作的权限!', 'data' => [],]));
-//            else
-//                throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获得该操作的权限!');
-//        }
+        // 获取参数
+        $controller = Yii::$app->controller->id;            // 控制器名
+        $action     = Yii::$app->controller->action->id;    // 方法名
+        $permissionName = $controller.'/'.$action;          // 权限值
+
+        // 验证权限
+        if( ! \Yii::$app->user->can($permissionName) && Yii::$app->getErrorHandler()->exception === null)
+        {
+            // 没有权限AJAX返回
+            if (Yii::$app->request->isAjax)
+                exit(json_encode(['status' => 0, 'msg' => '对不起，您现在还没获得该操作的权限!', 'data' => [],]));
+            else
+                throw new \yii\web\UnauthorizedHttpException('对不起，您现在还没获得该操作的权限!');
+        }
 
         // 查询导航栏信息
         $menus = Yii::$app->cache->get('navigation'.Yii::$app->user->id);
-//        if ( ! $menus) throw new \yii\web\UnauthorizedHttpException('对不起，您还没获得显示导航栏目权限!');
+        if ( ! $menus) throw new \yii\web\UnauthorizedHttpException('对不起，您还没获得显示导航栏目权限!');
 
         // 注入变量信息
         Yii::$app->view->params['menus'] = $menus;
@@ -181,10 +182,9 @@ class Controller extends \yii\web\Controller
 
             // 返回数据
             $this->arrError = [
-                'status' => 1,
-                'msg'    => 'success',
-                'other'  => $objQuery->offset($arrSearch['offset'])->limit($arrSearch['limit'])->orderBy($arrSearch['orderBy'])->createCommand()->getRawSql(),
-                'data'   => [
+                'code'  => 2,
+                'other' => $objQuery->offset($arrSearch['offset'])->limit($arrSearch['limit'])->orderBy($arrSearch['orderBy'])->createCommand()->getRawSql(),
+                'data'  => [
                     'sEcho'                => $arrSearch['echo'],     // 查询次数
                     'iTotalRecords'        => count($arrObject),      // 本次查询数据条数
                     'iTotalDisplayRecords' => $intTotal,              // 数据总条数
@@ -204,37 +204,51 @@ class Controller extends \yii\web\Controller
         {
             // 接收参数
             $type = $request->post('actionType'); // 操作类型
-            $this->arrError['msg'] = '操作类型错误';
+            $this->arrError['code'] = 207;
             if ($type)
             {
-                $data  = $request->post();
+                $data   = $request->post();
+                $model  = $this->getModel();
+                $index  = $model->primaryKey();
+                $isTrue = false;
                 unset($data['actionType']);
-                $model = $this->getModel();
-                $index = $model->primaryKey();
 
-                // 修改和删除时的查询数据
-                if ($type == 'update' || $type == 'delete') $model = $model->findOne($data[$index[0]]);
-
-                // 删除数据
-                if ($type == 'delete')
+                // 删除全部
+                if ($type === 'deleteAll' && isset($data['ids']) && ! empty($data['ids']))
                 {
-                    $this->arrError['msg'] = '服务器繁忙, 请稍候再试...';
-                    $isTrue = $model->delete();
+                    // 判断是否有删除全部的权限
+                    $this->arrError['code'] = 216;
+                    if (Yii::$app->user->can(Yii::$app->controller->id.'/deleteAll'))
+                    {
+                        $isTrue = $model->deleteAll([$index[0] => explode(',', $data['ids'])]);
+                    }
                 }
                 else
                 {
-                    // 新增数据
-                    $this->arrError['msg'] = '数据加载失败...';
-                    $isTrue = $model->load(['params' => $data], 'params');
-                    if ($isTrue)
+                    // 修改和删除时的查询数据
+                    if ($type == 'update' || $type == 'delete') $model = $model->findOne($data[$index[0]]);
+
+                    // 删除数据
+                    if ($type == 'delete')
                     {
-                        $isTrue = $model->save();
-                        $this->arrError['msg'] = $model->getErrorString();
+                        $this->arrError['code'] = 206;
+                        $isTrue = $model->delete();
+                    }
+                    else
+                    {
+                        // 新增数据
+                        $this->arrError['code'] = 205;
+                        $isTrue = $model->load(['params' => $data], 'params');
+                        if ($isTrue)
+                        {
+                            $isTrue = $model->save();
+                            $this->arrError['msg'] = $model->getErrorString();
+                        }
                     }
                 }
 
                 // 判断是否成功
-                if ($isTrue) $this->arrError['status'] = 1;
+                if ($isTrue) $this->arrError['code'] = 0;
                 $this->arrError['data'] = $model;
             }
         }
@@ -364,6 +378,12 @@ class Controller extends \yii\web\Controller
     protected function returnAjax($array = '')
     {
         if (empty($array)) $array = $this->arrError;                    // 默认赋值
+        if ( ! isset($array['msg']) || empty($array['msg']))
+        {
+            $errCode      = Yii::t('error', 'errorCode');
+            $array['msg'] = $errCode[$array['code']];
+        }
+        if ($array['code'] <= 200) $array['status'] = 1;
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;   // json 返回
         return $array;
     }

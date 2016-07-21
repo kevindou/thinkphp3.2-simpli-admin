@@ -35,7 +35,7 @@ class ModuleController extends Controller
             {
                 // 获取表信息
                 $db = Yii::$app->db;
-                $this->arrError['msg'] = '数据表不存在';
+                $this->arrError['code'] = 217;
                 $tables = $db->createCommand('SHOW TABLES')->queryAll();
                 if ($tables)
                 {
@@ -53,14 +53,13 @@ class ModuleController extends Controller
                     {
                         // 查询表结构信息
                         $arrTables = $db->createCommand('SHOW FULL COLUMNS FROM `'.$strTable.'`')->queryAll();
-                        $this->arrError['msg'] = '查询表结构失败';
+                        $this->arrError['msg'] = 218;
                         if ($arrTables)
                         {
                             // 成功返回
                             $this->arrError = [
-                                'status' => 1,
-                                'msg'    => '生成预览表单成功',
-                                'data'   => $this->createForm($arrTables),
+                                'code' => 3,
+                                'data' => $this->createForm($arrTables),
                             ];
                         }
                     }
@@ -83,8 +82,8 @@ class ModuleController extends Controller
             $table = $request->post('table');
             if ($attr)
             {
-                $this->arrError['msg'] = '对应数据库表不存在';
-                if ($table && ($name = trim($table, 'my_')))
+                $this->arrError['code'] = 217;
+                if ($table && ($name = ltrim($table, 'my_')))
                 {
                     // 拼接字符串
                     $dirName  = Yii::$app->basePath.'/';
@@ -97,9 +96,8 @@ class ModuleController extends Controller
 
                     // 返回数据
                     $this->arrError = [
-                        'status' => 1,
-                        'msg'    => '生成预览文件成功',
-                        'data'   => [
+                        'code' => 4,
+                        'data' => [
                             'html'       => highlight_string($this->createPHP($attr, $request->post('title')), true),
                             'file'       => [$strVName, file_exists($strVPath . $strVName)],
                             'controller' => [$strCName, file_exists($dirName . 'Controllers/'.$strCName)],
@@ -130,7 +128,7 @@ class ModuleController extends Controller
 
             if ($attr && $table && $title && $html && $php)
             {
-                $this->arrError['msg'] = '对应数据库表不存在';
+                $this->arrError['code'] = 217;
                 if ($table && ($name = trim($table, 'my_')))
                 {
                     // 拼接字符串
@@ -139,7 +137,7 @@ class ModuleController extends Controller
                     $strVName = $dirName.'views/'.$name.'/'.(stripos($html, '.php') ? $html : $html.'.php');
 
                     // 验证文件不存在
-                    $this->arrError['msg'] = '文件存在, 不能执行覆盖操作';
+                    $this->arrError['code'] = 219;
                     if ($allow === 1 ||  (! file_exists($strCName) && ! file_exists($strVName)))
                     {
                         // 生成权限
@@ -156,9 +154,8 @@ class ModuleController extends Controller
 
                         // 返回数据
                         $this->arrError = [
-                            'status' => 1,
-                            'msg'    => '生成预览文件成功',
-                            'data'   => Url::toRoute([$name.'/index']),
+                            'code' => 4,
+                            'data' => Url::toRoute([$name.'/index']),
                         ];
                     }
                 }
@@ -287,7 +284,7 @@ HTML;
         $strHtml = $strWhere =  '';
         if ($array)
         {
-            $strHtml = "\t\t\toCheckBox,";
+            $strHtml = "\t\t\toCheckBox,\n";
             foreach ($array as $key => $value)
             {
                 $html = "\t\t\t{\"title\": \"{$value['title']}\", \"data\": \"{$key}\", \"sName\": \"{$key}\", ";

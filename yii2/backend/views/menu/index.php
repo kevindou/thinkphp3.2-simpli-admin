@@ -30,11 +30,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <script type="text/javascript">
     var aAdmins  = <?=json_encode($this->params['admins'])?>,
         aParents = <?= $parents ?>;
-    // 添加用户显示
-    function adminToString(td, data, rowArr, row, col) {
-        $(td).html(aAdmins[data]);
-    }
-
     // 显示上级分类
     function parentStatus(td, data, rowArr, row, col)
     {
@@ -62,8 +57,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     // 保存之后的处理
     myTable.afterSave = function(data){
-        if (this.actionType != 'delete') window.location.reload();
-        return true;
+        window.location.reload();
+        return false;
     };
 
     $(function(){

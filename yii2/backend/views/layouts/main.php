@@ -342,7 +342,6 @@ AppAsset::register($this);
         // 导航栏样式装换
         var select = 'ul.nav-list a[href=' + window.location.pathname.replace(/\//g, '\\/') +']';
         $(select).closest('li').addClass('active').parentsUntil('ul.nav-list').addClass('active open');
-
         // 隐藏和显示
         $('.me-hide').click(function(evt){
             evt.preventDefault();

@@ -7,6 +7,9 @@ function dateTimeString(td, cellData) {$(td).html(timeFormat(cellData, 'yyyy-MM-
 // 推荐信息
 function recommendToString(td, data) {$(td).html('<span class="label label-' + (data == 1 ? 'success">推荐' : 'warning">不推荐') + '</span>');}
 
+// 用户显示
+function adminToString(td, data, rowArr, row, col) {$(td).html(aAdmins[data]);}
+
 // 图片显示
 function stringToImage(td, data, rowdatas, row)
 {
@@ -32,6 +35,7 @@ var oCheckBox = {
 		"bSortable": false,
 		"class": 	 "center",
 		"title": 	 '<label class="position-relative"><input type="checkbox" class="ace" /><span class="lbl"></span></label>',
+        "bViews":    false,
 		"render": 	 function(data){
 			return '<label class="position-relative"><input type="checkbox" value="' + data["id"] + '" class="ace" /><span class="lbl"></span></label>';
         }
@@ -47,7 +51,6 @@ var oOperateDetails = {"data":null, "title":"操作", "bSortable":false, "create
 	]));
 }};
 
-// 配置的语言
 var oTableLanguage = {
 	// 显示
 	"sLengthMenu": 	 "每页 _MENU_ 条记录",
@@ -67,29 +70,29 @@ var oTableLanguage = {
 
 /**
  * MeTable
- * Desc: dataTables 表格操作
- * User: liujinxing
- * Date: 2016-07-20
+ * Desc: dataTables 表格操作信息
+ * User: liujx
+ * Date: 2016-07-21
  */
 var MeTable = (function($) {
 	// 构造函数初始化配置
 	function MeTable(options, tableOptions, detailOptions) {
 		// 表格信息配置
 		this.tableOptions = {
-			//"fnServerData": fnServerData,		// 获取数据的处理函数
-			"sAjaxSource": "search",			// 获取数据地址
-			"bLengthChange": true, 				// 是否可以调整分页
-			"bAutoWidth": true,           	 	// 是否自动计算列宽
-            "bPaginate": true,					// 是否使用分页
-            "iDisplayStart": 0,
-            "iDisplayLength": 10,
-            "bServerSide": true,		 		// 是否开启从服务器端获取数据
-            "bRetrieve": true,
-            "bDestroy": true,
-            // "processing": true,				// 是否使用加载进度条
-            "sPaginationType": "full_numbers",  // 分页样式
-            "oLanguage": oTableLanguage,		// 语言配置
-            "order":[[1, "desc"]],
+			// "fnServerData": fnServerData,		// 获取数据的处理函数
+			"sAjaxSource":      "search",			// 获取数据地址
+			"bLengthChange":    true, 				// 是否可以调整分页
+			"bAutoWidth":       false,           	// 是否自动计算列宽
+            "bPaginate":        true,			    // 是否使用分页
+            "iDisplayStart":    0,
+            "iDisplayLength":   10,
+            "bServerSide":      true,		 		// 是否开启从服务器端获取数据
+            "bRetrieve":        true,
+            "bDestroy":         true,
+            // "processing": true,				    // 是否使用加载进度条
+            "sPaginationType":  "full_numbers",     // 分页样式
+            "oLanguage":        oTableLanguage,		// 语言配置
+            "order":            [[1, "desc"]],      // 默认排序
 		};
 
         var self = this;
@@ -112,7 +115,7 @@ var MeTable = (function($) {
 			iViewLoading: 0, 				// 详情加载Loading
 			iLoading:     0, 				// 页面加载Loading
 			bViewFull: 	  false,			// 详情打开的方式 1 2 打开全屏
-			bColResize:   true,             // 列宽可拖拽
+            bColResize:   false,            // 是否运行列宽拖拽
 		};
 
         // 服务器数据处理
@@ -225,7 +228,7 @@ var MeTable = (function($) {
 
 		// 处理生成表单
 		this.tableOptions.aoColumns.forEach(function(k, v) {
-			views += createViewTr(k.title, k.data);											// 查看详情信息
+			if (k.bViews !== false) views += createViewTr(k.title, k.data);				    // 查看详情信息
 			if (k.edit != undefined) form += createForm(k);									// 编辑表单信息
 			if (k.search != undefined) self.options.sSearchHtml += createSearchForm(k, v);  // 搜索信息
 
@@ -362,7 +365,7 @@ var MeTable = (function($) {
 		}
 
         // 判断开启列宽拖拽
-        //if (self.options.bColResize) $(self.options.sTable).colResizable();
+        if (self.options.bColResize)$(self.options.sTable).colResizable();
 	};
 
 	// 表格搜索
@@ -489,23 +492,23 @@ var MeTable = (function($) {
         self.options.iLoading = layer.load();
 		// ajax提交数据
 		$.ajax({
-			url:      sBaseUrl,
-			type:     'POST',
-			data:     data,
-			dataType: 'json'
+			url:        sBaseUrl,
+			type:       'POST',
+			data:       data,
+			dataType:   'json',
 		}).always(function(){
 			layer.close(self.options.iLoading);
 		}).done(function(json){
 			layer.msg(json.msg, {icon:json.status == 1 ? 6 : 5});
-			// 判断操作成功
-			if (json.status == 1)
-			{
+            // 判断操作成功
+            if (json.status == 1)
+            {
                 // 执行之后的数据处理
                 if (typeof self.afterSave == 'function' && ! self.afterSave(json.data)) return false;
-				self.table.draw(false);
-				if (self.actionType !== "delete") $(sModal).modal('hide');
-				self.actionType = "";
-			}
+                self.table.draw(false);
+                if (self.actionType !== "delete") $(sModal).modal('hide');
+                self.actionType = "";
+            }
 		}).fail(ajaxFail);
 		return false;
 	};

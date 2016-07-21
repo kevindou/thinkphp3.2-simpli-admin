@@ -38,15 +38,22 @@ class Admin extends \common\models\Admin
         return $this->_statusLabel;
     }
 
+    public function behaviors()
+    {
+        return [
+//            TimestampBehavior::className(),
+        ];
+    }
+
     /**
      * @inheritdoc
      */
     public static function getArrayStatus()
     {
         return [
-            self::STATUS_ACTIVE => Yii::t('app', 'STATUS_ACTIVE'),
+            self::STATUS_ACTIVE   => Yii::t('app', 'STATUS_ACTIVE'),
             self::STATUS_INACTIVE => Yii::t('app', 'STATUS_INACTIVE'),
-            self::STATUS_DELETED => Yii::t('app', 'STATUS_DELETED'),
+            self::STATUS_DELETED  => Yii::t('app', 'STATUS_DELETED'),
         ];
     }
 
@@ -61,7 +68,6 @@ class Admin extends \common\models\Admin
 
     public function getRoleLabel()
     {
-
         if ($this->_roleLabel === null) {
             $roles = self::getArrayRole();
             $this->_roleLabel = $roles[$this->role];
@@ -69,15 +75,12 @@ class Admin extends \common\models\Admin
         return $this->_roleLabel;
     }
 
-    /**
-      * @inheritdoc
-      */
+    // 验证规则
     public function rules()
     {
         return [
             [['username', 'email'], 'required'],
-            [['password', 'repassword','gameids'], 'required', 'on' => ['admin-create']],
-            [['gameids'], 'required', 'on' => ['admin-update']],
+            [['password', 'repassword', 'role'], 'required', 'on' => ['admin-create']],
             [['username', 'email', 'password', 'repassword'], 'trim'],
             [['password', 'repassword'], 'string', 'min' => 6, 'max' => 30],
             // Unique
@@ -97,20 +100,16 @@ class Admin extends \common\models\Admin
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    // 验证场景
     public function scenarios()
     {
         return [
-            'admin-create' => ['username', 'email', 'password', 'repassword', 'status', 'role','gameids'],
-            'admin-update' => ['username', 'email', 'password', 'repassword', 'status', 'role','gameids']
+            'admin-create' => ['username', 'email', 'password', 'repassword', 'status', 'role'],
+            'admin-update' => ['username', 'email', 'password', 'repassword', 'status', 'role']
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
+    // 字段信息
     public function attributeLabels()
     {
         $labels = parent::attributeLabels();
@@ -124,38 +123,33 @@ class Admin extends \common\models\Admin
         );
     }
 
-    public function beforeValidate()
-    {
-        if (! empty($this->gameids))
-        {
-            $array = [];
-            foreach ($this->gameids as $value) $array[] = (int)$value;
-            $this->gameids = json_encode($array);
-            return true;
-        }
-        return false;
-    }
-    /**
-     * @inheritdoc
-     */
+    // 修改之前
     public function beforeSave($insert)
     {
-        if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord || (!$this->isNewRecord && $this->password)) {
+        if (parent::beforeSave($insert))
+        {
+            // 新增记录和修改了密码
+            if ($this->isNewRecord || (!$this->isNewRecord && $this->password))
+            {
                 $this->setPassword($this->password);
                 $this->generateAuthKey();
                 $this->generatePasswordResetToken();
-                $this->created_id = Yii::$app->getUser()->id;
+
+                // 新增的时候添加新增时间和用户
+                if ($this->isNewRecord)
+                {
+                    $this->create_id   = Yii::$app->getUser()->id;
+                    $this->create_time = time();
+                }
             }
+
+            $this->update_id   = Yii::$app->getUser()->id;
+            $this->update_time = time();
             return true;
         }
         return false;
     }
-      // 查询之后
-    public function afterFind()
-    {
-        if (! empty($this->gameids)) $this->gameids = json_decode($this->gameids);
-    }
+
     // 获取错误信息
     public function getErrorString()
     {

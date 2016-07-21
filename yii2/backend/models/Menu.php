@@ -97,13 +97,10 @@ class Menu extends \backend\models\Model
         else
         {
             // 其他用户登录成功获取权限
-            $auth = Yii::$app->getAuthManager();
-            $role = $auth->getRolesByUser($uid);
-            if ($role)
+            $arrAuth = Yii::$app->getAuthManager()->getPermissionsByUser($uid);
+            if ($arrAuth)
             {
-                foreach ($role as $value) $menus[] = $value->menus;
-                $menus = self::find()->select($field)->where(['status' => 1, 'id' => explode(',', implode(',', $menus))])->orderBy($sort)->indexBy('id')->asArray()->all();
-
+                $menus = self::find()->select($field)->where(['status' => 1, 'url' => array_keys($arrAuth)])->orderBy($sort)->indexBy('id')->asArray()->all();
                 // 有导航栏信息
                 if ($menus)
                 {
@@ -118,26 +115,31 @@ class Menu extends \backend\models\Model
         }
 
         // 处理导航栏信息
-        foreach ($menus as $value)
+        if ($menus)
         {
-            // 判断是否存在
-            $id = $value['pid'] == 0 ? $value['id'] : $value['pid'];
-            if ( ! isset($navigation[$id])) $navigation[$id] = ['child' => []];
+            foreach ($menus as $value)
+            {
+                // 判断是否存在
+                $id = $value['pid'] == 0 ? $value['id'] : $value['pid'];
+                if ( ! isset($navigation[$id])) $navigation[$id] = ['child' => []];
 
-            // 添加数据
-            if ($value['pid'] == 0)
-                $navigation[$id] = array_merge($navigation[$id], $value);
-            else
-                $navigation[$id]['child'][] = $value;
+                // 添加数据
+                if ($value['pid'] == 0)
+                    $navigation[$id] = array_merge($navigation[$id], $value);
+                else
+                    $navigation[$id]['child'][] = $value;
+            }
+
+            // 按照ID排序
+            ksort($navigation);
+
+            // 将导航栏信息添加到缓存
+            $cache = Yii::$app->cache;
+            if ($cache->get($index)) $cache->delete($index);
+            $cache->set($index, $navigation, Yii::$app->params['cacheTime']);
+            return true;
         }
 
-        // 按照ID排序
-        ksort($navigation);
-
-        // 将导航栏信息添加到缓存
-        $cache = Yii::$app->cache;
-        if ($cache->get($index)) $cache->delete($index);
-        $cache->set($index, $navigation, Yii::$app->params['cacheTime']);
-        return true;
+        return false;
     }
 }

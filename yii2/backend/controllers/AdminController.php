@@ -14,10 +14,18 @@ class AdminController extends Controller
     // 搜索配置
     public function where($params)
     {
+        $where  = [];
+        $intUid = (int)Yii::$app->user->id;
+        if ($intUid != 1)
+        {
+            $where = [['or', ['id' => $intUid], ['create_id' => $intUid]]];
+        }
+
         return [
             'id'       => '=',
-            'username' => '=',
-            'email'    => '=',
+            'username' => 'like',
+            'email'    => 'like',
+            'where'    => $where,
         ];
     }
 
@@ -25,10 +33,10 @@ class AdminController extends Controller
     public function actionIndex()
     {
         // 查询用户数据
-        $roles = Admin::getArrayRole();
-        Yii::$app->view->params['roles']  = $roles;
-        Yii::$app->view->params['status'] = Admin::getArrayStatus();
-        return $this->render('index');
+        return $this->render('index', [
+            'roles'  => Admin::getArrayRole(),      // 用户角色
+            'status' => Admin::getArrayStatus(),    // 状态
+        ]);
     }
 
     // 返回model
@@ -49,17 +57,20 @@ class AdminController extends Controller
             {
                 case 'insert':
                     $model = new Admin(['scenario' => 'admin-create']);
-                    $this->arrError['msg'] = '服务器繁忙, 请稍候再试...';
+                    $this->arrError['code'] = 206;
                     if ($model->load(['params' => Yii::$app->request->post()], 'params'))
                     {
                         if ($model->save())
                         {
                             Yii::$app->authManager->assign(Yii::$app->authManager->getRole($model->role), $model->id);
-                            $this->arrError['status'] = 1;
+                            $this->arrError = [
+                                'code' => 0,
+                                'data' => $model,
+                            ];
                         }
 
                         // 返回错误信息
-                        if ($this->arrError['status'] != 0) $this->arrError['msg'] = $model->getErrorString();
+                        if ($this->arrError['code'] !== 0) $this->arrError['msg'] = $model->getErrorString();
                     }
                     break;
                 case 'update':
@@ -67,26 +78,29 @@ class AdminController extends Controller
                     $uid = Yii::$app->user->id;
                     if ($id)
                     {
-                        $model = $this->findModel($id);
+                        $model = Admin::findOne($id);
                         if ($model)
                         {
                             // 判断权限 管理员可以操作所有权限,其他用户只能修改自己添加的用户
-                            $this->arrError['msg'] = '对不起，您现在还没获得该操作的权限!';
-                            if ($uid == 1 || $model->created_id == $uid)
+                            $this->arrError['code'] = 216;
+                            if ($uid == 1 || ($model->create_id == $uid || $model->id == $uid))
                             {
                                 $model->setScenario('admin-update');
-                                $this->arrError['msg'] = '服务器繁忙, 请稍候再试...';
+                                $this->arrError['code'] = 206;
                                 if ($model->load(['params' => Yii::$app->request->post()], 'params'))
                                 {
                                     if ($model->save())
                                     {
                                         Yii::$app->authManager->revokeAll($id);
                                         Yii::$app->authManager->assign(Yii::$app->authManager->getRole($model->role), $id);
-                                        $this->arrError['status'] = 1;
+                                        $this->arrError = [
+                                            'code'   => 0,
+                                            'data'   => $model,
+                                        ];
                                     }
 
                                     // 返回错误信息
-                                    if ($this->arrError['status'] != 1) $this->arrError['msg'] = $model->getErrorString();
+                                    if ($this->arrError['code'] !== 0) $this->arrError['msg'] = $model->getErrorString();
                                 }
                             }
                         }
@@ -95,13 +109,24 @@ class AdminController extends Controller
 
                 case 'delete':
                     $id = (int)$array['id'];
+                    // 不能删除管理员
                     if ($id !== 1)
                     {
-                        if ($this->findModel($id)->delete())
+                        // 需要有删除管理员的权限
+                        $this->arrError['code'] = 216;
+                        if (Yii::$app->user->can('deleteAdmin'))
                         {
-                            // 移出权限
-                            Yii::$app->authManager->revokeAll($id);
-                            $this->arrError['status'] = 1;
+                            $this->arrError['code'] = 207;
+                            $arrUser = Admin::findOne($id);
+                            if ($arrUser && $arrUser->delete())
+                            {
+                                // 移出权限
+                                Yii::$app->authManager->revokeAll($id);
+                                $this->arrError = [
+                                    'code' => 0,
+                                    'data' => $arrUser,
+                                ];
+                            }
                         }
                     }
                     break;
@@ -111,19 +136,4 @@ class AdminController extends Controller
         return $this->returnAjax();
     }
 
-    /**
-     * Finds the Admin model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Admin the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Admin::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
 }

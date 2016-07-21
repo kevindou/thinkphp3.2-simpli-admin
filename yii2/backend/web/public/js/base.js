@@ -22,6 +22,8 @@ function handleParams(params, prefix){var other=""; prefix = prefix ? prefix : '
 function Label(content,params){return"<label "+handleParams(params)+"> "+content+" </label>"}
 // 生成Input
 function createInput(params, type){return'<input type="'+type+'" '+handleParams(params)+" />"}
+// 生成密码
+function createPassword(params){ return createInput(params, 'password');}
 // 生成text
 function createText(params) {return createInput(params, 'text')}
 // 生成textarea
@@ -175,7 +177,7 @@ function createForm(k)
     if (!k.edit.type) k.edit.type = "text";
     k.edit.options["name"]  = k.sName;
     k.edit.options["class"] = "form-control";
-    if (k.edit.type == undefined) k.edit.type = "text"
+    if (k.edit.type == undefined) k.edit.type = "text";
 
     if ( k.edit.type == "hidden" )
         form += createInput(k.edit.options, 'hidden');
@@ -193,7 +195,7 @@ function createForm(k)
         }
 
         // 默认输入框处理
-        if (k.edit.type == "text") if (!empty(k.value)) k.edit.options["value"] = k.value
+        if (k.edit.type == "text") if (!empty(k.value)) k.edit.options["value"] = k.value;
 
         // 使用函数
         form += window['create' + ucfirst(k.edit.type)](k.edit.options, k.value, k.edit.default) + '</div></div>';

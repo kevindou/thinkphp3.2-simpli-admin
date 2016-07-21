@@ -132,7 +132,6 @@ class Auth extends \yii\db\ActiveRecord
             $auth = Yii::$app->getAuthManager();
             $role = $auth->getRole($name);
             $role->description = $this->description;
-            $role->menus       = $this->menus;
             // save role
             if ($auth->update($name, $role)) {
                 // remove old permissions

@@ -25,20 +25,23 @@ $this->params['breadcrumbs'][] = $this->title;
 <!--表格数据-->
 <table class="table table-striped table-bordered table-hover" id="showTable"></table>
 <script type="text/javascript">
-    var myTable = new MeTable({sTitle:"管理员信息", "bColResize": false},{
+    var aStatus = <?=json_encode($status)?>,
+        aAdmins = <?=json_encode($this->params['admins'])?>,
+        aRoles  = <?=json_encode($roles)?>,
+        myTable = new MeTable({sTitle:"管理员信息"},{
         "aoColumns":[
             oCheckBox,
-			{"title": "管理员ID", "data": "id", "sName": "id", "edit": {"type": "text", "options": {"required":true,"number":true,}}, "search": {"type": "text"}}, 
+			{"title": "管理员ID", "data": "id", "sName": "id", "edit": {"type": "hidden"}, "search": {"type": "text"}},
 			{"title": "管理员账号", "data": "username", "sName": "username", "edit": {"type": "text", "options": {"required":true,"rangelength":"[2, 255]"}}, "search": {"type": "text"}, "bSortable": false}, 
-			{"title": "密码", "data": null, "sName": "password", "edit": {"type": "text", "options": {"rangelength":"[2, 20]"}}, "bSortable": false},
-			{"title": "确认密码", "data": null, "sName": "respassword", "edit": {"type": "text", "options": {"rangelength":"[2, 20]"}}, "bSortable": false},
-			{"title": "邮箱", "data": "email", "sName": "email", "edit": {"type": "text", "options": {"required":true,"rangelength":"[2, 255]"}}, "search": {"type": "text"}, "bSortable": false}, 
-			{"title": "角色", "data": "role", "sName": "role", "edit": {"type": "text", "options": {"required":true,"rangelength":"[2, 64]"}}, "bSortable": false}, 
-			{"title": "状态", "data": "status", "sName": "status", "edit": {"type": "text", "options": {"required":true,"number":true,}}, "bSortable": false}, 
+			{"title": "密码", "data": "password", "sName": "password", "edit": {"type": "password", "options": {"rangelength":"[2, 20]"}}, "bSortable": false, "defaultContent":"", "bViews":false},
+			{"title": "确认密码", "data": "repassword", "sName": "repassword", "edit": {"type": "password", "options": {"rangelength":"[2, 20]", "equalTo":"input[name=password]:first"}}, "bSortable": false, "defaultContent":"", "bViews":false},
+			{"title": "邮箱", "data": "email", "sName": "email", "edit": {"type": "text", "options": {"required":true,"rangelength":"[2, 255]", "email": true}}, "search": {"type": "text"}, "bSortable": false},
+			{"title": "角色", "data": "role", "sName": "role", "value": aRoles, "edit": {"type": "select", "options": {"required":true}}, "bSortable": false},
+			{"title": "状态", "data": "status", "sName": "status", "value": aStatus, "edit": {"type": "radio", "default": 1, "options": {"required":true,"number":true,}}, "bSortable": false},
 			{"title": "创建时间", "data": "create_time", "sName": "create_time", "createdCell" : dateTimeString}, 
-			{"title": "创建用户", "data": "created_id", "sName": "created_id", "bSortable": false}, 
+			{"title": "创建用户", "data": "create_id", "sName": "created_id", "bSortable": false, "createdCell": adminToString},
 			{"title": "修改时间", "data": "update_time", "sName": "update_time", "createdCell" : dateTimeString}, 
-			{"title": "修改用户", "data": "update_id", "sName": "update_id", "bSortable": false}, 
+			{"title": "修改用户", "data": "update_id", "sName": "update_id", "bSortable": false, "createdCell": adminToString},
 			oOperate
         ],
 
