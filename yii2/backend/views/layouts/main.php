@@ -106,11 +106,11 @@ AppAsset::register($this);
                     </a>
 
                     <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+<!--                        <li>-->
+<!--                            <a href="#"><i class="ace-icon fa fa-cog"></i>设置</a>-->
+<!--                        </li>-->
                         <li>
-                            <a href="#"><i class="ace-icon fa fa-cog"></i>设置</a>
-                        </li>
-                        <li>
-                            <a href="profile.html"><i class="ace-icon fa fa-user"></i>个人信息</a>
+                            <a href="<?=Url::toRoute(['admin/view'])?>"><i class="ace-icon fa fa-user"></i>个人信息</a>
                         </li>
                         <li class="divider"></li>
                         <li>

@@ -136,4 +136,10 @@ class AdminController extends Controller
         return $this->returnAjax();
     }
 
+    // 我的信息
+    public function actionView()
+    {
+        return $this->render('view', ['user' => Yii::$app->getUser()->identity]);
+    }
+
 }
