@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2016-07-21 18:23:48
+Date: 2016-07-22 19:12:38
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,16 +22,27 @@ DROP TABLE IF EXISTS `my_admin`;
 CREATE TABLE `my_admin` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '管理员ID',
   `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '管理员账号',
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '邮箱',
+  `face` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '管理员头像',
+  `role` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user' COMMENT '角色',
+  `status` smallint(6) NOT NULL DEFAULT '10' COMMENT '状态',
   `auth_key` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT '自动登录密钥',
   `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '密码哈希值',
   `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '重新登录哈希值',
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL COMMENT '邮箱',
-  `role` varchar(64) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'user' COMMENT '角色',
-  `status` smallint(6) NOT NULL DEFAULT '10' COMMENT '状态',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `create_id` int(11) NOT NULL COMMENT '创建用户',
   `update_time` int(11) NOT NULL COMMENT '修改时间',
   `update_id` int(11) DEFAULT NULL COMMENT '修改用户',
+  `last_time` int(11) DEFAULT NULL COMMENT '上一次登录时间',
+  `last_ip` char(12) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '上一次登录IP',
+  `address` varchar(50) COLLATE utf8_unicode_ci DEFAULT '' COMMENT '地址信息',
+  `age` tinyint(3) DEFAULT '18' COMMENT '年龄',
+  `maxim` varchar(255) COLLATE utf8_unicode_ci DEFAULT '' COMMENT '座右铭',
+  `nickname` varchar(255) COLLATE utf8_unicode_ci DEFAULT '' COMMENT '真实姓名',
+  `sex` tinyint(1) DEFAULT '1' COMMENT '性别（1 男 0 女）',
+  `home_url` varchar(50) COLLATE utf8_unicode_ci DEFAULT '' COMMENT '个人主页',
+  `facebook` varchar(50) COLLATE utf8_unicode_ci DEFAULT '' COMMENT 'facebook账号',
+  `birthday` varchar(20) COLLATE utf8_unicode_ci DEFAULT '' COMMENT '生日',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `role` (`role`),
@@ -42,9 +53,9 @@ CREATE TABLE `my_admin` (
 -- ----------------------------
 -- Records of my_admin
 -- ----------------------------
-INSERT INTO `my_admin` VALUES ('1', 'admin', 'gKkLFMdB2pvIXOFNpF_Aeemvdf1j0YUM', '$2y$13$Nuf1mzDRoCMxrWI.rIjENu20QshJG41smdEeHFHxq0qdmS99YytHy', '5vLaPpUS-I-XxJaoGP-GZDk474WdnaK3_1469073015', 'Super@admin.com', 'admin', '1', '1457337222', '1', '1469076860', '1');
-INSERT INTO `my_admin` VALUES ('3', 'liujinxing', 'Ja4xO7lSPmj_4Gtshkiied-_8EolgX7b', '$2y$13$NUDMG9NMx0BpXotoTP9Xj.qDsFih94meRHuMBfWM8w28qpCzX3Hxm', 'ggsBHJf2nVtiG69i-Xn6H1E8TGVdcJmt_1469083899', '1136261505@qq.com', 'user', '1', '1469077822', '1', '1469095955', '3');
-INSERT INTO `my_admin` VALUES ('4', 'gongyan', 'GQFk-KpdJhYiyP4PTC9jnXE-BbiSmXRG', '$2y$13$k1ZD3/FL5LSmKulS3BPXme6a.IptIYqgcfsgoBNdFhPzLekgIHyzC', 'Z1APs8xqLv27wF_WRnyofu1yjRS9qw54_1469095775', '6104155122@qq.com', 'user', '1', '1469095775', '3', '1469095913', '3');
+INSERT INTO `my_admin` VALUES ('1', 'super', 'Super@admin.com', '/public/assets/avatars/5791ddb2efd3c.jpg', 'admin', '1', 'gKkLFMdB2pvIXOFNpF_Aeemvdf1j0YUM', '$2y$13$Nuf1mzDRoCMxrWI.rIjENu20QshJG41smdEeHFHxq0qdmS99YytHy', '5vLaPpUS-I-XxJaoGP-GZDk474WdnaK3_1469073015', '1457337222', '1', '1469179297', '1', '1469174907', '127.0.0.1', '', '19', '学会微笑，学会面对，学会放下，让一切随心，随意，随缘！', '', '1', '', '', '');
+INSERT INTO `my_admin` VALUES ('3', 'liujinxing', '1136261505@qq.com', '/public/assets/avatars/avatar.jpg', 'user', '1', 'Ja4xO7lSPmj_4Gtshkiied-_8EolgX7b', '$2y$13$NUDMG9NMx0BpXotoTP9Xj.qDsFih94meRHuMBfWM8w28qpCzX3Hxm', 'ggsBHJf2nVtiG69i-Xn6H1E8TGVdcJmt_1469083899', '1469077822', '1', '1469095955', '3', null, null, '', '18', '', '', '1', '', '', '');
+INSERT INTO `my_admin` VALUES ('4', 'gongyan', '6104155122@qq.com', '/public/assets/avatars/avatar.jpg', 'user', '1', 'GQFk-KpdJhYiyP4PTC9jnXE-BbiSmXRG', '$2y$13$k1ZD3/FL5LSmKulS3BPXme6a.IptIYqgcfsgoBNdFhPzLekgIHyzC', 'Z1APs8xqLv27wF_WRnyofu1yjRS9qw54_1469095775', '1469095775', '3', '1469095913', '3', null, null, '', '18', '', '', '1', '', '', '');
 
 -- ----------------------------
 -- Table structure for my_auth_assignment
@@ -88,9 +99,12 @@ CREATE TABLE `my_auth_item` (
 -- Records of my_auth_item
 -- ----------------------------
 INSERT INTO `my_auth_item` VALUES ('admin', '1', '超级管理员', null, null, '1469009779', '1469009779');
+INSERT INTO `my_auth_item` VALUES ('admin/editable', '2', '管理员信息行内编辑', null, null, '1469177671', '1469177671');
 INSERT INTO `my_auth_item` VALUES ('admin/index', '2', '管理员信息显示', null, null, '1469009816', '1469009816');
 INSERT INTO `my_auth_item` VALUES ('admin/search', '2', '管理员信息搜索', null, null, '1469009816', '1469009816');
 INSERT INTO `my_auth_item` VALUES ('admin/update', '2', '管理员信息编辑', null, null, '1469009816', '1469009816');
+INSERT INTO `my_auth_item` VALUES ('admin/upload', '2', '管理员头像上传', null, null, '1469157297', '1469157297');
+INSERT INTO `my_auth_item` VALUES ('admin/view', '2', '管理员个人信息', null, null, '1469096927', '1469096927');
 INSERT INTO `my_auth_item` VALUES ('authority/index', '2', '权限信息显示', null, null, '1469078967', '1469080494');
 INSERT INTO `my_auth_item` VALUES ('authority/search', '2', '权限信息搜索', null, null, '1469078967', '1469080591');
 INSERT INTO `my_auth_item` VALUES ('authority/update', '2', '权限信息编辑', null, null, '1469094174', '1469094174');
@@ -110,7 +124,7 @@ INSERT INTO `my_auth_item` VALUES ('role/index', '2', '角色信息显示', null
 INSERT INTO `my_auth_item` VALUES ('role/search', '2', '角色信息搜索', null, null, '1469081628', '1469081628');
 INSERT INTO `my_auth_item` VALUES ('role/update', '2', '角色信息编辑', null, null, '1469081575', '1469081575');
 INSERT INTO `my_auth_item` VALUES ('role/view', '2', '角色信息查看详情', null, null, '1469094284', '1469094284');
-INSERT INTO `my_auth_item` VALUES ('user', '1', '管理员', null, null, '1469083867', '1469096145');
+INSERT INTO `my_auth_item` VALUES ('user', '1', '管理员', null, null, '1469083867', '1469098773');
 
 -- ----------------------------
 -- Table structure for my_auth_item_child
@@ -128,12 +142,16 @@ CREATE TABLE `my_auth_item_child` (
 -- ----------------------------
 -- Records of my_auth_item_child
 -- ----------------------------
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/editable');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/index');
 INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/index');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/search');
 INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/search');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/update');
 INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/update');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/upload');
+INSERT INTO `my_auth_item_child` VALUES ('admin', 'admin/view');
+INSERT INTO `my_auth_item_child` VALUES ('user', 'admin/view');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'authority/index');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'authority/search');
 INSERT INTO `my_auth_item_child` VALUES ('admin', 'authority/update');
@@ -195,7 +213,7 @@ CREATE TABLE `my_menu` (
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '修改时间',
   `update_id` int(11) NOT NULL DEFAULT '0' COMMENT '修改用户',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COMMENT='导航栏信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='导航栏信息表';
 
 -- ----------------------------
 -- Records of my_menu
