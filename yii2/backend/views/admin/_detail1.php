@@ -131,8 +131,9 @@
 
                     <div class="profile-info-value">
                         <i class="fa fa-map-marker light-orange bigger-110"></i>
-                        <span id="country" class="editable editable-click">中国</span>
-                        <span id="city" class="editable editable-click">湖南</span>
+                        <span id="address" class="editable editable-click">中国</span>
+                        <span id="country" class="editable editable-click">湖南</span>
+                        <span id="city" class="editable editable-click">岳阳市</span>
                     </div>
                 </div>
 
@@ -480,65 +481,26 @@
             error:           EditError,
         });
 
-        // 城市和地区联动
-        var countries = [];
-        $.each({ "CA": "Canada", "IN": "India", "NL": "Netherlands", "TR": "Turkey", "US": "United States"}, function(k, v) {
-            countries.push({id: k, text: v});
-        });
+        var sAddressUrl = "<?=\yii\helpers\Url::toRoute(['admin/address'])?>";
 
-        var cities = [];
-        cities["CA"] = [];
-        $.each(["Toronto", "Ottawa", "Calgary", "Vancouver"] , function(k, v){
-            cities["CA"].push({id: v, text: v});
-        });
-        cities["IN"] = [];
-        $.each(["Delhi", "Mumbai", "Bangalore"] , function(k, v){
-            cities["IN"].push({id: v, text: v});
-        });
-        cities["NL"] = [];
-        $.each(["Amsterdam", "Rotterdam", "The Hague"] , function(k, v){
-            cities["NL"].push({id: v, text: v});
-        });
-        cities["TR"] = [];
-        $.each(["Ankara", "Istanbul", "Izmir"] , function(k, v){
-            cities["TR"].push({id: v, text: v});
-        });
-        cities["US"] = [];
-        $.each(["New York", "Miami", "Los Angeles", "Chicago", "Wysconsin"] , function(k, v){
-            cities["US"].push({id: v, text: v});
-        });
-
-        var currentValue = "NL";
+        // 省
         $('#country').editable({
             type: 'select2',
             value : 'NL',
             //onblur:'ignore',
-            source: countries,
+            source: sAddressUrl,
             select2: {
                 'width': 140
             },
-            success: function(response, newValue) {
-                if(currentValue == newValue) return;
-                currentValue = newValue;
-
-                var new_source = (!newValue || newValue == "") ? [] : cities[newValue];
-
-                //the destroy method is causing errors in x-editable v1.4.6+
-                //it worked fine in v1.4.5
-                /**
-                 $('#city').editable('destroy').editable({
-				type: 'select2',
-				source: new_source
-			}).editable('setValue', null);
-                 */
-
-                //so we remove it altogether and create a new element
+            success: function(response, newValue)
+            {
+                console.info(newValue);
                 var city = $('#city').removeAttr('id').get(0);
-                $(city).clone().attr('id', 'city').text('Select City').editable({
+                $(city).clone().attr('id', 'city').text('选择城市').editable({
                     type: 'select2',
                     value : null,
                     //onblur:'ignore',
-                    source: new_source,
+                    source: sAddressUrl + '?iPid=' + newValue,
                     select2: {
                         'width': 140
                     }
@@ -548,6 +510,7 @@
             }
         });
 
+        // 市
         $('#city').editable({
             type: 'select2',
             value : 'Amsterdam',
@@ -556,6 +519,9 @@
                 'width': 140
             }
         });
+
+        // 县
+        
 
         // 上一次登录时间
         $('#login_time').editable({

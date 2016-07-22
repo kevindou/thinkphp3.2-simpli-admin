@@ -2,12 +2,10 @@
 namespace common\models;
 
 use Yii;
-use yii\base\Model;
-use common\models\Admin;
 /**
  * Login form
  */
-class AdminForm extends Model
+class AdminForm extends \yii\base\Model
 {
     public $username;
     public $password;

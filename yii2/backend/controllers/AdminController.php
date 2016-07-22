@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use backend\models\Admin;
+use common\models\China;
 use Yii;
 /**
  * file: AdminController.php
@@ -177,5 +178,26 @@ class AdminController extends Controller
         }
 
         return true;
+    }
+
+    // 获取地址信息
+    public function actionAddress()
+    {
+        $request = Yii::$app->request;
+        $array   = [];
+        if ($request->isGet)
+        {
+            $strName = $request->get('query');          // 查询参数
+            $intPid  = (int)$request->get('iPid', 0);   // 父类ID
+            $where   = ['and', ['Pid' => $intPid]];
+            if ( ! empty($strName)) array_push($where, ['like', 'Name', $strName]);
+            $arrCountry = China::find()->select(['Id', 'Name'])->where($where)->all();
+            if ($arrCountry)
+            {
+                foreach ($arrCountry as $value) $array[] = ['id' => $value->Id, 'text' => $value->Name];
+            }
+        }
+
+        exit(json_encode($array));
     }
 }

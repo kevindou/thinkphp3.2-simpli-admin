@@ -85,12 +85,16 @@ class Admin extends \common\models\Admin
             [['password', 'repassword'], 'string', 'min' => 6, 'max' => 30],
             // Unique
             [['username', 'email'], 'unique'],
+            [['home_url', 'facebook'], 'string', 'min' => 2, 'max' => 50],
+            ['home_url', 'url'],
+            ['birthday', 'string', 'min' => 2, 'max' => 20],
             // Username
             ['username', 'match', 'pattern' => '/^[a-zA-Z0-9_-]+$/'],
             ['username', 'string', 'min' => 3, 'max' => 30],
             // E-mail
             ['email', 'string', 'max' => 100],
             ['email', 'email'],
+            [['age', 'sex'], 'integer'],
             // Repassword
             ['repassword', 'compare', 'compareAttribute' => 'password'],
             //['status', 'default', 'value' => self::STATUS_ACTIVE],
@@ -106,7 +110,7 @@ class Admin extends \common\models\Admin
         return [
             'default'      => ['username', 'email', 'password', 'repassword', 'status', 'role'],
             'admin-create' => ['username', 'email', 'password', 'repassword', 'status', 'role'],
-            'admin-update' => ['username', 'email', 'password', 'repassword', 'status', 'role']
+            'admin-update' => ['username', 'email', 'password', 'repassword', 'status', 'role', 'nickname', 'home_url', 'facebook', 'maxim', 'birthday', 'sex', 'age']
         ];
     }
 
@@ -123,6 +127,14 @@ class Admin extends \common\models\Admin
                 'last__ip'   => '上一次登录的IP',
                 'password'   => '密码',
                 'repassword' => '确认密码',
+                'home_url'   => '主页地址',
+                'birthday'   => '生日',
+                'facebook'   => 'FaceBook账号',
+                'sex'        => '性别',
+                'age'        => '年龄',
+                'address'    => '地址',
+                'maxim'      => '座右铭',
+                'nickname'   => '真实姓名',
             ]
         );
     }

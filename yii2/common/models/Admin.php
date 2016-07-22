@@ -4,7 +4,6 @@ namespace common\models;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
@@ -24,7 +23,7 @@ use yii\web\IdentityInterface;
  * @property integer $updated_time
  * @property string $password write-only password
  */
-class Admin extends ActiveRecord implements IdentityInterface
+class Admin extends Model implements IdentityInterface
 {
     const STATUS_DELETED = -1;
     const STATUS_INACTIVE = 0;

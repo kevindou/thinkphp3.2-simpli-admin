@@ -19,7 +19,7 @@ use Yii;
  * @property integer $update_time
  * @property integer $update_id
  */
-class Menu extends \backend\models\Model
+class Menu extends \common\models\Model
 {
     /**
      * @inheritdoc

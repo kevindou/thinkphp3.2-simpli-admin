@@ -1,6 +1,5 @@
 <?php
-namespace backend\models;
-use Yii;
+namespace common\models;
 
 class Model extends \yii\db\ActiveRecord
 {

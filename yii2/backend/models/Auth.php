@@ -20,7 +20,7 @@ use Yii;
  * @property AuthRule $ruleName
  * @property AuthItemChild[] $authItemChildren
  */
-class Auth extends \yii\db\ActiveRecord
+class Auth extends \common\models\Model
 {
     /**
      * Auth type

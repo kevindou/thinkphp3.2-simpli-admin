@@ -1,5 +1,5 @@
 <?php
-namespace backend\models;
+namespace common\models;
 /**
  * Class    UploadForm
  * @package backend\models

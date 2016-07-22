@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use backend\models\Admin;
-use backend\models\UploadForm;
+use common\models\UploadForm;
 use yii\web\UploadedFile;
 use yii\helpers\ArrayHelper;
 
