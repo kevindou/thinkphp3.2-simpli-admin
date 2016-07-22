@@ -91,6 +91,7 @@ class Controller extends \yii\web\Controller
         $this->admins = ArrayHelper::map($admin, 'id', 'username');
         // 注入变量信息
         Yii::$app->view->params['admins'] = $this->admins;
+        Yii::$app->view->params['user']   = Yii::$app->getUser()->identity;
     }
 
     // 首页显示
@@ -348,6 +349,29 @@ class Controller extends \yii\web\Controller
         return $this->returnAjax();
     }
 
+    /**
+     * getUploadPath() 获取上传文件目录(默认是相对路径 ./public/uploads)
+     * @access protected
+     * @return string 返回上传文件的目录地址(相对于index.php文件的目录)
+     */
+    protected function getUploadPath()
+    {
+        return './public/uploads';
+    }
+
+    /**
+     * afterUpload() 文件上传成功的处理信息
+     * @access protected
+     * @param  object $objFile     文件上传类
+     * @param  string $strFilePath 文件保存路径
+     * @param  string $strField    上传文件表单名
+     * @return bool 上传成功返回true
+     */
+    public function afterUpload($objFile, &$strFilePath, $strField)
+    {
+        return true;
+    }
+
     // 图片上传
     public function actionUpload()
     {
@@ -356,48 +380,44 @@ class Controller extends \yii\web\Controller
         if ($request->isPost)
         {
             // 接收参数
-            $file  = $request->get('fileurl');
-            $field = $request->get('field');
-            if (! empty($field))
+            $strFile  = $request->get('sOldUrl');   // 旧的地址
+            $strField = $request->get('sField');    // 上传文件表单名称
+            if ( ! empty($strField))
             {
                 $model = new UploadForm();
-                $model->scenario = $field;
+                $model->scenario = $strField;
                 try {
-                    $objFile = $model->$field = UploadedFile::getInstance($model, $field);
+                    $objFile = $model->$strField = UploadedFile::getInstance($model, $strField);
                     if ($objFile && $model->validate())
                     {
                         // 创建目录
-                        if ($field  == 'push') {
-                            $dirName  = "./public/push/".date('Ym/');
-                        } else {
-                            $dirName  = "./public/uploads/".date('Ym/');
-                        }
-
+                        $dirName = $this->getUploadPath();
                         if ( ! file_exists($dirName)) mkdir($dirName, 0777, true);
                         $this->arrError['code'] = 202;
                         $this->arrError['data'] = $dirName;
                         if (file_exists($dirName))
                         {
                             // 生成文件随机名
-                            $fileName = uniqid() . '.';
-                            $fileDir  = $dirName. $fileName. $objFile->extension;
+                            $strFileName = uniqid() . '.';
+                            $strFilePath = $dirName. $strFileName. $objFile->extension;
                             $this->arrError['code'] = 204;
-                            if ($objFile->saveAs($fileDir))
+                            if ($objFile->saveAs($strFilePath) && $this->afterUpload($objFile, $strFilePath, $strField))
                             {
-                                if (! empty($file) && file_exists('.'.$file)) unlink('.'.$file);
+                                // 删除旧文件
+                                if (! empty($strFile) && file_exists('.'.$strFile)) unlink('.'.$strFile);
                                 $this->arrError['code'] = 1;
                                 $this->arrError['data'] = [
-                                    'fileDir' => trim($fileDir, '.'),
-                                    'image'   => $objFile->baseName.'.'.$objFile->extension,
+                                    'sFilePath' => trim($strFilePath, '.'),
+                                    'sFileName' => $objFile->baseName.'.'.$objFile->extension,
                                 ];
                             }
                         }
                     } else {
-                        $this->arrError['msg'] = $model->getFirstError($field);
+                        $this->arrError['msg'] = $model->getFirstError($strField);
                     }
                 } catch (\Exception $e) {
                     $this->arrError['code'] = 203;
-                    $this->arrError['data'] = $e->getMessage();
+                    $this->arrError['msg']  = $e->getMessage();
                 }
             }
         }

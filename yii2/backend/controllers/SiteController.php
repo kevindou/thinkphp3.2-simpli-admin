@@ -5,6 +5,7 @@ use Yii;
 use yii\filters\AccessControl;
 use common\models\AdminForm;
 use backend\models\Menu;
+use backend\models\Admin;
 use yii\filters\VerbFilter;
 use yii\web\UnauthorizedHttpException;
 
@@ -60,7 +61,10 @@ class SiteController extends \yii\web\Controller
         // 查询导航栏信息
         $menus = Yii::$app->cache->get('navigation'.Yii::$app->user->id);
         if ( ! $menus) throw new UnauthorizedHttpException('对不起，您还没获得显示导航栏目权限!');
+
+        // 用户信息和导航栏目
         Yii::$app->view->params['menus'] = $menus;
+        Yii::$app->view->params['user']  = Yii::$app->getUser()->identity;
 
         // 系统信息
         $system = explode(' ', php_uname());
@@ -100,7 +104,15 @@ class SiteController extends \yii\web\Controller
     // 用户退出
     public function actionLogout()
     {
-        // 用户退出
+        // 用户退出修改登录时间
+        $admin = Admin::findOne(Yii::$app->user->id);
+        if ($admin)
+        {
+            $admin->last_time = time();
+            $admin->last_ip   = Yii::$app->request->userIP;
+            $admin->save();
+        }
+
         Yii::$app->user->logout();
         return $this->goHome();
     }

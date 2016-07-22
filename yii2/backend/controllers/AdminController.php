@@ -140,6 +140,42 @@ class AdminController extends Controller
     // 我的信息
     public function actionView()
     {
-        return $this->render('view', ['user' => Yii::$app->getUser()->identity]);
+        return $this->render('view');
+    }
+
+    // 上传文件目录
+    public function getUploadPath()
+    {
+        return './public/assets/avatars/';
+    }
+
+    // 上传头像之后的处理
+    public function afterUpload($objFile, &$strFilePath, $strField)
+    {
+        // 上传头像信息
+        if ($strField === 'avatar')
+        {
+            $admin = Admin::findOne(Yii::$app->user->id);
+            if ($admin)
+            {
+                // 删除之前的图像信息
+                if ($admin->face && file_exists('.'.$admin->face))
+                {
+                    @unlink('.'.$admin->face);
+                    @unlink('.'.dirname($admin->face).'/thumb_'.basename($admin->face));
+                }
+
+                $strTmpPath = dirname($strFilePath).'/thumb_'.basename($strFilePath);
+                // 处理图片
+                $image = Yii::$app->image->load($strFilePath);
+                $image->resize(180, 180, \yii\image\drivers\Image::CROP)->save($strTmpPath);
+                $image->resize(48, 48, \yii\image\drivers\Image::CROP)->save();
+                $admin->face = ltrim($strFilePath, '.');
+                $admin->save();
+                $strFilePath = $strTmpPath;
+            }
+        }
+
+        return true;
     }
 }

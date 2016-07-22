@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-3 center">
 							<span class="profile-picture">
-								<img src="/public/assets/avatars/avatar.jpg" id="avatar2" alt="Alex's Avatar" class="editable img-responsive">
+								<img src="<?=$user->face ? dirname($user->face).'/thumb_'.basename($user->face) : '/public/assets/avatars/profile-pic.jpg'?>" id="avatar2" alt="Alex's Avatar" class="editable img-responsive">
 							</span>
 
                             <div class="space space-4"></div>
@@ -68,7 +68,7 @@
                                     <div class="profile-info-name"> 年龄 </div>
 
                                     <div class="profile-info-value">
-                                        <span>永远18</span>
+                                        <span><?=$user->age?></span>
                                     </div>
                                 </div>
 
@@ -95,7 +95,7 @@
                                 <div class="profile-info-row">
                                     <div class="profile-info-name"> 个人主页 </div>
                                     <div class="profile-info-value">
-                                        <a target="_blank" href="http://user.qzone.qq.com/821901008">http://user.qzone.qq.com/821901008</a>
+                                        <a target="_blank" href="<?=$user->home_url?>"><?=$user->home_url?></a>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">
@@ -103,7 +103,7 @@
                                         <i class="middle ace-icon fa fa-facebook-square bigger-150 blue"></i>
                                     </div>
                                     <div class="profile-info-value">
-                                        <a href="https://www.facebook.com/profile.php?id=100010982047493" target="_blank">821901008@qq.com</a>
+                                        <a href="<?=$user->facebook?>" target="_blank"><?=$user->facebook?></a>
                                     </div>
                                 </div>
                             </div>

@@ -2,16 +2,16 @@
     <div id="user-profile-3" class="user-profile row">
         <div class="col-sm-offset-1 col-sm-10">
             <div class="well well-sm">
-                <div class="inline middle blue bigger-110"> 你已经完成配置信息的70% </div>
+                <div class="inline middle blue bigger-110"> 你已经完成配置信息的<span id="sProgressHtml"> 0% </div>
                 &nbsp; &nbsp; &nbsp;
-                <div style="width:60%;" data-percent="70%" class="inline middle no-margin progress progress-striped active">
-                    <div class="progress-bar progress-bar-success" style="width:70%"></div>
+                <div style="width:60%;"  class="inline middle no-margin progress progress-striped active">
+                    <div class="progress-bar progress-bar-success" id="sProgress"></div>
                 </div>
             </div>
 
             <div class="space"></div>
 
-            <form class="form-horizontal">
+            <form class="form-horizontal" name="user" id="sUserForm">
                 <div class="tabbable">
                     <ul class="nav nav-tabs padding-16">
                         <li class="active">
@@ -35,9 +35,7 @@
                                 <div class="col-xs-12 col-sm-4">
                                     <input type="file" />
                                 </div>
-
                                 <div class="vspace-12-sm"></div>
-
                                 <div class="col-xs-12 col-sm-8">
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label no-padding-right" for="form-field-username">账号名</label>
@@ -49,8 +47,8 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label no-padding-right" for="form-field-first">真实姓名</label>
                                         <div class="col-sm-8">
-                                            <input class="input-small" type="text" id="form-field-first" placeholder="性" value="liu" />
-                                            <input class="input-small" type="text" id="form-field-last" placeholder="名" value="jinxing" />
+                                            <input class="input-small" type="text" id="form-field-first" placeholder="性" value="" />
+                                            <input class="input-small" type="text" id="form-field-last" placeholder="名" value="" />
                                         </div>
                                     </div>
                                 </div>
@@ -91,7 +89,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-comment">座右铭</label>
                                 <div class="col-sm-9">
-                                    <textarea id="form-field-comment"></textarea>
+                                    <textarea id="form-field-comment"><?=$user->maxim?></textarea>
                                 </div>
                             </div>
                             <div class="space"></div>
@@ -100,7 +98,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-email">电子邮件</label>
                                 <div class="col-sm-9">
 									<span class="input-icon input-icon-right">
-										<input type="email" id="form-field-email" value="alexdoe@gmail.com" />
+										<input type="email" id="form-field-email" value="<?=$user->email?>" />
 										<i class="ace-icon fa fa-envelope"></i>
 									</span>
                                 </div>
@@ -110,7 +108,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-website">个人主页</label>
                                 <div class="col-sm-9">
 									<span class="input-icon input-icon-right">
-										<input type="url" id="form-field-website" value="http://www.liujinxing.com/" />
+										<input type="url" id="form-field-website" value="<?=$user->home_url?>" />
 										<i class="ace-icon fa fa-globe"></i>
 									</span>
                                 </div>
@@ -120,7 +118,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-facebook">Facebook</label>
                                 <div class="col-sm-9">
 									<span class="input-icon">
-										<input type="text" value="facebook_alexdoe" id="form-field-facebook" />
+										<input type="text" value="<?=$user->facebook?>" id="form-field-facebook" />
 										<i class="ace-icon fa fa-facebook blue"></i>
 									</span>
                                 </div>
@@ -163,3 +161,24 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var $form  = $('#sUserForm'),
+        $input = $form.find('input');
+    alert($input.length);
+    // 修改进度
+    function setProgress()
+    {
+        var iHave  = 0;
+        $input.each(function(){if ( ! empty($(this).val())) iHave ++;});
+        var sProgress = Math.min(parseInt(iHave / ($input.length - 2) * 100), 100) + '%';
+        $('#sProgressHtml').html(sProgress);
+        $('#sProgress').css('width', sProgress);
+    }
+
+    $(function(){
+        setProgress();
+        $input.bind('blur', function(){
+            setProgress();
+        })
+    })
+</script>

@@ -92,17 +92,17 @@ AppAsset::register($this);
                 <!-- 用户信息显示 -->
                 <li class="light-blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" src="/public/assets/avatars/avatar.jpg" alt="Jason's Photo" />
+                        <img class="nav-user-photo" src="<?=$this->params['user']->face?>" alt="Jason's Photo" />
                             <span class="user-info">
-                                <small>欢迎登录</small><?=Yii::$app->user->identity->username?>
+                                <small>欢迎登录</small><?=$this->params['user']->username?>
                             </span>
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
 
                     <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-<!--                        <li>-->
-<!--                            <a href="#"><i class="ace-icon fa fa-cog"></i>设置</a>-->
-<!--                        </li>-->
+                        <li>
+                            <a href="<?=Url::toRoute(['site/index'])?>"><i class="ace-icon fa fa-desktop"></i>登录信息</a>
+                        </li>
                         <li>
                             <a href="<?=Url::toRoute(['admin/view'])?>"><i class="ace-icon fa fa-user"></i>个人信息</a>
                         </li>

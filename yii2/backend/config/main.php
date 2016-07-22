@@ -19,9 +19,15 @@ return [
             'class'             => 'yii\rbac\DbManager',
         ],
 
+        // 图片处理
+        'image' => [
+            'class'  => 'yii\image\ImageDriver',
+            'driver' => 'GD'
+        ],
+
         // 用户信息
         'user' => [
-            'identityClass' => 'common\models\Admin',
+            'identityClass'   => 'common\models\Admin',
             'enableAutoLogin' => true,
         ],
 

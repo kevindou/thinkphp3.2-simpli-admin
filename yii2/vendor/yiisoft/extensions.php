@@ -57,4 +57,22 @@ return array (
       '@yii/faker' => $vendorDir . '/yiisoft/yii2-faker',
     ),
   ),
+  'yurkinx/yii2-image' => 
+  array (
+    'name' => 'yurkinx/yii2-image',
+    'version' => '1.1.0.0',
+    'alias' => 
+    array (
+      '@yii/image' => $vendorDir . '/yurkinx/yii2-image/yii/image',
+    ),
+  ),
+  'yiisoft/yii2-imagine' => 
+  array (
+    'name' => 'yiisoft/yii2-imagine',
+    'version' => '2.0.3.0',
+    'alias' => 
+    array (
+      '@yii/imagine' => $vendorDir . '/yiisoft/yii2-imagine',
+    ),
+  ),
 );

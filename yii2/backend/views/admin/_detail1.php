@@ -10,42 +10,106 @@
     <div class="user-profile row" id="user-profile-1">
         <div class="col-xs-12 col-sm-3 center">
             <div>
-				<span class="profile-picture">
-					<img id="avatar" class="editable img-responsive" alt="Alex's Avatar" src="/public/assets/avatars/avatar.jpg" />
-				</span>
+                <span class="profile-picture">
+                    <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="<?=$user->face ? dirname($user->face).'/thumb_'.basename($user->face) : '/public/assets/avatars/profile-pic.jpg'?>" />
+                </span>
                 <div class="space-4"></div>
                 <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
                     <div class="inline position-relative">
-                        <a data-toggle="dropdown" class="user-title-label dropdown-toggle" href="#">
+                        <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                             <i class="ace-icon fa fa-circle light-green"></i>
                             &nbsp;
                             <span class="white"><?=$user->username?></span>
                         </a>
+
                         <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
                             <li class="dropdown-header"> 切换状态 </li>
+
                             <li>
                                 <a href="#">
-                                    <i class="ace-icon fa fa-circle green"></i>&nbsp;
-                                    <span class="green"> 启用 </span>
+                                    <i class="ace-icon fa fa-circle green"></i>
+                                    &nbsp;
+                                    <span class="green">启用</span>
                                 </a>
                             </li>
+
                             <li>
                                 <a href="#">
-                                    <i class="ace-icon fa fa-circle red"></i>&nbsp;
-                                    <span class="red"> 正在审核 </span>
+                                    <i class="ace-icon fa fa-circle red"></i>
+                                    &nbsp;
+                                    <span class="red">正在审核</span>
                                 </a>
                             </li>
+
                             <li>
                                 <a href="#">
-                                    <i class="ace-icon fa fa-circle grey"></i>&nbsp;
-                                    <span class="grey"> 停用 </span>
+                                    <i class="ace-icon fa fa-circle grey"></i>
+                                    &nbsp;
+                                    <span class="grey">停用</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
+
             <div class="space-6"></div>
+
+            <!-- #section:pages/profile.contact -->
+            <div class="profile-contact-info">
+                <div class="profile-contact-links align-left">
+                    <a href="#" class="btn btn-link">
+                        <i class="ace-icon fa fa-plus-circle bigger-120 green"></i>
+                        添加朋友
+                    </a>
+
+                    <a href="#" class="btn btn-link">
+                        <i class="ace-icon fa fa-envelope bigger-120 pink"></i>
+                        发送邮件
+                    </a>
+
+                    <a href="#" class="btn btn-link">
+                        <i class="ace-icon fa fa-globe bigger-125 blue"></i>
+                        我的主页
+                    </a>
+                </div>
+
+                <div class="space-6"></div>
+
+                <div class="profile-social-links align-center">
+                    <a href="#" class="tooltip-info" title="" data-original-title="Visit my Facebook">
+                        <i class="middle ace-icon fa fa-facebook-square fa-2x blue"></i>
+                    </a>
+
+                    <a href="#" class="tooltip-info" title="" data-original-title="Visit my Twitter">
+                        <i class="middle ace-icon fa fa-twitter-square fa-2x light-blue"></i>
+                    </a>
+
+                    <a href="#" class="tooltip-error" title="" data-original-title="Visit my Pinterest">
+                        <i class="middle ace-icon fa fa-pinterest-square fa-2x red"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- /section:pages/profile.contact -->
+            <div class="hr hr12 dotted"></div>
+
+            <!-- #section:custom/extra.grid -->
+            <div class="clearfix">
+                <div class="grid2">
+                    <span class="bigger-175 blue">25</span>
+                    <br>
+                    Followers
+                </div>
+
+                <div class="grid2">
+                    <span class="bigger-175 blue">12</span>
+                    <br>
+                    Following
+                </div>
+            </div>
+
+            <!-- /section:custom/extra.grid -->
             <div class="hr hr16 dotted"></div>
         </div>
 
@@ -68,7 +132,7 @@
                     <div class="profile-info-value">
                         <i class="fa fa-map-marker light-orange bigger-110"></i>
                         <span id="country" class="editable editable-click">中国</span>
-                        <span id="city" class="editable editable-click">上海</span>
+                        <span id="city" class="editable editable-click">湖南</span>
                     </div>
                 </div>
 
@@ -76,15 +140,14 @@
                     <div class="profile-info-name"> 年龄 </div>
 
                     <div class="profile-info-value">
-                        <span id="age" class="editable editable-click">永远18</span>
+                        <span id="age" class="editable editable-click"><?=$user->age?></span>
                     </div>
                 </div>
 
                 <div class="profile-info-row">
                     <div class="profile-info-name"> 添加时间 </div>
-
                     <div class="profile-info-value">
-                        <span id="signup" class="editable editable-click"><?=date('Y-m-d H:i:s', $user->create_time)?></span>
+                        <span id="login_time"  class="editable editable-click"><?=date('Y-m-d H:i:s', $user->create_time)?></span>
                     </div>
                 </div>
 
@@ -92,7 +155,15 @@
                     <div class="profile-info-name"> 上一次登录时间 </div>
 
                     <div class="profile-info-value">
-                        <span id="login" class="editable editable-click"><?=date('Y-m-d H:i:s', $user->update_time)?></span>
+                        <span id="login" class="editable editable-click"><?=date('Y-m-d H:i:s', $user->last_time)?></span>
+                    </div>
+                </div>
+
+                <div class="profile-info-row">
+                    <div class="profile-info-name"> 上一次登录IP </div>
+
+                    <div class="profile-info-value">
+                        <span id="login" class="editable editable-click"><?=$user->last_ip?></span>
                     </div>
                 </div>
 
@@ -100,7 +171,7 @@
                     <div class="profile-info-name"> 座右铭 </div>
 
                     <div class="profile-info-value">
-                        <span id="about" class="editable editable-click">学会微笑,学会面对,学会放下,让一切随心、随意、随心</span>
+                        <span id="about" class="editable editable-click"><?=$user->maxim ? $user->maxim : '这个家伙很懒, 什么也没有留下'?></span>
                     </div>
                 </div>
             </div>
@@ -372,6 +443,13 @@
     </div>
 </div>
 <script type="text/javascript">
+    var sBaseUrl = "<?=\yii\helpers\Url::toRoute(['admin/editable'])?>",
+        iUserId  = <?=$user->id?>,
+        fSuccess = function(response, newValue) {
+            if (response.status == 1) return true;
+            layer.msg(response.msg, {icon: 5, time:1000});
+            return false;
+        };
     $(function(){
         // 单个修改表单信息
         $.fn.editable.defaults.mode = 'inline';
@@ -390,21 +468,16 @@
             });
         }
 
-
         // 修改用户名
         $('#username').editable({
-            type: 'text',
-            name: 'username',
-            url:  '/admin/editable',
-            pk:    <?=$user->id?>,
-            send: "always",
-            ajaxOptions:{type: "POST", dataType:'json'},
-            success:function(response, newValue) {
-                if (response.status == 1) return true;
-                layer.msg(response.msg, {icon: 5, time:1000});
-                return false;
-            },
-            error:EditError,
+            type:           'text',
+            name:           'username',
+            url:            sBaseUrl,
+            pk:             iUserId,
+            send:           "always",
+            ajaxOptions:    {type: "POST", dataType:'json'},
+            success:        fSuccess,
+            error:           EditError,
         });
 
         // 城市和地区联动
@@ -484,26 +557,32 @@
             }
         });
 
-        $('#signup').editable({
-            type: 'adate',
+        // 上一次登录时间
+        $('#login_time').editable({
+            type:           'adate',
             date: {
-                format: 'yyyy-mm-dd',
+                format:     'yyyy-mm-dd',
                 viewformat: 'yyyy-mm-dd',
-                weekStart: 1,
-                language: 'zh-CN',
+                weekStart:  1,
+                language:   'zh-CN',
             }
-        })
+        });
 
         $('#age').editable({
-            type: 'spinner',
-            name : 'age',
+            type:        'spinner',
+            name :       'age',
+            pk:          iUserId,
+            url:         sBaseUrl,
+            send:        "always",
+            ajaxOptions: {type: "POST", dataType:'json'},
             spinner : {
                 min : 16,
                 max : 99,
                 step: 1,
                 on_sides: true
-                //,nativeUI: true//if true and browser support input[type=number], native browser control will be used
-            }
+            },
+            success:    fSuccess,
+            error:      EditError,
         });
 
 
@@ -514,24 +593,29 @@
                 min : 1,
                 max: 50,
                 width: 100
-                //,nativeUI: true//if true and browser support input[type=range], native browser control will be used
             },
             success: function(response, newValue) {
                 if(parseInt(newValue) == 1)
-                    $(this).html(newValue + " hour ago");
-                else $(this).html(newValue + " hours ago");
+                    $(this).html(newValue + " 小时之前 ");
+                else $(this).html(newValue + " 小时之前");
             }
         });
 
+        // 座右铭
         $('#about').editable({
-            mode: 'inline',
-            type: 'wysiwyg',
-            name : 'about',
+            mode:        'inline',
+            type:        'wysiwyg',
+            name :       'maxim',
+            pk:          iUserId,
+            url:         sBaseUrl,
+            send:        "always",
+            ajaxOptions: {type: "POST", dataType:'json'},
             wysiwyg : {
                 //css : {'max-width':'300px'}
             },
-            success: function(response, newValue) {
-            }
+
+            success: fSuccess,
+            error:   EditError,
         });
 
         try {
@@ -546,7 +630,8 @@
             $('#avatar').editable({
                 type: 'image',
                 name: 'avatar',
-                value: null,
+//                value: null,
+                pk:    <?=$user->id?>,
                 image: {
                     //specify ace file input plugin's options here
                     btn_choose: '选择头像',
@@ -577,9 +662,9 @@
                     },
                 },
                 url: function(params) {
-                    var submit_url = '/admin/upload', // 提交页面
+                    var submit_url = '<?=\yii\helpers\Url::toRoute(['admin/upload', 'sField' => 'avatar'])?>', // 提交页面
                         deferred   = null,
-                        avatar 	   = '#avatar',			// 选择对象
+                        avatar 	   = '#avatar',	      // 选择对象
                         value 	   = $(avatar).next().find('input[type=hidden]:eq(0)').val();
 
                     // 数据验证
@@ -592,7 +677,7 @@
                     // 提交表单
                     var $form 	   = $(avatar).next().find('.editableform:eq(0)'),
                         file_input = $form.find('input[type=file]:eq(0)'),
-                        pk 		   = $(avatar).attr('data-pk'),	//primary key to be sent to server
+                        pk 		   = '<?=$user->id?>',	//primary key to be sent to server
                         ie_timeout = null;
 
 
@@ -606,7 +691,7 @@
                         });
                         //and then add files
                         $form.find('input[type=file]').each(function(){
-                            var field_name = $(this).attr('name');
+                            var field_name = 'UploadForm[' + $(this).attr('name') + ']';
                             var files = $(this).data('ace_input_files');
                             if(files && files.length > 0) {
                                 formData_object.append(field_name, files[0]);
@@ -627,7 +712,9 @@
                     }
                     else {
                         deferred = new $.Deferred
-
+                        $($form).find('input[type=file]').each(function(){
+                            $(this).attr('name', 'UploadForm[' + $(this).attr('name') + ']');
+                        });
                         var temporary_iframe_id = 'temporary-iframe-'+(new Date()).getTime()+'-'+(parseInt(Math.random()*1000));
                         var temp_iframe =
                             $('<iframe id="'+temporary_iframe_id+'" name="'+temporary_iframe_id+'" \
@@ -664,13 +751,11 @@
                     deferred
                         .done(function(result) {
                             if(result.status == 1)
-                                $(avatar).get(0).src = result.data.fileDir;
+                                $(avatar).get(0).src = result.data.sFilePath;
                             else
                                 layer.msg(result.msg, {icon:5, time:1000})
                         })
-                        .fail(function(result) {//failure
-                            layer.msg('请求页面没有响应');
-                        })
+                        .fail(ajaxFail)
                         .always(function() {//called on both success and failure
                             if(ie_timeout) clearTimeout(ie_timeout)
                             ie_timeout = null;

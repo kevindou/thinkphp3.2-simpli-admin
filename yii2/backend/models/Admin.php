@@ -118,6 +118,9 @@ class Admin extends \common\models\Admin
         return array_merge(
             $labels,
             [
+                'face'       => '头像信息',
+                'last_time'  => '上一次登录时间',
+                'last__ip'   => '上一次登录的IP',
                 'password'   => '密码',
                 'repassword' => '确认密码',
             ]

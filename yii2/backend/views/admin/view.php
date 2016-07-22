@@ -40,9 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="hr dotted"></div>
 <!-- 用户信息的显示 -->
-<?=$this->render('_detail1', ['user' => $user])?>
-<?=$this->render('_detail2', ['user' => $user])?>
-<?=$this->render('_detail3', ['user' => $user])?>
+<?=$this->render('_detail1', ['user' => $this->params['user']])?>
+<?=$this->render('_detail2', ['user' => $this->params['user']])?>
+<?=$this->render('_detail3', ['user' => $this->params['user']])?>
 <script type="text/javascript">
     $(function(){
         // 详情中图片上传
@@ -214,7 +214,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 no_icon:'ace-icon fa fa-picture-o',
                 thumbnail:'large',
                 droppable:true,
-
                 allowExt: ['jpg', 'jpeg', 'png', 'gif'],
                 allowMime: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
             })
@@ -223,10 +222,9 @@ $this->params['breadcrumbs'][] = $this->title;
             })
             .end().find('.date-picker').datepicker().next().on(ace.click_event, function(){
             $(this).prev().focus();
-        })
+        });
+
         $('.input-mask-phone').mask('(999) 999-9999');
-
-
 
         ////////////////////
         //change profile
