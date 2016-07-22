@@ -40,15 +40,15 @@
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label no-padding-right" for="form-field-username">账号名</label>
                                         <div class="col-sm-8">
-                                            <input class="col-xs-12 col-sm-10" type="text" id="form-field-username" placeholder="Username" value="<?=$user->username?>" />
+                                            <input class="col-xs-12 col-sm-10" type="text" id="form-field-username" name="username" required="true" rangelength="[2, 20]" placeholder="Username" value="<?=$user->username?>" />
                                         </div>
                                     </div>
                                     <div class="space-4"></div>
                                     <div class="form-group">
                                         <label class="col-sm-4 control-label no-padding-right" for="form-field-first">真实姓名</label>
                                         <div class="col-sm-8">
-                                            <input class="input-small" type="text" id="form-field-first" placeholder="性" value="" />
-                                            <input class="input-small" type="text" id="form-field-last" placeholder="名" value="" />
+                                            <input class="input-small" type="text" id="form-field-first" placeholder="性" rangelength="[1, 2]" value="" />
+                                            <input class="input-small" type="text" id="form-field-last" placeholder="名" rangelength="[1, 2]" value="" />
                                         </div>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                 <div class="col-sm-9">
                                     <div class="input-medium">
                                         <div class="input-group">
-                                            <input class="input-medium date-picker" id="form-field-date" type="text" data-date-format="yyyy-mm-dd" placeholder="2016-06-01" />
+                                            <input class="input-medium" id="form-field-date" type="text" name="birthday"  placeholder="2016-06-01" />
 											<span class="input-group-addon">
 												<i class="ace-icon fa fa-calendar"></i>
 											</span>
@@ -74,13 +74,13 @@
                                 <label class="col-sm-3 control-label no-padding-right">性别</label>
                                 <div class="col-sm-9">
                                     <label class="inline">
-                                        <input name="form-field-radio" type="radio" class="ace" />
+                                        <input type="radio" name="sex" value="1" required="true" number="true" class="ace" />
                                         <span class="lbl middle"> 男 </span>
                                     </label>
 
                                     &nbsp; &nbsp; &nbsp;
                                     <label class="inline">
-                                        <input name="form-field-radio" type="radio" class="ace" />
+                                        <input  type="radio" name="sex" value="0" required="true" number="true" class="ace" />
                                         <span class="lbl middle"> 女 </span>
                                     </label>
                                 </div>
@@ -89,7 +89,7 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-comment">座右铭</label>
                                 <div class="col-sm-9">
-                                    <textarea id="form-field-comment"><?=$user->maxim?></textarea>
+                                    <textarea id="form-field-comment" name="maxim" rangelength="[2, 255]"><?=$user->maxim?></textarea>
                                 </div>
                             </div>
                             <div class="space"></div>
@@ -98,7 +98,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-email">电子邮件</label>
                                 <div class="col-sm-9">
 									<span class="input-icon input-icon-right">
-										<input type="email" id="form-field-email" value="<?=$user->email?>" />
+										<input type="email" name="email" required="true" email="true" rangelength="[2, 40]" id="form-field-email" value="<?=$user->email?>" />
 										<i class="ace-icon fa fa-envelope"></i>
 									</span>
                                 </div>
@@ -108,7 +108,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-website">个人主页</label>
                                 <div class="col-sm-9">
 									<span class="input-icon input-icon-right">
-										<input type="url" id="form-field-website" value="<?=$user->home_url?>" />
+										<input type="url" id="form-field-website" name="url" rangelength="[2, 50]" url="true" value="<?=$user->home_url?>" />
 										<i class="ace-icon fa fa-globe"></i>
 									</span>
                                 </div>
@@ -118,7 +118,7 @@
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-facebook">Facebook</label>
                                 <div class="col-sm-9">
 									<span class="input-icon">
-										<input type="text" value="<?=$user->facebook?>" id="form-field-facebook" />
+										<input type="text" value="<?=$user->facebook?>" name="faceboox" rangelength="[2, 50]" id="form-field-facebook" />
 										<i class="ace-icon fa fa-facebook blue"></i>
 									</span>
                                 </div>
@@ -130,23 +130,23 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-pass1">新密码</label>
                                 <div class="col-sm-9">
-                                    <input type="password" id="form-field-pass1" />
+                                    <input type="password" name="password"  required="true" rangelength="[6, 20]" id="form-field-pass1" />
                                 </div>
                             </div>
                             <div class="space-4"></div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-pass2">确认密码</label>
-
                                 <div class="col-sm-9">
-                                    <input type="password" id="form-field-pass2" />
+                                    <input type="password" name="repassword" required="true" rangelength="[6, 20]" id="form-field-pass2" />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="clearfix form-actions">
+                    <input type="hidden" name="id" value="<?=$user->id?>">
                     <div class="col-md-offset-3 col-md-9">
-                        <button class="btn btn-info" type="button">
+                        <button class="btn btn-info" type="submit">
                             <i class="ace-icon fa fa-check bigger-110"></i>
                             保存
                         </button>
@@ -163,22 +163,38 @@
 </div>
 <script type="text/javascript">
     var $form  = $('#sUserForm'),
-        $input = $form.find('input');
-    alert($input.length);
+        $input = $form.find('input[type!=hidden]').add('textarea');
     // 修改进度
     function setProgress()
     {
         var iHave  = 0;
         $input.each(function(){if ( ! empty($(this).val())) iHave ++;});
-        var sProgress = Math.min(parseInt(iHave / ($input.length - 2) * 100), 100) + '%';
+        var sProgress = Math.min(parseInt(iHave / ($input.length - 3) * 100), 100) + '%';
         $('#sProgressHtml').html(sProgress);
         $('#sProgress').css('width', sProgress);
     }
 
     $(function(){
         setProgress();
-        $input.bind('blur', function(){
-            setProgress();
-        })
+
+        // 填写表单
+        $input.bind('blur', function(){setProgress();});
+
+        $form.submit(function(){
+            if ($(this).validate(validatorError).form())
+            {
+
+            }
+            return false;
+        });
+
+        // 生日时间选择
+        $('#form-field-date').datepicker({
+            format: 'yyyy-mm-dd',
+            weekStart: 1,
+            autoclose: true,
+            todayBtn: 'linked',
+            language: 'zh-CN'
+        });
     })
 </script>
