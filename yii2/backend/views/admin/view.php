@@ -40,9 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="hr dotted"></div>
 <!-- 用户信息的显示 -->
-<?=$this->render('_detail1', ['user' => $this->params['user']])?>
-<?=$this->render('_detail2', ['user' => $this->params['user']])?>
-<?=$this->render('_detail3', ['user' => $this->params['user']])?>
+<?=$this->render('_detail1', ['address' => $address, 'china' => $china, 'logs' => $logs])?>
+<?=$this->render('_detail2')?>
+<?=$this->render('_detail3')?>
 <script type="text/javascript">
     $(function(){
         // 详情中图片上传
@@ -56,10 +56,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         <h4 class="blue">跟换头像</h4>\
                     </div>\
                     \
-                    <form class="no-margin m-image" action="/admin/upload" method="post">\
+                    <form class="no-margin m-image" action="' + sUploadUrl + '" method="post">\
                      <div class="modal-body">\
                         <div class="space-4"></div>\
-                        <div style="width:75%;margin-left:12%;"><input type="file" name="avatar" /></div>\
+                        <div style="width:75%;margin-left:12%;"><input type="file" name="UploadForm[avatar]" /></div>\
                      </div>\
                     \
                      <div class="modal-footer center">\
@@ -168,7 +168,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             form.find('input[type=file]').ace_file_input('enable');
                             form.find('.modal-body > :last-child').remove();
                             modal.modal("hide");
-                            $('#avatar2').get(0).src = result.data.fileDir;
+                            $('#avatar2').get(0).src = result.data.sFilePath;
                             working = false;
                         } else {
                             layer.msg(result.msg, {icon:5})

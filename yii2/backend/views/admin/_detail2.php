@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-3 center">
 							<span class="profile-picture">
-								<img src="<?=$user->face ? dirname($user->face).'/thumb_'.basename($user->face) : '/public/assets/avatars/profile-pic.jpg'?>" id="avatar2" alt="Alex's Avatar" class="editable img-responsive">
+								<img src="<?=$this->params['user']->face ? dirname($this->params['user']->face).'/thumb_'.basename($this->params['user']->face) : '/public/assets/avatars/profile-pic.jpg'?>" id="avatar2" alt="Alex's Avatar" class="editable img-responsive">
 							</span>
 
                             <div class="space space-4"></div>
@@ -39,7 +39,7 @@
 
                         <div class="col-xs-12 col-sm-9">
                             <h4 class="blue">
-                                <span class="middle"><?=$user->username?></span>
+                                <span class="middle"><?=$this->params['user']->username?></span>
 								<span class="label label-purple arrowed-in-right">
 									<i class="ace-icon fa fa-circle smaller-80 align-middle"></i>
 									在线
@@ -50,7 +50,7 @@
                                 <div class="profile-info-row">
                                     <div class="profile-info-name"> 姓名 </div>
                                     <div class="profile-info-value">
-                                        <span><?=$user->username?></span>
+                                        <span><?=$this->params['user']->username?></span>
                                     </div>
                                 </div>
 
@@ -59,8 +59,7 @@
 
                                     <div class="profile-info-value">
                                         <i class="fa fa-map-marker light-orange bigger-110"></i>
-                                        <span>中国</span>
-                                        <span>湖南</span>
+                                        <span>中国,<?=$this->params['user']->address?></span>
                                     </div>
                                 </div>
 
@@ -68,7 +67,7 @@
                                     <div class="profile-info-name"> 年龄 </div>
 
                                     <div class="profile-info-value">
-                                        <span><?=$user->age?></span>
+                                        <span><?=$this->params['user']->age?></span>
                                     </div>
                                 </div>
 
@@ -76,7 +75,7 @@
                                     <div class="profile-info-name"> 创建时间 </div>
 
                                     <div class="profile-info-value">
-                                        <span><?=date('Y-m-d H:i:s', $user->create_time)?></span>
+                                        <span><?=date('Y-m-d H:i:s', $this->params['user']->create_time)?></span>
                                     </div>
                                 </div>
 
@@ -95,7 +94,7 @@
                                 <div class="profile-info-row">
                                     <div class="profile-info-name"> 个人主页 </div>
                                     <div class="profile-info-value">
-                                        <a target="_blank" href="<?=$user->home_url?>"><?=$user->home_url?></a>
+                                        <a target="_blank" href="<?=$this->params['user']->home_url?>"><?=$this->params['user']->home_url?></a>
                                     </div>
                                 </div>
                                 <div class="profile-info-row">
@@ -103,7 +102,7 @@
                                         <i class="middle ace-icon fa fa-facebook-square bigger-150 blue"></i>
                                     </div>
                                     <div class="profile-info-value">
-                                        <a href="<?=$user->facebook?>" target="_blank"><?=$user->facebook?></a>
+                                        <a href="<?=$this->params['user']->facebook?>" target="_blank"><?=$this->params['user']->facebook?></a>
                                     </div>
                                 </div>
                             </div>

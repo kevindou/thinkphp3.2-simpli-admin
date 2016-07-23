@@ -1,4 +1,6 @@
 <?php
+
+use yii\helpers\Url;
 /**
  * Created by PhpStorm.
  * User: liujinxing
@@ -11,7 +13,7 @@
         <div class="col-xs-12 col-sm-3 center">
             <div>
                 <span class="profile-picture">
-                    <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="<?=$user->face ? dirname($user->face).'/thumb_'.basename($user->face) : '/public/assets/avatars/profile-pic.jpg'?>" />
+                    <img id="avatar" class="editable img-responsive editable-click editable-empty" alt="Alex's Avatar" src="<?=$this->params['user']->face ? dirname($this->params['user']->face).'/thumb_'.basename($this->params['user']->face) : '/public/assets/avatars/profile-pic.jpg'?>" />
                 </span>
                 <div class="space-4"></div>
                 <div class="width-80 label label-info label-xlg arrowed-in arrowed-in-right">
@@ -19,7 +21,7 @@
                         <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                             <i class="ace-icon fa fa-circle light-green"></i>
                             &nbsp;
-                            <span class="white"><?=$user->username?></span>
+                            <span class="white"><?=$this->params['user']->username?></span>
                         </a>
 
                         <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">
@@ -122,7 +124,7 @@
                     <div class="profile-info-name"> 用户名 </div>
 
                     <div class="profile-info-value">
-                        <span id="username" class="editable editable-click"><?=$user->username?></span>
+                        <span id="username" class="editable editable-click"><?=$this->params['user']->username?></span>
                     </div>
                 </div>
 
@@ -131,9 +133,10 @@
 
                     <div class="profile-info-value">
                         <i class="fa fa-map-marker light-orange bigger-110"></i>
-                        <span id="address" class="editable editable-click">中国</span>
-                        <span id="country" class="editable editable-click">湖南</span>
-                        <span id="city" class="editable editable-click">岳阳市</span>
+                        <span class="editable editable-click">中国</span>
+                        <span id="country" class="editable editable-click"><?=isset($china[0]) ? $china[0]->Name : '选择省'?></span>
+                        <span id="city" class="editable editable-click"><?=isset($china[1]) ? $china[1]->Name : '选择市'?></span>
+                        <span id="address" class="editable editable-click" <?=$address == '选择县' ? 'style="display:none"': ''?>"><?=$address?></span>
                     </div>
                 </div>
 
@@ -141,14 +144,14 @@
                     <div class="profile-info-name"> 年龄 </div>
 
                     <div class="profile-info-value">
-                        <span id="age" class="editable editable-click"><?=$user->age?></span>
+                        <span id="age" class="editable editable-click"><?=$this->params['user']->age?></span>
                     </div>
                 </div>
 
                 <div class="profile-info-row">
                     <div class="profile-info-name"> 添加时间 </div>
                     <div class="profile-info-value">
-                        <span id="login_time"  class="editable editable-click"><?=date('Y-m-d H:i:s', $user->create_time)?></span>
+                        <span id="login_time"  class="editable editable-click"><?=date('Y-m-d H:i:s', $this->params['user']->create_time)?></span>
                     </div>
                 </div>
 
@@ -156,7 +159,7 @@
                     <div class="profile-info-name"> 上一次登录时间 </div>
 
                     <div class="profile-info-value">
-                        <span id="login" class="editable editable-click"><?=date('Y-m-d H:i:s', $user->last_time)?></span>
+                        <span id="login" class="editable editable-click"><?=date('Y-m-d H:i:s', $this->params['user']->last_time)?></span>
                     </div>
                 </div>
 
@@ -164,7 +167,7 @@
                     <div class="profile-info-name"> 上一次登录IP </div>
 
                     <div class="profile-info-value">
-                        <span id="login" class="editable editable-click"><?=$user->last_ip?></span>
+                        <span id="login" class="editable editable-click"><?=$this->params['user']->last_ip?></span>
                     </div>
                 </div>
 
@@ -172,7 +175,7 @@
                     <div class="profile-info-name"> 座右铭 </div>
 
                     <div class="profile-info-value">
-                        <span id="about" class="editable editable-click"><?=$user->maxim ? $user->maxim : '这个家伙很懒, 什么也没有留下'?></span>
+                        <span id="about" class="editable editable-click"><?=$this->params['user']->maxim ? $this->params['user']->maxim : '这个家伙很懒, 什么也没有留下'?></span>
                     </div>
                 </div>
             </div>
@@ -184,7 +187,7 @@
                 <div class="widget-header widget-header-small">
                     <h4 class="widget-title blue smaller">
                         <i class="ace-icon fa fa-rss orange"></i>
-                        最近活动
+                        操作记录
                     </h4>
 
                     <div class="widget-toolbar action-buttons">
@@ -200,16 +203,16 @@
                 <div class="widget-body">
                     <div class="widget-main padding-8">
                         <div id="profile-feed-1" class="profile-feed">
+                            <?php if ($logs) : foreach ($logs as $value) : ?>
                             <div class="profile-activity clearfix">
                                 <div>
-                                    <img class="pull-left" alt="Alex Doe's avatar" src="/public/assets/avatars/avatar5.png" />
-                                    <a class="user" href="#"> Alex Doe </a>
-                                    changed his profile photo.
-                                    <a href="#">Take a look</a>
-
+                                    <img class="pull-left" alt="Alex Doe's avatar" src="<?=$this->params['user']->face?>" />
+                                    <a class="user" href="#"> <?=$value['action']?> </a>
+                                    <?=implode(',', $value['data'])?>
+                                    <a href="#"><?=$value['type']?></a>
                                     <div class="time">
                                         <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        an hour ago
+                                        <?=$value['time']?>
                                     </div>
                                 </div>
 
@@ -223,217 +226,7 @@
                                     </a>
                                 </div>
                             </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <img class="pull-left" alt="Susan Smith's avatar" src="/public/assets/avatars/avatar1.png" />
-                                    <a class="user" href="#"> Susan Smith </a>
-
-                                    is now friends with Alex Doe.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        2 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <i class="pull-left thumbicon fa fa-check btn-success no-hover"></i>
-                                    <a class="user" href="#"> Alex Doe </a>
-                                    joined
-                                    <a href="#">Country Music</a>
-
-                                    group.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        5 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <i class="pull-left thumbicon fa fa-picture-o btn-info no-hover"></i>
-                                    <a class="user" href="#"> Alex Doe </a>
-                                    uploaded a new photo.
-                                    <a href="#">Take a look</a>
-
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        5 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <img class="pull-left" alt="David Palms's avatar" src="/public/assets/avatars/avatar4.png" />
-                                    <a class="user" href="#"> David Palms </a>
-
-                                    left a comment on Alex's wall.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        8 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <i class="pull-left thumbicon fa fa-pencil-square-o btn-pink no-hover"></i>
-                                    <a class="user" href="#"> Alex Doe </a>
-                                    published a new blog post.
-                                    <a href="#">Read now</a>
-
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        11 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <img class="pull-left" alt="Alex Doe's avatar" src="/public/assets/avatars/avatar5.png" />
-                                    <a class="user" href="#"> Alex Doe </a>
-
-                                    upgraded his skills.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        12 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <i class="pull-left thumbicon fa fa-key btn-info no-hover"></i>
-                                    <a class="user" href="#"> Alex Doe </a>
-
-                                    logged in.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        12 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <i class="pull-left thumbicon fa fa-power-off btn-inverse no-hover"></i>
-                                    <a class="user" href="#"> Alex Doe </a>
-
-                                    logged out.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        16 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="profile-activity clearfix">
-                                <div>
-                                    <i class="pull-left thumbicon fa fa-key btn-info no-hover"></i>
-                                    <a class="user" href="#"> Alex Doe </a>
-
-                                    logged in.
-                                    <div class="time">
-                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                                        16 hours ago
-                                    </div>
-                                </div>
-
-                                <div class="tools action-buttons">
-                                    <a href="#" class="blue">
-                                        <i class="ace-icon fa fa-pencil bigger-125"></i>
-                                    </a>
-
-                                    <a href="#" class="red">
-                                        <i class="ace-icon fa fa-times bigger-125"></i>
-                                    </a>
-                                </div>
-                            </div>
+                            <?php endforeach; endif; ?>
                         </div>
                     </div>
                 </div>
@@ -444,13 +237,119 @@
     </div>
 </div>
 <script type="text/javascript">
-    var sBaseUrl = "<?=\yii\helpers\Url::toRoute(['admin/editable'])?>",
-        iUserId  = <?=$user->id?>,
-        fSuccess = function(response, newValue) {
+    var sBaseUrl = "<?=Url::toRoute(['admin/editable'])?>",                             // 行内编辑提交地址
+        iUserId  = <?=$this->params['user']->id?>,                                      // 用户唯一ID
+        fSuccess = function(response, newValue) {                                       // 成功执行函数
             if (response.status == 1) return true;
             layer.msg(response.msg, {icon: 5, time:1000});
             return false;
-        };
+        },
+
+        sAddressUrl = "<?=Url::toRoute(['admin/address'])?>",                           // 三级联动提交地址
+        sUploadUrl  = "<?=Url::toRoute(['admin/upload', 'sField' => 'avatar'])?>";      // 上传图片地址
+
+    // 公共的方法用来处理编辑的信息
+    function EditError() {
+        $.gritter.add({
+            title: '编辑出现错误!',
+            text: '服务器没有响应',
+            class_name: 'gritter-error gritter-center',
+            time: 800
+        });
+    }
+
+    // 选择县
+    function selectAddress(iPid, sName)
+    {
+        if (empty(sName)) sName = '选择县';
+        var address = $('#address').removeAttr('id').show().get(0);
+        $(address).clone().attr('id', 'address').text(sName).editable({
+            type: 'select2',
+            value: null,
+            source: sAddressUrl + '?iPid=' + iPid,
+            select2: {
+                'width': 150
+            },
+            name:           "address",
+            url:            sBaseUrl,
+            pk:             iUserId,
+            send:           "always",
+            ajaxOptions:    {type:"POST",dataType: "json"},
+            params: function(params) {
+                var arr = $(this).data('editable').input.sourceData, value = params.value;
+                for (var i in arr){if (arr[i].id == value) {value = arr[i].text;break;}}
+                // 没有选择数据
+                if (empty(value)) return false;
+                params.value = $('#country').html() + "," + $('#city').html() + "," + value;
+                return params;
+            },
+            validate:       function(x){
+                if (x == false)
+                {
+                    gAlert('温馨提醒', '你没有选择您所在的地址信息', 'warning');
+                    return '你没有选择您所在的地址信息';
+                }
+            },
+            success:        fSuccess,
+            error:          EditError
+        }).insertAfter(address);
+        $(address).remove();
+    }
+
+    // 选择市函数
+    function selectCity(iPid, sName)
+    {
+        if (empty(sName)) sName = '选择市';
+        var city = $('#city').removeAttr('id').get(0);
+        $(city).clone().attr('id', 'city').text(sName).editable({
+            type: 'select2',
+            value : null,
+            //onblur:'ignore',
+            source: sAddressUrl + '?iPid=' + iPid,
+            select2: {
+                'width': 140
+            },
+            success: function(response, newValue) {
+                // 没有选择数据
+                if (empty(newValue)) {
+                    gAlert('温馨提醒', '你没有选择您所在的地址信息', 'warning');
+                    return false;
+                }
+
+                // 查询是否还存在县的数据
+                $.ajax({
+                    "url":      sAddressUrl + "?iPid=" + newValue,
+                    "type":     "GET",
+                    "dataType": "json",
+                }).done(function(json){
+                    if (json.length > 0)
+                    {
+                        selectAddress(newValue);
+                    } else {
+                        $('#address').hide();
+                        oLoading = layer.load();
+                        // 修改数据
+                        $.ajax({
+                            url:        sBaseUrl,
+                            type:       "POST",
+                            dataType:   "json",
+                            data:       {
+                                "name":  "address",
+                                "pk":    iUserId,
+                                "value": $('#country').html() + ',' + $('#city').html()
+                            }
+                        }).done(function(json){
+                            layer.msg(json.msg, {icon: json.status == 1 ? 6 : 5})
+                        }).fail(ajaxFail).always(alwaysClose)
+                    }
+                    return true;
+                });
+            }
+        }).insertAfter(city);//insert it after previous instance
+        $(city).remove();//remove previous instance
+
+    }
+
     $(function(){
         // 单个修改表单信息
         $.fn.editable.defaults.mode = 'inline';
@@ -458,16 +357,6 @@
         $.fn.editableform.buttons = '<button type="submit" class="btn btn-info editable-submit"><i class="ace-icon fa fa-check"></i></button>'+
             '<button type="button" class="btn editable-cancel"><i class="ace-icon fa fa-times"></i></button>';
         $.fn.editable.defaults.ajaxOptions = {type: "POST", dataType:'json'};
-
-        // 公共的方法用来处理编辑的信息
-        function EditError() {
-            $.gritter.add({
-                title: '编辑出现错误!',
-                text: '服务器没有响应',
-                class_name: 'gritter-error gritter-center',
-                time: 800,
-            });
-        }
 
         // 修改用户名
         $('#username').editable({
@@ -481,8 +370,6 @@
             error:           EditError,
         });
 
-        var sAddressUrl = "<?=\yii\helpers\Url::toRoute(['admin/address'])?>";
-
         // 省
         $('#country').editable({
             type: 'select2',
@@ -494,34 +381,20 @@
             },
             success: function(response, newValue)
             {
-                console.info(newValue);
-                var city = $('#city').removeAttr('id').get(0);
-                $(city).clone().attr('id', 'city').text('选择城市').editable({
-                    type: 'select2',
-                    value : null,
-                    //onblur:'ignore',
-                    source: sAddressUrl + '?iPid=' + newValue,
-                    select2: {
-                        'width': 140
-                    }
-                }).insertAfter(city);//insert it after previous instance
-                $(city).remove();//remove previous instance
-
+                selectCity(newValue);
             }
         });
 
         // 市
-        $('#city').editable({
-            type: 'select2',
-            value : 'Amsterdam',
-            source: cities[currentValue],
-            select2: {
-                'width': 140
-            }
-        });
+        <?php if (isset($china[0]) && isset($china[1])) : ?>
+        selectCity(<?=$china[0]->Id?>, '<?=$china[1]->Name?>');
+        <?php endif; ?>
 
         // 县
-        
+        <?php if (isset($china[1]) && $address !== '选择县') : ?>
+        selectAddress(<?=$china[1]->Id?>, '<?=$address?>');
+        <?php endif; ?>
+
 
         // 上一次登录时间
         $('#login_time').editable({
@@ -597,7 +470,7 @@
                 type: 'image',
                 name: 'avatar',
 //                value: null,
-                pk:    <?=$user->id?>,
+                pk:    iUserId,
                 image: {
                     //specify ace file input plugin's options here
                     btn_choose: '选择头像',
@@ -628,7 +501,7 @@
                     },
                 },
                 url: function(params) {
-                    var submit_url = '<?=\yii\helpers\Url::toRoute(['admin/upload', 'sField' => 'avatar'])?>', // 提交页面
+                    var submit_url = sUploadUrl, // 提交页面
                         deferred   = null,
                         avatar 	   = '#avatar',	      // 选择对象
                         value 	   = $(avatar).next().find('input[type=hidden]:eq(0)').val();
@@ -643,7 +516,7 @@
                     // 提交表单
                     var $form 	   = $(avatar).next().find('.editableform:eq(0)'),
                         file_input = $form.find('input[type=file]:eq(0)'),
-                        pk 		   = '<?=$user->id?>',	//primary key to be sent to server
+                        pk 		   = iUserId,	//primary key to be sent to server
                         ie_timeout = null;
 
 

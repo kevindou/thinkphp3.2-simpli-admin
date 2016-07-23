@@ -133,6 +133,15 @@ class AdminController extends Controller
                     }
                     break;
             }
+
+            // 记录日志
+            $this->info('update', [
+                'action' => 'admin/update',
+                'type'   => $action,
+                'data'   => $array,
+                'code'   => $this->arrError['code'],
+                'time'   => date('Y-m-d H:i:s')
+            ]);
         }
 
         return $this->returnAjax();
@@ -141,7 +150,30 @@ class AdminController extends Controller
     // 我的信息
     public function actionView()
     {
-        return $this->render('view');
+        $address  = '选择县';
+        $user     = Yii::$app->view->params['user'];
+        $arrChina = [];
+        if ($user->address)
+        {
+            $arrAddress = explode(',', $user->address);
+            if ($arrAddress)
+            {
+                if (isset($arrAddress[2])) $address = $arrAddress[2];
+
+                // 查询省市信息
+                $arrChina = \common\models\China::find()->where(['Name' => array_slice($arrAddress, 0, 2)])->orderBy(['Pid' => SORT_ASC])->all();
+            }
+        }
+
+        // 获取用户日志信息
+        $arrLogs = $this->getInfo('update');
+
+        // 载入视图文件
+        return $this->render('view', [
+            'address' => $address,  // 县
+            'china'   => $arrChina, // 省市信息
+            'logs'    => $arrLogs,  // 日志信息
+        ]);
     }
 
     // 上传文件目录
@@ -189,7 +221,7 @@ class AdminController extends Controller
         {
             $strName = $request->get('query');          // 查询参数
             $intPid  = (int)$request->get('iPid', 0);   // 父类ID
-            $where   = ['and', ['Pid' => $intPid]];
+            $where   = ['and', ['Pid' => $intPid], ['<>', 'Id', 0]];
             if ( ! empty($strName)) array_push($where, ['like', 'Name', $strName]);
             $arrCountry = China::find()->select(['Id', 'Name'])->where($where)->all();
             if ($arrCountry)

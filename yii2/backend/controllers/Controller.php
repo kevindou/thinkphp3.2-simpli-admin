@@ -251,9 +251,19 @@ class Controller extends \yii\web\Controller
                 // 判断是否成功
                 if ($isTrue) $this->arrError['code'] = 0;
                 $this->arrError['data'] = $model;
+
+                // 记录日志
+                $this->info('update', [
+                    'action' => Yii::$app->controller->id.'/update',
+                    'type'   => $type,
+                    'data'   => $data,
+                    'code'   => $this->arrError['code'],
+                    'time'   => date('Y-m-d H:i:s')
+                ]);
             }
         }
 
+        // 返回数据
         return $this->returnAjax();
     }
 
@@ -327,6 +337,15 @@ class Controller extends \yii\web\Controller
                     }
                 }
             }
+
+            // 记录日志
+            $this->info('update', [
+                'action' => Yii::$app->controller->id.'/editable',
+                'type'   => 'editable',
+                'data'   => ['pk' => $mixPk, 'name' => $strAttr, 'value' => $mixValue],
+                'code'   => $this->arrError['code'],
+                'time'   => date('Y-m-d H:i:s')
+            ]);
         }
         return $this->returnAjax();
     }
@@ -445,4 +464,73 @@ class Controller extends \yii\web\Controller
 
     // 获取详情model对象
     protected function getDetailModel(){return new Admin();}
+
+    /**
+     * info() 记录日志信息(管理员操作日志)
+     * @access protected
+     * @param  string   $strFile   文件名(不包括后缀名)
+     * @param  mixed    $data      日志信息
+     * @param  bool     $isUseUser 是否使用管理员记录
+     */
+    protected function info($strFile, array $data, $isUseUser = true)
+    {
+        // 写入文件名
+        if ($isUseUser) $strFile .= '_' . Yii::$app->user->id;
+        $strFile .= '.log';
+
+        // 写入目录
+        $strPath = Yii::$app->basePath.'/runtime/logs/admin/';
+        if ( ! file_exists($strPath)) mkdir($strPath, 0777, true);
+
+        // 写入数据
+        file_put_contents($strPath.$strFile, serialize($data) . "\n", FILE_APPEND);
+    }
+
+    /**
+     * getInfo() 获取管理员的日志信息
+     * @param string $strFile   日志文件名(不包含后缀名)
+     * @param bool   $isUseUser 是否使用管理员ID
+     * @param int    $intStart  读取开始位置
+     * @param int    $intLength 读取数据条数
+     * @return array 返回数组
+     */
+    protected function getInfo($strFile, $isUseUser = true)
+    {
+        // 读取文件名
+        if ($isUseUser) $strFile .= '_' . Yii::$app->user->id;
+
+        // 读取文件全路径
+        $strPath = Yii::$app->basePath.'/runtime/logs/admin/'.$strFile.'.log';
+
+        // 判读是否存在
+        $array = [];
+        if (file_exists($strPath))
+        {
+            $resFile = fopen($strPath, 'a+');
+            if ($resFile)
+            {
+                while ( ! feof($resFile))
+                {
+                    $tmpStr = fgets($resFile);
+                    if ($tmpStr) $array[] = unserialize($tmpStr);
+                }
+
+                // 只保存用户的200条记录
+                $intCount = count($array);
+                if ($intCount > 200)
+                {
+                    unlink($strPath);
+                    $array = array_slice($array, $intCount-200);
+                    $resFile = fopen($strPath, 'w+');
+                    flock($resFile, LOCK_EX);
+                    foreach ($array as $value) fwrite($resFile, serialize($value) . "\n");
+                }
+
+                fclose($resFile);
+                krsort($array);
+            }
+        }
+
+        return $array;
+    }
 }
