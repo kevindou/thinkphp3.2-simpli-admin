@@ -56,7 +56,14 @@ function createSelect(params, data, selected){
 
 // 生成上传文件类型 file
 function createFile(params){
-    return '<input type="file" ' + handleParams(params, 'ace_') + '/><input type="hidden" ' + handleParams(params) + '/>';
+    var tmp = $.extend({}, params);
+    if (params && params.type && params.type == 'ace_input')
+    {
+        tmp.name = 'UploadForm[' + tmp.name + ']';
+        tmp.id   = 'ace_' + tmp.id;
+    }
+
+    return '<input type="file" ' + handleParams(tmp) + '/><input type="hidden" ' + handleParams(params) + '/>';
 }
 
 // 添加时间天
@@ -314,9 +321,9 @@ function aceFileInputAjax(file_input, url) {
 // 文件上传
 function aceFileInput(select, url, fun) {
     var $input = $(select), ie_timeout = null, objHide = $(select.replace('ace_', '')), conf = {
-        no_file:        'No File ...',
-        btn_choose:     'Choose',
-        btn_change:     'Change',
+        no_file:        '没有选择文件 ...',
+        btn_choose:     '选择',
+        btn_change:     '更换文件',
         droppable:      false,
         thumbnail:      false, //| true | large
         // 允许上传的文件类型
@@ -328,11 +335,11 @@ function aceFileInput(select, url, fun) {
     if (arguments[3]) conf = $.extend(conf, arguments[3]);
     if (!fun) fun = function(result) {
         if (result.status == 1) {
-            gAlert("上传文件成功", "上传文件的地址为：" + result.data.fileUrl, "success");
-            objHide.val(result.data.fileUrl)
+            gAlert("上传文件成功", "上传文件的地址为：" + result.data.sFilePath, "success");
+            objHide.val(result.data.sFilePath)
         } else {
-            gAlert("上传文件出现错误Error:", result.msg)
-            $input.ace_file_input('apply_settings')
+            gAlert("上传文件出现错误Error:", result.msg);
+            $input.ace_file_input('apply_settings').ace_file_input('reset_input');
         }
         // 失败执行
     };

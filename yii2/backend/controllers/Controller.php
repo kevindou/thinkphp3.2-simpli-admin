@@ -399,41 +399,47 @@ class Controller extends \yii\web\Controller
         if ($request->isPost)
         {
             // 接收参数
-            $strFile  = $request->get('sOldUrl');   // 旧的地址
             $strField = $request->get('sField');    // 上传文件表单名称
             if ( ! empty($strField))
             {
+                // 判断删除之前的文件
+                $strFile  = $request->post($strField);   // 旧的地址
+                if (! empty($strFile) && file_exists('.'.$strFile)) unlink('.'.$strFile);
+
                 $model = new UploadForm();
                 $model->scenario = $strField;
                 try {
                     $objFile = $model->$strField = UploadedFile::getInstance($model, $strField);
-                    if ($objFile && $model->validate())
+                    $this->arrError['code'] = 221;
+                    if ($objFile)
                     {
-                        // 创建目录
-                        $dirName = $this->getUploadPath();
-                        if ( ! file_exists($dirName)) mkdir($dirName, 0777, true);
-                        $this->arrError['code'] = 202;
-                        $this->arrError['data'] = $dirName;
-                        if (file_exists($dirName))
+                        $isTrue = $model->validate();
+                        $this->arrError['msg'] = $model->getFirstError($strField);
+                        if ($isTrue)
                         {
-                            // 生成文件随机名
-                            $strFileName = uniqid() . '.';
-                            $strFilePath = $dirName. $strFileName. $objFile->extension;
-                            $this->arrError['code'] = 204;
-                            if ($objFile->saveAs($strFilePath) && $this->afterUpload($objFile, $strFilePath, $strField))
+                            // 创建目录
+                            $dirName = $this->getUploadPath();
+                            if ( ! file_exists($dirName)) mkdir($dirName, 0777, true);
+                            $this->arrError['code'] = 202;
+                            $this->arrError['data'] = $dirName;
+                            if (file_exists($dirName))
                             {
-                                // 删除旧文件
-                                if (! empty($strFile) && file_exists('.'.$strFile)) unlink('.'.$strFile);
-                                $this->arrError['code'] = 1;
-                                $this->arrError['data'] = [
-                                    'sFilePath' => trim($strFilePath, '.'),
-                                    'sFileName' => $objFile->baseName.'.'.$objFile->extension,
-                                ];
+                                // 生成文件随机名
+                                $strFileName = uniqid() . '.';
+                                $strFilePath = $dirName. $strFileName. $objFile->extension;
+                                $this->arrError['code'] = 204;
+                                if ($objFile->saveAs($strFilePath) && $this->afterUpload($objFile, $strFilePath, $strField))
+                                {
+                                    $this->arrError['code'] = 1;
+                                    $this->arrError['data'] = [
+                                        'sFilePath' => trim($strFilePath, '.'),
+                                        'sFileName' => $objFile->baseName.'.'.$objFile->extension,
+                                    ];
+                                }
                             }
                         }
-                    } else {
-                        $this->arrError['msg'] = $model->getFirstError($strField);
                     }
+
                 } catch (\Exception $e) {
                     $this->arrError['code'] = 203;
                     $this->arrError['msg']  = $e->getMessage();

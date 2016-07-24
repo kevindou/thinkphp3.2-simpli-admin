@@ -92,7 +92,7 @@ class Admin extends \common\models\Admin
             ['username', 'match', 'pattern' => '/^[a-zA-Z0-9_-]+$/'],
             ['username', 'string', 'min' => 3, 'max' => 30],
             // E-mail
-            ['email', 'string', 'max' => 100],
+            [['email', 'face'], 'string', 'max' => 100],
             ['email', 'email'],
             [['age', 'sex'], 'integer'],
             // Repassword
@@ -110,7 +110,7 @@ class Admin extends \common\models\Admin
         return [
             'default'      => ['username', 'email', 'password', 'repassword', 'status', 'role'],
             'admin-create' => ['username', 'email', 'password', 'repassword', 'status', 'role'],
-            'admin-update' => ['username', 'email', 'password', 'repassword', 'status', 'role', 'nickname', 'home_url', 'facebook', 'maxim', 'birthday', 'sex', 'age']
+            'admin-update' => ['username', 'email', 'password', 'repassword', 'status', 'role', 'face', 'nickname', 'home_url', 'facebook', 'maxim', 'birthday', 'sex', 'age']
         ];
     }
 

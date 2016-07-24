@@ -186,10 +186,25 @@ class AdminController extends Controller
     public function afterUpload($objFile, &$strFilePath, $strField)
     {
         // 上传头像信息
-        if ($strField === 'avatar')
+        if ($strField === 'avatar' || $strField === 'face')
         {
+            // 删除之前的缩略图
+            $strFace = Yii::$app->request->post('face');
+            if ($strFace)
+            {
+                $strFace = dirname($strFace).'/thumb_'.basename($strFace);
+                if (file_exists('.'.$strFace)) @unlink('.'.$strFace);
+            }
+
+            // 处理图片
+            $strTmpPath = dirname($strFilePath).'/thumb_'.basename($strFilePath);
+            $image = Yii::$app->image->load($strFilePath);
+            $image->resize(180, 180, \yii\image\drivers\Image::CROP)->save($strTmpPath);
+            $image->resize(48, 48, \yii\image\drivers\Image::CROP)->save();
+
+            // 管理员页面修改头像
             $admin = Admin::findOne(Yii::$app->user->id);
-            if ($admin)
+            if ($admin && $strField === 'avatar')
             {
                 // 删除之前的图像信息
                 if ($admin->face && file_exists('.'.$admin->face))
@@ -198,16 +213,14 @@ class AdminController extends Controller
                     @unlink('.'.dirname($admin->face).'/thumb_'.basename($admin->face));
                 }
 
-                $strTmpPath = dirname($strFilePath).'/thumb_'.basename($strFilePath);
-                // 处理图片
-                $image = Yii::$app->image->load($strFilePath);
-                $image->resize(180, 180, \yii\image\drivers\Image::CROP)->save($strTmpPath);
-                $image->resize(48, 48, \yii\image\drivers\Image::CROP)->save();
                 $admin->face = ltrim($strFilePath, '.');
                 $admin->save();
                 $strFilePath = $strTmpPath;
             }
         }
+
+
+
 
         return true;
     }

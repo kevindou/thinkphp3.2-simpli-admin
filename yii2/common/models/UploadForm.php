@@ -10,13 +10,15 @@ namespace common\models;
 class UploadForm extends \yii\base\Model
 {
     // 定义字段
-    public $avatar;
+    public $avatar;  // 管理员个人页面上传头像
+    public $face;    // 管理员信息页面上传头像
 
     // 设置应用场景
     public function scenarios()
     {
         return [
             'avatar' => ['avatar'],
+            'face'   => ['face'],
         ];
     }
 
@@ -25,6 +27,7 @@ class UploadForm extends \yii\base\Model
     {
         return [
             [['avatar'], 'image', 'extensions' => ['png', 'jpg', 'gif', 'jpeg'], 'on' => 'avatar'],
+            [['face'], 'image', 'extensions' => ['png', 'jpg', 'gif', 'jpeg'], 'on' => 'face'],
         ];
     }
 }

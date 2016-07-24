@@ -140,11 +140,11 @@ AppAsset::register($this);
                     <i class="ace-icon fa fa-pencil"></i>
                 </button>
 
-                <button class="btn btn-warning me-user">
+                <button class="btn btn-warning me-user" id="bt-me-user">
                     <i class="ace-icon glyphicon glyphicon-user"></i>
                 </button>
 
-                <button class="btn btn-danger me-set">
+                <button class="btn btn-danger me-set" id="bt-me-set">
                     <i class="ace-icon fa fa-cogs"></i>
                 </button>
             </div>
@@ -358,7 +358,8 @@ AppAsset::register($this);
         });
 
         // 用户页面
-        $('.me-user,.me-set').click(function(){ window.location.href = "/admin/admin/site";})
+        $('#bt-me-user').click(function(){window.location.href="<?=Url::toRoute(['admin/view'])?>"});
+        $('#bt-me-set').click(function(){window.location.href="<?=Url::toRoute(['site/index'])?>"});
     })
 </script>
 </body>
