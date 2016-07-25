@@ -3,7 +3,7 @@
  * file: index.php
  * desc: 使用ThinkPHP 3.2.3 入口文件
  * user: liujx
- * date: 2016-07-15 16:48:57
+ * date: 2016-07-25 19:02:06
  */
 header('Content-Type:text/html; charset=utf-8');                             // 应用入口文件
 if (version_compare(PHP_VERSION,'5.3.0','<'))  die('require PHP > 5.3.0 !'); // 检测PHP环境

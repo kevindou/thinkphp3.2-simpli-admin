@@ -50,6 +50,7 @@ INSERT INTO `my_auth_item` VALUES ('/admin/admin/index', '2', '管理员信息�
 INSERT INTO `my_auth_item` VALUES ('/admin/admin/login', '2', '管理员欢迎页面显示', null, '1467191163', '1467191163');
 INSERT INTO `my_auth_item` VALUES ('/admin/admin/search', '2', '管理员信息搜索', null, '1467103592', '1467103592');
 INSERT INTO `my_auth_item` VALUES ('/admin/admin/update', '2', '管理员信息编辑', null, '1467103571', '1467103571');
+INSERT INTO `my_auth_item` VALUES ('/admin/admin/upload', '2', '管理员头像上传', null, '1467103571', '1467103571');
 INSERT INTO `my_auth_item` VALUES ('/admin/auth/index', '2', '权限管理显示', null, '1467103726', '1467103726');
 INSERT INTO `my_auth_item` VALUES ('/admin/auth/search', '2', '权限信息搜索', null, '1467103781', '1467103781');
 INSERT INTO `my_auth_item` VALUES ('/admin/auth/update', '2', '权限信息编辑', null, '1467103757', '1467103757');
@@ -94,6 +95,8 @@ INSERT INTO `my_auth_child` VALUES ('user', '/admin/admin/login');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/admin/search');
 INSERT INTO `my_auth_child` VALUES ('user', '/admin/admin/search');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/admin/update');
+INSERT INTO `my_auth_child` VALUES ('admin', '/admin/admin/upload');
+INSERT INTO `my_auth_child` VALUES ('user', '/admin/admin/upload');
 INSERT INTO `my_auth_child` VALUES ('user', '/admin/admin/update');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/auth/index');
 INSERT INTO `my_auth_child` VALUES ('admin', '/admin/auth/search');
