@@ -16,7 +16,7 @@ return [
     'components' => [
         // 权限管理
         'authManager' => [
-            'class'             => 'yii\rbac\DbManager',
+            'class' => 'yii\rbac\DbManager',
         ],
 
         // 图片处理
@@ -34,7 +34,7 @@ return [
         // 日志
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
-            'targets' => [
+            'targets'    => [
                 [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],

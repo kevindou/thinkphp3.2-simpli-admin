@@ -104,13 +104,14 @@ var MeTable = (function($) {
 			sTable: 	  "#showTable", 	// 显示表格选择器
 			sFormId:  	  "#editForm",		// 编辑表单选择器
 			sBaseUrl:     "update",			// 编辑数据提交URL
+			sExportUrl:   "export",         // 数据导出地址
 			sSearchHtml:  "",				// 搜索信息
 			sSearchType:  "middle",			// 搜索表单位置
 			sSearchForm:  "#searchForm",	// 搜索表单选择器
 			bRenderH1: 	  true,				// 是否渲染H1内容
 			bEditTable:   true,				// 是否开启行内编辑
 			oEditTable:   {},				// 行内编辑对象信息
-			sEditUrl:	  "inline",			// 行内编辑请求地址
+			sEditUrl:	  "editable",	    // 行内编辑请求地址
 			sEditPk: 	  "id",				// 行内编辑pk索引值
 			iViewLoading: 0, 				// 详情加载Loading
 			iLoading:     0, 				// 页面加载Loading
@@ -322,7 +323,7 @@ var MeTable = (function($) {
             $(this.options.sSearchForm).append(self.options.sSearchHtml);
         }
 
-		// 新增、修改、删除、查看、删除全部、保存、刷新
+		// 新增、修改、删除、查看、删除全部、保存、刷新、导出
 		$('.me-table-insert').click(function(evt){evt.preventDefault();self.insert();});
 		$(document).on('click', '.me-table-edit', function(evt){evt.preventDefault();self.update($(this).attr('table-data'))});
 		$(document).on('click', '.me-table-del', function(evt){evt.preventDefault();self.delete($(this).attr('table-data'))});
@@ -330,6 +331,7 @@ var MeTable = (function($) {
 		$('.me-table-delete').click(function(evt){evt.preventDefault();self.deleteAll();});
 		$('.me-table-save').click(function(evt){evt.preventDefault();self.save();});
 		$('.me-table-reload').click(function(evt){evt.preventDefault();self.search();});
+		$('.me-table-export').click(function(evt){evt.preventDefault();self.export();});
 
 		// 行选择
         $(document).on('click', self.options.sTable + ' th input:checkbox' , function(){
@@ -512,5 +514,73 @@ var MeTable = (function($) {
 		}).fail(ajaxFail);
 		return false;
 	};
+
+    // 数据导出
+    MeTable.prototype.export = function(bAll) {
+        var self = this,
+            html = '<form action="' + self.options.sExportUrl + '" target="_blank" method="POST" class="me-export" style="display:none">';
+        html += '<input type="hidden" name="iSize" value="' + (bAll ? 0 : $('select[name=' + self.options.sTable.replace('#', '') + '_length]').val()) + '"/>';
+        html += '<input type="hidden" name="sTitle" value="' + self.options.sTitle + '"/>';
+
+
+        // 添加字段信息
+        this.tableOptions.aoColumns.forEach(function(k, v){
+            if (k.data != null && (k.isExport == undefined)) html += '<input type="hidden" name="aFields[' + k.data + ']" value="' + k.title + '"/>';
+        });
+
+        // 添加查询条件
+        var value = $(self.options.sSearchForm).serializeArray();
+        for (var i in value)
+        {
+            if (empty(value[i]["value"]) || value[i]["value"] == "All") continue;
+            html += '<input type="hidden" name="params[' + value[i]['name'] + ']" value="' + value[i]["value"] + '"/>';
+        }
+
+        // 表单提交
+        var $form    = $(html);
+        $('body').append($form);
+        var deferred = new $.Deferred,
+            temporary_iframe_id = 'temporary-iframe-'+(new Date()).getTime()+'-'+(parseInt(Math.random()*1000)),
+            temp_iframe = $('<iframe id="'+temporary_iframe_id+'" name="'+temporary_iframe_id+'" \
+								frameborder="0" width="0" height="0" src="about:blank"\
+								style="position:absolute; z-index:-1; visibility: hidden;"></iframe>')
+                .insertAfter($form);
+
+        $form.append('<input type="hidden" name="temporary-iframe-id" value="'+temporary_iframe_id+'" />');
+        temp_iframe.data('deferrer' , deferred);
+        $form.attr({
+            method:  'POST',
+            enctype: 'multipart/form-data',
+            target:  temporary_iframe_id //important
+        });
+
+        $form.get(0).submit();
+        var ie_timeout = setTimeout(function(){
+            ie_timeout = null;
+            deferred.reject($(document.getElementById(temporary_iframe_id).contentDocument).text());
+            //temp_iframe.attr('src', 'about:blank').remove();
+            $('.me-export').remove();
+        } , 500);
+
+        deferred
+        .fail(function(result) {
+            if (result)
+            {
+                try {
+                    result = $.parseJSON(result);
+                    gAlert("温馨提醒：", result.msg, result.status == 1 ? 'success' : "warning");
+                } catch (e) {
+                    gAlert("温馨提醒：", '服务器没有响应...');
+                }
+            }
+            else
+            {
+                gAlert('温馨提醒：', '数据正在导出, 请稍候...', 'success');
+            }
+
+        })
+        .always(function() {clearTimeout(ie_timeout);});
+        deferred.promise();
+    };
 	return MeTable;
 })($);

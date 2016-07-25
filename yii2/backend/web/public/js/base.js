@@ -296,7 +296,7 @@ function aceFileInputAjax(file_input, url) {
             $('<iframe id="'+temporary_iframe_id+'" name="'+temporary_iframe_id+'" \
 								frameborder="0" width="0" height="0" src="about:blank"\
 								style="position:absolute; z-index:-1; visibility: hidden;"></iframe>')
-                .insertAfter($form)
+                .insertAfter($form);
 
         $form.append('<input type="hidden" name="temporary-iframe-id" value="'+temporary_iframe_id+'" />');
         temp_iframe.data('deferrer' , deferred);

@@ -450,6 +450,107 @@ class Controller extends \yii\web\Controller
         return $this->returnAjax();
     }
 
+    /**
+     * handleExport() 处理需要导出的数据显示问题
+     * @param array $arrObject 查询到的对象数组
+     */
+    protected function handleExport(&$arrObject){}
+
+    // 导出Excel文件
+    public function actionExport()
+    {
+        $request = Yii::$app->request;
+        if ($request->isPost)
+        {
+            // 接收参数
+            $arrFields = $request->post('aFields');         // 字段信息
+//            $intSize   = (int)$request->post('iSize');      // 查询数据条数
+            $strTitle  = $request->post('sTitle');          // 标题信息
+
+            // 判断数据的有效性
+            if ($arrFields && $strTitle)
+            {
+                // 获取数据
+                $arrKeys   = array_keys($arrFields);        // 所有的字段
+                $arrSearch = $this->query();                // 处理查询参数
+                $objArray  = $this->getModel()->find()->where($arrSearch['where'])->orderBy($arrSearch['orderBy'])->all();
+                // var_dump($this->getModel()->find()->where($arrSearch['where'])->orderBy($arrSearch['orderBy'])->createCommand()->getRawSql());exit;
+
+                // 判断数据是否存在
+                $this->arrError['code'] = 220;
+                if ($objArray)
+                {
+                    // 处理查询到的数据
+                    $this->handleExport($objArray);
+
+                    ob_end_clean();
+                    ob_start();
+                    $objPHPExcel = new \PHPExcel();
+                    $objPHPExcel->getProperties()->setCreator("Liujx Admin")
+                        ->setLastModifiedBy("Liujx Admin")
+                        ->setTitle("Office 2007 XLSX Test Document")
+                        ->setSubject("Office 2007 XLSX Test Document")
+                        ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                        ->setKeywords("office 2007 openxml php")
+                        ->setCategory("Test result file");
+                    $objPHPExcel->setActiveSheetIndex(0);
+
+                    // 获取显示列的信息
+                    $intLength = count($arrFields);
+                    $arrLetter = range('A', 'Z');
+                    if ($intLength > 26)
+                    {
+                        $arrLetters = array_slice($arrLetter, 0, $intLength - 26);
+                        if ($arrLetters) foreach ($arrLetters as $value) array_push($arrLetter, 'A'.$value);
+                    }
+
+                    $arrLetter = array_slice($arrLetter, 0, $intLength);
+
+                    // 确定第一行信息
+                    foreach ($arrLetter as $key => $value)
+                    {
+                        $objPHPExcel->getActiveSheet()->setCellValue($value.'1', $arrFields[$arrKeys[$key]]);
+                    }
+
+                    // 写入数据信息
+                    $intNum = 2;
+                    foreach ($objArray as $value)
+                    {
+                        // 写入信息数据
+                        foreach ($arrLetter as $intKey => $strValue)
+                        {
+                            $tmpAttribute = $arrKeys[$intKey];
+                            $objPHPExcel->getActiveSheet()->setCellValue($strValue.$intNum, $value->$tmpAttribute);
+                        }
+
+                        $intNum ++;
+                    }
+
+                    // 设置sheet 标题信息
+                    $objPHPExcel->getActiveSheet()->setTitle($strTitle);
+                    $objPHPExcel->setActiveSheetIndex(0);
+
+                    // 设置头信息
+                    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                    header('Content-Disposition: attachment;filename="'.$strTitle.'.xlsx"');
+                    header('Cache-Control: max-age=0');
+                    header('Cache-Control: max-age=1');
+                    header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');           // Date in the past
+                    header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');  // always modified
+                    header('Cache-Control: cache, must-revalidate');            // HTTP/1.1
+                    header('Pragma: public');                                   // HTTP/1.0
+
+                    // 直接输出文件
+                    $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+                    $objWriter->save('php://output');
+                    Yii::$app->end();
+                }
+            }
+        }
+
+        return $this->returnAjax();
+    }
+
     // ajax返回
     protected function returnAjax($array = '')
     {

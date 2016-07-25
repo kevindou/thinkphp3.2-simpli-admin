@@ -10,17 +10,21 @@ $this->params['breadcrumbs'][] = $this->title;
         <i class="ace-icon fa fa-plus bigger-120 blue"></i>
         添加
     </button>
-    <button class="btn btn-white btn-warning btn-bold me-table-delete">
-        <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+    <button class="btn btn-white btn-danger btn-bold me-table-delete">
+        <i class="ace-icon fa fa-trash-o bigger-120 red"></i>
         删除
     </button>
     <button class="btn btn-white btn-info btn-bold me-hide">
         <i class="ace-icon fa  fa-external-link bigger-120 orange"></i>
         隐藏
     </button>
-    <button class="btn btn-white btn-primary btn-bold orange2 me-table-reload">
-        <i class="ace-icon fa fa-refresh bigger-120 orange"></i>
+    <button class="btn btn-white btn-pink btn-bold  me-table-reload">
+        <i class="ace-icon fa fa-refresh bigger-120 pink"></i>
         刷新
+    </button>
+    <button class="btn btn-white btn-warning btn-bold me-table-export">
+        <i class="ace-icon glyphicon glyphicon-export bigger-120 orange2"></i>
+        导出Excel
     </button>
 </p>
 <!--表格数据-->

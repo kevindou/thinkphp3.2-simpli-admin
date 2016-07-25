@@ -89,6 +89,13 @@ class ComposerStaticInit97f60f486aee3c9bc14072d1bbd961d8
                 0 => __DIR__ . '/..' . '/yurkinx/yii2-image',
             ),
         ),
+        'P' => 
+        array (
+            'PHPExcel' => 
+            array (
+                0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
+            ),
+        ),
         'I' => 
         array (
             'Imagine' => 

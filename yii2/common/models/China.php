@@ -62,4 +62,5 @@ class China extends \common\models\Model
     {
         return $this->hasMany(China::className(), ['Pid' => 'Id']);
     }
+
 }
