@@ -77,7 +77,7 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                     if (empty($strError))
                     {
                         // 执行数据库操作
-                        $mysql->multi_query(str_replace('my_', $prefix, file_get_contents('../project.sql')));
+                        $mysql->multi_query(str_replace('my_', $prefix, file_get_contents('./project.sql')));
                         do {
                             $result = $mysql->store_result();
                             if ($result) $result->free();

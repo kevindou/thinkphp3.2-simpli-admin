@@ -69,7 +69,7 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                 {
                     // 检查表信息
                     $result   = $mysql->query('SHOW TABLES');
-                    $arrTable = [$prefix.'admin', $prefix.'auth_child', $prefix.'auth_item', $prefix.'menu'];
+                    $arrTable = [$prefix.'admin', $prefix.'auth_item', $prefix.'auth_item_child', $prefix.'assignment', $prefix.'rule',  $prefix.'menu'];
                     $strError = '';
                     if ($result)
                     {
@@ -84,6 +84,7 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                     $arrError['msg'] = $strError;
                     if (empty($strError))
                     {
+                        set_time_limit(0);
                         // 执行数据库操作
                         $mysql->multi_query(str_replace('my_', $prefix, file_get_contents('./yii2.sql')));
                         do {
@@ -92,10 +93,13 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                         } while ($mysql->next_result());
                         if ($mysql->error == 0)
                         {
+                            // 修改文件名
+                            rename('./index.php', './install.log');
+
                             // 信息返回
                             $arrError = [
                                 'status' => 1,
-                                'msg'    => '安装成功, 为你跳转到后台登录页面'
+                                'msg'    => '安装成功'
                             ];
                         }
                     }
@@ -210,7 +214,7 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                 // 数据请求
                 var l = layer.load();
                 $.ajax({
-                    url:  './install.php',
+                    url:  './index.php',
                     type: 'POST',
                     data: $('form').serialize(),
                     dataType:'json',
