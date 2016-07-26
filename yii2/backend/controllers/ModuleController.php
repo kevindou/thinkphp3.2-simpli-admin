@@ -356,14 +356,14 @@ HTML;
 
     /**
      * 显示的前置和后置操作
-     * myTable.beforeShow(array data, bool isDetail) return true 前置
-     * myTable.afterShow(array data, bool isDetail)  return true 后置
+     * myTable.beforeShow(object data, bool isDetail) return true 前置
+     * myTable.afterShow(object data, bool isDetail)  return true 后置
      */
 
      /**
       * 编辑的前置和后置操作
-      * myTable.beforeSave(array data) return true 前置
-      * myTable.afterSave(array data)  return true 后置
+      * myTable.beforeSave(object data) return true 前置
+      * myTable.afterSave(object data)  return true 后置
       */
 
     $(function(){

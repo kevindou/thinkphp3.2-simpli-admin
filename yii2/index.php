@@ -93,6 +93,33 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                         } while ($mysql->next_result());
                         if ($mysql->error == 0)
                         {
+                            // 修改配置文件
+                            $strConfig = <<<HTML
+<?php
+return [
+    'components' => [
+        'db' => [
+            'class'       => 'yii\db\Connection',
+            'dsn'         => 'mysql:host=localhost;dbname={$database}',
+            'username'    => '{$username}',
+            'password'    => '{$password}',
+            'charset'     => 'utf8',
+            'tablePrefix' => '{$prefix}',
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@common/mail',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => true,
+        ],
+    ],
+];
+HTML;
+                            // 修改配置文件内容
+                            file_put_contents('./common/config/main-local.php', $strConfig);
+
                             // 修改文件名
                             rename('./index.php', './install.log');
 
@@ -188,6 +215,7 @@ if (! empty($_POST) && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_
                     <p> 后台项目位于./backend </p>
                     <p> 超级管理员账号：<strong class="text-success">super</strong> </p>
                     <p> 超级管理员密码：<strong class="text-danger">admin123</strong> </p>
+                    <p> SQL文件位于：<span class="text-info">./yii2.sql</span></p>
                 </div>
             </div>
             <div class="modal-footer">

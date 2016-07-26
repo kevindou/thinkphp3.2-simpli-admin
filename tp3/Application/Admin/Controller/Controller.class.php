@@ -15,7 +15,7 @@ use Common\Auth;
 class Controller extends \Common\Controller
 {
     // 定义验证数据、模型、主键
-    protected $validate = [], $model = 'admin', $pk = 'id', $thumb = [160, 160];
+    protected $validate = [], $model = 'admin', $pk = 'id', $thumb = [160, 160], $sort = 'id';
 
     /**
      * where() 查询方法
@@ -62,7 +62,7 @@ class Controller extends \Common\Controller
         $aParams = post('params');                   // 查询参数
         $sOrder  = post('sSortDir_0', 'desc');       // 排序类型
         $aWhere  = $this->where($aParams);           // 查询条件信息
-        $sFile   = isset($aParams['orderBy']) && ! empty($aParams['orderBy']) ? $aParams['orderBy'] : 'id'; // 排序字段
+        $sFile   = isset($aParams['orderBy']) && ! empty($aParams['orderBy']) ? $aParams['orderBy'] : $this->sort; // 排序字段
         $aSearch = [
             'orderBy' => [$sFile => $sOrder],
             'where'   => [],                         // 查询条件
@@ -205,9 +205,9 @@ class Controller extends \Common\Controller
     public function export()
     {
         // 接收参数
-        $arrFields = post('aFields'); // 字段信息
-        $intSize   = (int)post('iSize');   // 查询数据条数
-        $strTitle  = post('sTitle');  // 标题信息
+        $arrFields = post('aFields');       // 字段信息
+        $intSize   = (int)post('iSize');    // 查询数据条数
+        $strTitle  = post('sTitle');        // 标题信息
 
         // 数据验证
         if (IS_POST && $arrFields && $strTitle)
@@ -219,7 +219,7 @@ class Controller extends \Common\Controller
 
             // 查询数据
             $objQuery = M($this->model)->field($arrKeys)->where($aSearch['where']);
-            if ($intSize > 0) $objQuery = $objQuery->limit($intSize);
+            // if ($intSize > 0) $objQuery = $objQuery->limit($intSize);
             $data     = $objQuery->select();
             $this->arrError['msg'] = '没有需要导出的数据';
             if ($data)

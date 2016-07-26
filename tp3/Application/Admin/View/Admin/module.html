@@ -144,9 +144,9 @@
                         if (json.status == 1)
                         {
                             // 第一步提交
-                            if (info.step === 1) $('#my-content').html(json.data);
+                            if (data.step === 1) $('#my-content').html(json.data);
                             // 第二步提交
-                            if (info.step === 2)
+                            if (data.step === 2)
                             {
                                 $('.code').html(json.data.html);
                                 // HTML

@@ -543,7 +543,7 @@ class Controller extends \yii\web\Controller
                     // 直接输出文件
                     $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
                     $objWriter->save('php://output');
-                    Yii::$app->end();
+                    exit;// Yii::$app->end();
                 }
             }
         }
