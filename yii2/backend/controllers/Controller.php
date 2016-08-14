@@ -58,13 +58,8 @@ class Controller extends \yii\web\Controller
         // 主控制器验证
         if ( ! parent::beforeAction($action)) {return false;}
 
-        // 获取参数
-        $controller = Yii::$app->controller->id;            // 控制器名
-        $action     = Yii::$app->controller->action->id;    // 方法名
-        $permissionName = $controller.'/'.$action;          // 权限值
-
         // 验证权限
-        if( ! \Yii::$app->user->can($permissionName) && Yii::$app->getErrorHandler()->exception === null)
+        if( ! \Yii::$app->user->can($action->controller->id . '/' . $action->id) && Yii::$app->getErrorHandler()->exception === null)
         {
             // 没有权限AJAX返回
             if (Yii::$app->request->isAjax)
@@ -543,7 +538,8 @@ class Controller extends \yii\web\Controller
                     // 直接输出文件
                     $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
                     $objWriter->save('php://output');
-                    exit;// Yii::$app->end();
+                    // exit;//
+                    Yii::$app->end();
                 }
             }
         }
