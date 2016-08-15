@@ -8,6 +8,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use common\components\Helper;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -65,14 +66,13 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return mixed
-     */
     public function actionIndex()
     {
-        return $this->render('index');
+        $redis = Yii::$app->redis;
+        $name = $redis->get('myname');
+        var_dump($name);
+        var_dump($redis);exit;
+//        return $this->render('index');
     }
 
     /**
