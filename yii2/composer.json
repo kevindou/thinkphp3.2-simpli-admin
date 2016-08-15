@@ -20,7 +20,7 @@
         "yiisoft/yii2-swiftmailer": "*",
         "yiisoft/yii2-imagine": "^2.0",
         "yurkinx/yii2-image": "^1.1",
-        "phpoffice/phpexcel": "dev-develop",
+        "phpoffice/phpexcel": "*",
         "yiisoft/yii2-redis": "^2.0"
     },
     "require-dev": {
