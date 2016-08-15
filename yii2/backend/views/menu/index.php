@@ -47,10 +47,10 @@ $this->params['breadcrumbs'][] = $this->title;
             {"data": "status", "sName":"status","title": "状态", "value" : <?=json_encode(Yii::$app->params['status'])?>, "edit":{"type":"radio", "default":1, "options":{"required":1, "number":1}},"search":{"type":"select"}, "createdCell":statusToString},
             {"data": "sort", "sName":"sort","title":"排序", "value" : 100, "edit":{"type":"text", "options":{"required":1, "number":1}}},
             // 公共属性字段信息
-            {"data": "create_time", "sName":"create_time","title":"创建时间", "createdCell":dateTimeString},
-            {"data": "create_id", "sName":"create_id", "title":"创建用户", "createdCell":adminToString, "bSortable": false},
-            {"data": "update_time", "sName":"update_time", "title":"修改时间", "createdCell":dateTimeString},
-            {"data": "update_id", "sName":"update_id", "title":"修改用户", "createdCell":adminToString, "bSortable": false},
+            {"data": "created_at", "sName":"created_at","title":"创建时间", "createdCell":dateTimeString},
+            {"data": "created_id", "sName":"created_id", "title":"创建用户", "createdCell":adminToString, "bSortable": false},
+            {"data": "updated_at", "sName":"updated_at", "title":"修改时间", "createdCell":dateTimeString},
+            {"data": "updated_id", "sName":"updated_id", "title":"修改用户", "createdCell":adminToString, "bSortable": false},
             oOperate
         ],
     });

@@ -40,10 +40,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			{"title": "邮箱", "data": "email", "sName": "email", "edit": {"type": "text", "options": {"required":true,"rangelength":"[2, 255]", "email": true}}, "search": {"type": "text"}, "bSortable": false},
 			{"title": "角色", "data": "role", "sName": "role", "value": aRoles, "edit": {"type": "select", "options": {"required":true}}, "bSortable": false},
 			{"title": "状态", "data": "status", "sName": "status", "value": aStatus, "edit": {"type": "radio", "default": 1, "options": {"required":true,"number":true,}}, "bSortable": false},
-			{"title": "创建时间", "data": "create_time", "sName": "create_time", "createdCell" : dateTimeString}, 
-			{"title": "创建用户", "data": "create_id", "sName": "created_id", "bSortable": false, "createdCell": adminToString},
-			{"title": "修改时间", "data": "update_time", "sName": "update_time", "createdCell" : dateTimeString}, 
-			{"title": "修改用户", "data": "update_id", "sName": "update_id", "bSortable": false, "createdCell": adminToString},
+			{"title": "创建时间", "data": "created_at", "sName": "created_at", "createdCell" : dateTimeString},
+			{"title": "创建用户", "data": "created_id", "sName": "created_id", "bSortable": false, "createdCell": adminToString},
+			{"title": "修改时间", "data": "updated_at", "sName": "updated_at", "createdCell" : dateTimeString},
+			{"title": "修改用户", "data": "updated_id", "sName": "updated_id", "bSortable": false, "createdCell": adminToString},
 			oOperate
         ],
 

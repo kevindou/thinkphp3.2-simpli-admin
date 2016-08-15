@@ -3,6 +3,8 @@
 namespace backend\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use common\behaviors\UpdateBehavior;
 
 /**
  * This is the model class for table "{{%menu}}".
@@ -27,6 +29,14 @@ class Menu extends \common\models\Model
     public static function tableName()
     {
         return '{{%menu}}';
+    }
+
+    public function behaviors()
+    {
+        return [
+            TimestampBehavior::className(),
+            UpdateBehavior::className(),
+        ];
     }
 
     /**
@@ -59,20 +69,6 @@ class Menu extends \common\models\Model
             'update_time' => '修改时间',
             'update_id'   => '修改用户',
         ];
-    }
-
-    // 修改之前
-    public function beforeSave($insert)
-    {
-        $this->update_time = time();
-        $this->update_id   = Yii::$app->getUser()->id;
-        if ($insert)
-        {
-            $this->create_id   = $this->update_id;
-            $this->create_time = $this->update_time;
-        }
-
-        return true;
     }
 
     // 修改之后

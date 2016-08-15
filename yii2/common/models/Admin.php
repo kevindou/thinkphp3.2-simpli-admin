@@ -5,6 +5,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\web\IdentityInterface;
+use common\behaviors\UpdateBehavior;
 
 /**
  * User model
@@ -45,6 +46,7 @@ class Admin extends Model implements IdentityInterface
     {
         return [
             TimestampBehavior::className(),
+            UpdateBehavior::className(),
         ];
     }
 

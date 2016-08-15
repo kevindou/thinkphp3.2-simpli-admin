@@ -3,6 +3,7 @@ namespace backend\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * User model
@@ -36,13 +37,6 @@ class Admin extends \common\models\Admin
             $this->_statusLabel = $statuses[$this->status];
         }
         return $this->_statusLabel;
-    }
-
-    public function behaviors()
-    {
-        return [
-//            TimestampBehavior::className(),
-        ];
     }
 
     /**
@@ -150,17 +144,8 @@ class Admin extends \common\models\Admin
                 $this->setPassword($this->password);
                 $this->generateAuthKey();
                 $this->generatePasswordResetToken();
-
-                // 新增的时候添加新增时间和用户
-                if ($this->isNewRecord)
-                {
-                    $this->create_id   = Yii::$app->getUser()->id;
-                    $this->create_time = time();
-                }
             }
 
-            $this->update_id   = Yii::$app->getUser()->id;
-            $this->update_time = time();
             return true;
         }
         return false;
