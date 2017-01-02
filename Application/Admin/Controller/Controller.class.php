@@ -35,25 +35,20 @@ class Controller extends \Common\Controller
         parent::_initialize();
         
         // 不是管理员需要验证权限
-        if ($this->user->id !== 1)
-        {
+        if ($this->user->id !== 1) {
             // 验证用户权限
-            if ( ! Auth::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME))
-            {
+            if ( ! Auth::can($this->user->id, strtolower('/'.MODULE_NAME.'/'.CONTROLLER_NAME).'/'.ACTION_NAME)) {
                 $strMsg = '抱歉！你没有执行权限 :)';
                 IS_AJAX ? $this->ajaxReturn($strMsg) : $this->go($strMsg);
             }
         }
-
-        // 初始化注入变量
-        $this->assign([
-            'users' => ['name' => $this->user->name, 'face' => $this->user->face],
-            'menus' => Auth::getUserMenus($this->user->id)
-        ]);
     }
 
     // 获取数据页面
-    public function index(){$this->display('Admin/'.$this->model);}
+    public function index()
+    {
+        $this->display();
+    }
 
     // 查询处理
     protected function query()

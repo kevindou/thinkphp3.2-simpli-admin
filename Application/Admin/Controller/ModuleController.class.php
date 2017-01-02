@@ -12,12 +12,6 @@ use Think\Model;
 // 引入命名空间
 class ModuleController extends Controller
 {
-    // 首页显示
-    public function index()
-    {
-        $this->display('Admin/module');
-    }
-
     // 第一步接收标题和数据表数据生成表单配置信息
     public function create()
     {

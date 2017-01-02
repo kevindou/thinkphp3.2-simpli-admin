@@ -30,6 +30,6 @@ class MenuController extends Controller
         if ( ! empty($parent)) $parent = Helper::map($parent, 'id', 'menu_name');
         $parent[0] = '父级分类';
         $this->assign('parents', $parent);
-        parent::index();
+        $this->display('index');
     }
 }

@@ -11,14 +11,8 @@
         <a id="table-refresh" title="刷新" href="#" onclick="return myTable.search();">
             <i class="icon-refresh"></i>
         </a>
-        <a id="toggle-fullscreen" class="hidden-phone hidden-tablet" title="全屏" href="#">
-            <i class="icon-fullscreen"></i>
-        </a>
         <a class="btn-minimize" title="隐藏" href="#">
             <i class="icon-chevron-up"></i>
-        </a>
-        <a class="btn-close" title="删除" href="#">
-            <i class="icon-remove"></i>
         </a>
     </div>
 </div>
@@ -26,7 +20,10 @@
     <!--表格数据-->
     <table class="table table-striped table-bordered table-hover" id="showTable"></table>
 </div>
-
+<link rel="stylesheet" type="text/css" href="__JS__/jcrop/jquery.Jcrop.min.css" />
+<script type="text/javascript" src="__JS__/plupload/plupload.full.min.js"></script>
+<script type="text/javascript" src="__JS__/plupload/zh_CN.js"></script>
+<script type="text/javascript" src="__JS__/jcrop/jquery.Jcrop.min.js"></script>
 <script type="text/javascript">
     var roles    = {$roles|json_encode=###},
         uploader = null,
@@ -37,7 +34,12 @@
             {"data":"password", "sName":"password", "title":"管理员密码","edit":{"type":"password", "options":{"rangelength":"[6, 20]"}}},
             {"data":"truepass", "sName":"truepass", "title":"确认密码","edit":{"type":"password", "options":{"rangelength":"[6, 20]", "equalTo":"input[name=password]:first"}}, "defaultContent":"", "isExport": false},
             {"data":"email", "sName":"email","title":"管理员Email", "edit":{"type":"text", "options":{"required":1, "rangelength":"[2, 50]", "email":1}}, "search":{"type":"text"}},
-            {"data":"face", "sName":"face","title":"使用头像", "edit":{"type":"image", "options":{"required":1, "rangelength":"[2, 100]"}}},
+            {"data":"face", "sName":"face","title":"使用头像",
+                "edit": {"type":"image", "options":{"required":1, "rangelength":"[2, 100]"}},
+                "createdCell": function(td, data) {
+                    $(td).html(data ? "<img style='width:30px;height:30px;' src='" + data + "'>" : "");
+                }
+            },
             {"data":"status", "sName":"status","title":"状态","value":{"1":"启用", "0":"待审核", "-1":"停用"}, "createdCell":function(td, data, rowdatas, row, col) {
                 var md = {"-1" : {"class":"important", "title":"停用"}, "0" : {"class":"warning", "title":"待审核"}, "1" :{"class":"success", "title":"启用"}}, arr = md[data];
                 $(td).html('<span class="label label-' + arr["class"] + '">' + arr["title"] + '</span>')

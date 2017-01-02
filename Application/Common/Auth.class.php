@@ -201,6 +201,7 @@ class Auth
      */
     public static function getUserRoles($intUid)
     {
+        $intUid = (int)$intUid;
         // 判断是否为管理员
         $where = ['type' => ['eq', self::ROLE_TYPE]];
         if ($intUid !== 1) {

@@ -14,12 +14,6 @@ class AuthController extends Controller
     // 定义查询数据
     public $model = 'auth_item';
 
-    // 显示首页
-    public function index()
-    {
-        $this->display('Admin/auth');
-    }
-
     // 查询处理
     public function where($params)
     {
@@ -32,8 +26,7 @@ class AuthController extends Controller
     // 修改数据
     public function update()
     {
-        if (IS_AJAX)
-        {
+        if (IS_AJAX) {
             // 接收参数
             $sType = post('actionType');                  // 操作类型
             $aType = ['delete', 'insert', 'update'];      // 可执行操作
@@ -41,8 +34,7 @@ class AuthController extends Controller
             $this->arrError['msg'] = "操作类型错误";
 
             // 操作类型判断
-            if (in_array($sType, $aType, true))
-            {
+            if (in_array($sType, $aType, true)) {
                 /** 逻辑验证
                  * 1 不是管理要验证
                  * 2 删除需要验证
@@ -55,13 +47,11 @@ class AuthController extends Controller
                     ($iType === Auth::ROLE_TYPE && $aType !== 'delete') ||                                                          // 角色操作除删除外不验证
                     ($iType === Auth::AUTH_TYPE && Auth::can($this->user->id, 'updateAuth')) ||                                     // 权限验证操作
                     ($aType === 'delete' && Auth::can($this->user->id, $iType === Auth::ROLE_TYPE ? 'deleteRole' : 'deleteAuth'))   // 删除权限
-                )
-                {
+                ) {
                     // 处理数据返回
                     $isTrue = Auth::handleItem($sType, $iType === Auth::ROLE_TYPE ? Auth::ROLE_TYPE : Auth::AUTH_TYPE, $this->user->id);
                     $this->arrError['msg'] = '服务器繁忙, 请稍候再试...';
-                    if ($isTrue === true || is_numeric($isTrue))
-                    {
+                    if ($isTrue === true || is_numeric($isTrue)) {
                         $this->arrError = [
                             'status' => 1,
                             'msg'    => '操作成功 ^.^',

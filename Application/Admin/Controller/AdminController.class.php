@@ -54,7 +54,7 @@ class AdminController extends Controller
 
         $this->render('Admin/index', [
             'roles' => $roles,
-            'user'  => $_SESSION[$this->_admin],
+            'users' => session($this->_admin),
             'data'  => [
                 'system' => $system,                                // 系统信息
                 'tp'     => 'Think PHP '.THINK_VERSION,             // ThinkPHP 版本
@@ -74,25 +74,20 @@ class AdminController extends Controller
         $strNew  = post('newPassword');  // 新密码
         $strTrue = post('truePassword'); // 确认密码
         // 验证数据不能为空
-        if (IS_AJAX && $strOld && $strNew && $strTrue)
-        {
+        if (IS_AJAX && $strOld && $strNew && $strTrue) {
             $this->arrError['msg'] = '密码强度太弱';
             $intLength = strlen($strNew);
-            if ($intLength > 2 && $intLength < 16)
-            {
+            if ($intLength > 2 && $intLength < 16) {
                 $this->arrError['msg'] = '没有修改密码或者确认密码错误';
-                if ($strOld !== $strNew && $strNew === $strTrue)
-                {
+                if ($strOld !== $strNew && $strNew === $strTrue) {
                     $this->arrError['msg'] = '修改用户不存在';
                     $model   = M('admin');
                     $arrUser = $model->field(['password'])->find($this->user->id);
 
                     // 用户存在
-                    if ($arrUser)
-                    {
+                    if ($arrUser) {
                         $this->arrError['msg'] = '原始密码错误';
-                        if (sha1($strOld) === $arrUser['password'])
-                        {
+                        if (sha1($strOld) === $arrUser['password']) {
                             $this->arrError['msg'] = '服务器繁忙, 请稍候再试...';
                             // 修改用户信息
                             if ($model->where(['id' => $this->user->id])->save(['password' => sha1($strNew)]))
@@ -104,9 +99,7 @@ class AdminController extends Controller
                                 ];
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // 用户存在删除管理员信息
                         unset($_SESSION[$this->_admin]);
                         $this->arrError['status'] = 3;

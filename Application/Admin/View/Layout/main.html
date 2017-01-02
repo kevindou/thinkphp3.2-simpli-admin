@@ -77,7 +77,6 @@
             </div>
         </div>
         <!-- end: 主要导航栏 -->
-
         <!-- start: 主要内容 -->
         <div id="content" class="span10">
             <div class="row-fluid">
@@ -100,7 +99,7 @@
     <script type="text/javascript" src="__PUBLIC__/js/jquery.ui.touch-punch.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/modernizr.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.cookie.js"></script>
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.cookie.js"></script>-->
     <script type="text/javascript" src='__PUBLIC__/js/fullcalendar.min.js'></script>
     <script type="text/javascript" src='__PUBLIC__/js/jquery.dataTables.min.js'></script>
     <!--文件上传-->
@@ -108,20 +107,20 @@
     <script type="text/javascript" src="__PUBLIC__/js/plupload/zh_CN.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jcrop/jquery.Jcrop.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/excanvas.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.pie.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.stack.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.resize.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.flot.time.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/colResizable.min.js"></script>
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.flot.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.flot.pie.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.flot.stack.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.flot.resize.min.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.flot.time.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/colResizable.min.js"></script>-->
     <script type="text/javascript" src="__PUBLIC__/js/jquery.chosen.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.uniform.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.cleditor.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.noty.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.elfinder.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.raty.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.iphone.toggle.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/jquery.gritter.min.js"></script>
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.iphone.toggle.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/js/jquery.gritter.min.js"></script>-->
     <script type="text/javascript" src="__PUBLIC__/js/jquery.imagesloaded.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.masonry.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.knob.modified.js"></script>
@@ -138,14 +137,13 @@
     <script type="text/javascript" src="__PUBLIC__/js/custom.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/jquery.datetimepicker.full.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/datepicker.zh-CN.js"></script>
-	<!--<script type="text/javascript" src='__PUBLIC__/js/dataTables.colResize.js'></script>-->
+	<script type="text/javascript" src='__PUBLIC__/js/dataTables.colResize.js'></script>
     <script type="text/javascript" >
     $(function(){
         // 导航栏搜索
         $('.menu-search').bind('blur keyup', function(){
             var v = $(this).val();
-            if (v)
-            {
+            if (v) {
                 $('ul.main-menu a').hide();
                 $('ul.main-menu a:contains(\'' + v + '\')').show();
             } else {

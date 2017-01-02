@@ -35,12 +35,6 @@ class RoleController extends Controller
         ];
     }
 
-    // 首页显示
-    public function index()
-    {
-        $this->display('Admin/role');
-    }
-
     // 查看角色信息
     public function view()
     {

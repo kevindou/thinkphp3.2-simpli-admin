@@ -30,8 +30,7 @@ class Controller extends \Think\Controller
     public function _initialize()
     {
         // 判断是否已经登录
-        if (!$this->isLogin())
-        {
+        if (!$this->isLogin()) {
             if (IS_AJAX) {
                 $this->arrError['msg'] = '请先登录...';
                 $this->ajaxReturn();
