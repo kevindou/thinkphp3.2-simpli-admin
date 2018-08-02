@@ -41,7 +41,8 @@ function createTextarea(params){if(empty(params)){params={"class":" form-control
 // upload 上传文件
 function createImage(params)
 {
-    return '<div id="handle' + params['name'] + '"> \
+    var url = params["data-url"] ? 'data-url="' + params["data-url"] + '"' : '';
+    return '<div id="handle' + params['name'] + '" ' + url + '> \
             <input type="hidden" '+handleParams(params)+'> \
             <div class="mp-10"> \
                 <button class="btn btn-success file-select" type="button"> \
@@ -554,14 +555,15 @@ function CutOutImage(select, id,  src, obj)
  */
 function MeUpload(select)
 {
-    var success = typeof arguments[1] == 'function' ? arguments[1] : (typeof arguments[2] == 'function' ? arguments[2] : arguments[3]);
+    var url = $(select).data('url'),
+        success = typeof arguments[1] == 'function' ? arguments[1] : (typeof arguments[2] == 'function' ? arguments[2] : arguments[3]);
     var obj = {
         browse_button :       $(select + ' .file-select').get(0),       // 上传文件按钮.
         container :           $(select).get(0),                         // 上传文件核心DIV
         runtimes :            'html5,flash,silverlight,html4',          // 上传文件方式
         flash_swf_url :       '/Public/js/plupload/Moxie.swf',          // swf上传文件
         silverlight_xap_url : '/Public/js/plupload/js/Moxie.xap',       // 使用xap
-        url :                 'upload',                                 // 上传文件处理页面
+        url :                 url ? url : 'upload',                     // 上传文件处理页面
         // 文件限制
         filters : {
             max_file_size : '2mb',                                       // 文件大小

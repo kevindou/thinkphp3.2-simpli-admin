@@ -35,7 +35,7 @@
             {"data":"truepass", "sName":"truepass", "title":"确认密码","edit":{"type":"password", "options":{"rangelength":"[6, 20]", "equalTo":"input[name=password]:first"}}, "defaultContent":"", "isExport": false},
             {"data":"email", "sName":"email","title":"管理员Email", "edit":{"type":"text", "options":{"required":1, "rangelength":"[2, 50]", "email":1}}, "search":{"type":"text"}},
             {"data":"face", "sName":"face","title":"使用头像",
-                "edit": {"type":"image", "options":{"required":1, "rangelength":"[2, 100]"}},
+                "edit": {"type":"image", "options":{"required":1, "rangelength":"[2, 100]", "data-url": ""}},
                 "createdCell": function(td, data) {
                     $(td).html(data ? "<img style='width:30px;height:30px;' src='" + data + "'>" : "");
                 }
@@ -71,7 +71,7 @@
 
     $(function(){
         myTable.init();
-        uploader = MeUpload('#handleface');
+        uploader = MeUpload('#handleface', "{:U('admin/upload')}");
         uploader.init();
     })
 </script>
