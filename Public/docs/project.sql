@@ -27,7 +27,7 @@ CREATE TABLE `my_admin` (
 -- 管理员信息
 -- ----------------------------
 INSERT INTO `my_admin` VALUES ('1', 'admin', 'f865b53623b121fd34ee5426c792e5c33af8c227', 'admin@qq.com', '/Public/Uploads/20160704/Admin577a423364339.jpg', '', '', '', '1', '0', '1457604078', '1467715355', '127.0.0.1', '1', '1');
-INSERT INTO `my_admin` VALUES ('2', 'liujinxing', 'e74057e4af210894e68ae86918e051929bb6d85f', '821901008@qq.com', '/Public/Uploads/20160705/Admin577b8efe9d4ab.jpg', 'user', '', '', '1', '0', '1457606311', '1467368469', '127.0.0.1', '1', '1');
+INSERT INTO `my_admin` VALUES ('2', 'liujinxing', 'f865b53623b121fd34ee5426c792e5c33af8c227', '821901008@qq.com', '/Public/Uploads/20160705/Admin577b8efe9d4ab.jpg', 'user', '', '', '1', '0', '1457606311', '1467368469', '127.0.0.1', '1', '1');
 
 -- ----------------------------
 -- 角色和权限表
