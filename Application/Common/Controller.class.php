@@ -98,11 +98,42 @@ class Controller extends \Think\Controller
      */
     public function ajaxReturn($message = '', $data = [], $status = 0)
     {
-        if (!empty($message)) $this->arrError['msg'] = $message;
-        if (!empty($data)) $this->arrError['data'] = $data;
-        if ($status === 1) $this->arrError['status'] = 1;
+        if (!empty($message)) {
+            $this->arrError['msg'] = $message;
+        }
+
+        if (!empty($data)) {
+            $this->arrError['data'] = $data;
+        }
+
+        if ($status === 1) {
+            $this->arrError['status'] = 1;
+        }
+
         header('Content-Type:application/json; charset=utf-8');
         exit(json_encode($this->arrError));
+    }
+
+    /**
+     * 正确返回
+     *
+     * @param mixed  $data
+     * @param string $message
+     */
+    public function ajaxSuccess($data, $message = '')
+    {
+        $this->ajaxReturn($message, $data, 1);
+    }
+
+    /**
+     * 错误返回
+     *
+     * @param       $message
+     * @param array $data
+     */
+    public function ajaxError($message, $data = [])
+    {
+        $this->ajaxReturn($message, $data);
     }
 
     /**
@@ -130,7 +161,7 @@ class Controller extends \Think\Controller
      * render() 视图渲染
      * @access protected
      *
-     * @params string      $file   视图文件
+     * @param null|string  $file   视图文件
      * @param  mixed|array $params 注入的变量
      *
      * @return true 返回true

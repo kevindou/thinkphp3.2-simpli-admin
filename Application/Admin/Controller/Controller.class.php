@@ -6,29 +6,14 @@
  * date: 2016-3-12
  */
 
-// 定义命名空间
 namespace Admin\Controller;
 
-// 引入命名空间
 use Common\Auth;
 
 class Controller extends \Common\Controller
 {
     // 定义验证数据、模型、主键
     protected $validate = [], $model = 'admin', $pk = 'id', $thumb = [160, 160], $sort = 'id';
-
-    /**
-     * where() 查询方法
-     * @access protected
-     *
-     * @param  array $params 页面提交过来的查询条件信息
-     *
-     * @return array 返回查询数据信息(默认没有查询条件)
-     */
-    protected function where($params)
-    {
-        return [];
-    }
 
     // 初始化判断定义
     public function _initialize()
@@ -58,7 +43,12 @@ class Controller extends \Common\Controller
         // 接收参数
         $aParams = post('params');                   // 查询参数
         $sOrder  = post('sSortDir_0', 'desc');       // 排序类型
-        $aWhere  = $this->where($aParams);           // 查询条件信息
+        if (method_exists($this, 'where')) {
+            $aWhere = $this->where($aParams);           // 查询条件信息
+        } else {
+            $aWhere = [];
+        }
+
         $sFile   = isset($aParams['orderBy']) && !empty($aParams['orderBy']) ? $aParams['orderBy'] : $this->sort; // 排序字段
         $aSearch = [
             'orderBy' => [$sFile => $sOrder],
@@ -98,91 +88,113 @@ class Controller extends \Common\Controller
     // 查询所有数据
     public function search()
     {
-        if (IS_AJAX) {
-            $model = M($this->model);
-            // 接收参数
-            $intNum  = (int)post('sEcho');               // 第几页
-            $start   = (int)post('iDisplayStart', 0);   // 开始位置
-            $length  = (int)post('iDisplayLength', 10);  // 查询长度
-            $aSearch = $this->query();
+        // 接收参数
+        $intNum  = (int)post('sEcho');               // 第几页
+        $start   = (int)post('iDisplayStart', 0);   // 开始位置
+        $length  = (int)post('iDisplayLength', 10);  // 查询长度
+        $aSearch = $this->query();
 
-            // 查询数据
-            $count = $model->where($aSearch['where'])->count();
-            $data  = $model->where($aSearch['where'])->limit($start, $length)->order($aSearch['orderBy'])->select();
-            // echo $model->getLastSql();
-            $this->arrError = [
-                'status' => 1,
-                'msg'    => 'success',
-                'data'   => [
-                    'sEcho'                => $intNum,      // 请求次数
-                    'iTotalRecords'        => count($data), // 当前页面条数
-                    'iTotalDisplayRecords' => (int)$count,  // 数据总条数
-                    'aaData'               => $data,        // 数据信息
-                ],
-            ];
+        // 查询数据
+        /* @var $query mixed */
+        $query = M($this->model)->where($aSearch['where']);
+        $model = clone $query;
+        $count = $query->count();
+        $data  = $model->limit($start, $length)->order($aSearch['orderBy'])->select();
+
+        $this->ajaxSuccess([
+            'sEcho'                => $intNum,      // 请求次数
+            'iTotalRecords'        => count($data), // 当前页面条数
+            'iTotalDisplayRecords' => (int)$count,  // 数据总条数
+            'aaData'               => $data,        // 数据信息
+        ]);
+    }
+
+    public function insert()
+    {
+        // 数据验证
+        /* @var $model mixed */
+        $model = D($this->model);
+        if (!$model->validate($this->validate)->create()) {
+            $this->ajaxError($model->getError());
         }
 
-        $this->ajaxReturn();
+        if (!$this->beforeInsert($model)) {
+            $this->ajaxError('服务器繁忙,请稍候再试...');
+        }
+
+        if (!$insert_id = $model->add()) {
+            $this->ajaxError('新增数据失败');
+        }
+
+        $data = $model->find($insert_id);
+        if (method_exists($this, 'afterSave') && !$this->afterSave($data, post(), 'insert')) {
+            $this->ajaxError('服务器繁忙,请稍候再试...');
+        }
+
+        return $this->ajaxSuccess($data, '新增成功');
+    }
+
+    public function delete()
+    {
+        // 验证数据存在
+        $id = post($this->pk);
+        if (!$data = M($this->model)->find($id)) {
+            $this->ajaxError('删除数据不存在');
+        }
+
+        // 如果是管理员删除 验证权限
+        if (CONTROLLER_NAME == 'Admin' &&
+            $this->user->id != 1 &&
+            !Auth::can($this->user->id, 'deleteUser') &&
+            post('create_id') != $this->user->id) {
+            $this->ajaxError('你没有权限操作');
+        }
+
+        // 前置操作
+        if (method_exists($this, 'beforeDelete') && !$this->beforeDelete($data)) {
+            $this->ajaxError('服务器繁忙,请稍候再试...');
+        }
+
+        if (!M($this->model)->delete($id)) {
+            $this->ajaxError('删除成功失败');
+        }
+
+        // 后置操作
+        if (method_exists($this, 'afterSave') && !$this->afterSave($data, post(), 'delete')) {
+            $this->ajaxError('服务器繁忙,请稍候再试...');
+        }
+
+        return $this->ajaxSuccess($data, '删除成功');
     }
 
     // 修改数据
     public function update()
     {
-        if (IS_AJAX) {
-            // 接收参数
-            $type                  = post('actionType');                  // 操作类型
-            $arrType               = ['delete', 'insert', 'update'];      // 可执行操作
-            $this->arrError['msg'] = "操作类型错误";
-
-            // 操作类型判断
-            if (in_array($type, $arrType, true)) {
-                // 数据验证
-                $model = D($this->model);
-
-                // 修改和删除验证数据存在
-                $this->arrError['msg'] = '将要操作的数据不存在';
-                if ($type === 'insert' || ($data = $model->find(post($this->pk)))) {
-                    // 数据的验证
-                    $isTrue                = $model->validate($this->validate)->create();
-                    $this->arrError['msg'] = $model->getError();
-                    if ($isTrue || $type === 'delete') {
-                        $isTrue                = false;
-                        $this->arrError['msg'] = '服务器繁忙,请稍候再试...';
-
-                        // 根据类型操作数据
-                        switch ($type) {
-                            case 'delete':
-                                // 如果是管理员删除 验证权限 或者添加 者
-                                $this->arrError['msg'] = '你没有权限操作';
-                                if (CONTROLLER_NAME !== 'Admin' || $this->user->id === 1 || (Auth::can($this->user->id, 'deleteUser') && post('create_id') == $this->user->id)) {
-                                    $this->arrError['msg'] = '服务器繁忙,请稍候再试...';
-                                    if ($this->beforeDelete($model)) $isTrue = $model->delete();
-                                }
-                                break;
-                            case 'update':
-                                if ($this->beforeUpdate($model)) $isTrue = $model->save();
-                                break;
-                            case 'insert':
-                                if ($this->beforeInsert($model) && ($isTrue = $model->add())) $data = $model->find($isTrue);
-                                break;
-                        }
-
-                        $this->arrError['data'] = $model->getLastSql();
-                        // 判断操作成功
-                        if ($isTrue && $this->afterSave($data, post(), $type)) {
-                            // 返回数据信息
-                            $this->arrError = [
-                                'status' => 1,
-                                'msg'    => '恭喜您,操作成功 ^.^',
-                                'data'   => $data,
-                            ];
-                        }
-                    }
-                }
-            }
+        // 验证数据存在
+        if (!$data = M($this->model)->find(post($this->pk))) {
+            $this->ajaxError('修改数据不存在');
         }
 
-        $this->ajaxReturn();
+        // 数据验证
+        /* @var $model mixed */
+        $model = D($this->model);
+        if (!$model->validate($this->validate)->create()) {
+            $this->ajaxError($model->getError());
+        }
+
+        if (!$this->beforeUpdate($model)) {
+            $this->ajaxError('服务器繁忙,请稍候再试...');
+        }
+
+        if (!$model->save()) {
+            $this->ajaxError('修改失败');
+        }
+
+        if (method_exists($this, 'afterSave') && !$this->afterSave($data, post(), 'update')) {
+            $this->ajaxError('服务器繁忙,请稍候再试...');
+        }
+
+        return $this->ajaxSuccess($data, '修改成功');
     }
 
     /**
@@ -288,37 +300,33 @@ class Controller extends \Common\Controller
     {
         // 删除图片处理
         $strOldName = get('sOldName');
-        if ($strOldName && file_exists('.' . $strOldName)) unlink('.' . $strOldName);
+        if ($strOldName && file_exists('.' . $strOldName)) {
+            @unlink('.' . $strOldName);
+        }
 
         // 获取上传对象
         $upload = $this->beforeUpload();
+        if (!$info = $upload->upload()) {
+            $this->ajaxError($upload->getError());
+        }
 
-        // 文件上传
-        $info                  = $upload->upload();
-        $this->arrError['msg'] = $upload->getError();
+        if (method_exists($this, 'afterUpload') && !$this->afterUpload($info)) {
+            $this->ajaxError('上传文件处理失败');
+        }
 
-        // 上传成功
-        if ($info && $this->afterUpload($info)) {
-            $arrInfo = [];
-            foreach ($info as $value) {
-                $arrInfo[] = [
-                    'sOldName' => $value['name'],                                           // 旧文件名
-                    'sNewName' => $value['savename'],                                       // 新文件名
-                    'sPath'    => trim($upload->rootPath, '.') . $value['savepath'] . $value['savename'], // 文件路径
-                ];
-            }
-
-            $this->arrError = [
-                'status' => 1,
-                'msg'    => '文件上传成功',
-                'data'   => $arrInfo,
+        $arrInfo = [];
+        foreach ($info as $value) {
+            $arrInfo[] = [
+                'sOldName' => $value['name'],                                           // 旧文件名
+                'sNewName' => $value['savename'],                                       // 新文件名
+                'sPath'    => trim($upload->rootPath, '.') . $value['savepath'] . $value['savename'], // 文件路径
             ];
         }
 
-        $this->ajaxReturn();
+        $this->ajaxSuccess($arrInfo, '文件上传成功');
     }
 
-    // 图片裁剪
+// 图片裁剪
     public function clipping()
     {
         $intX    = (int)post('x');  // x轴
@@ -326,28 +334,29 @@ class Controller extends \Common\Controller
         $intW    = (int)post('w');  // 宽度
         $intH    = (int)post('h');  // 高度
         $strPath = post('path');    // 图片路径
-        if ($strPath && ($intX || $intY || $intW || $intH)) {
-            // 判读图片存在
-            $this->arrError['msg'] = '处理图片不存在';
-            $strPath               = '.' . trim($strPath, '.');
-            if (file_exists($strPath)) {
-                $image = new \Think\Image();
-                $image->open($strPath);
-                $this->arrError['msg'] = '图片裁剪失败';
-                if ($image->crop($intW, $intH, $intX, $intY)->save($strPath)) {
-                    $image->open($strPath);
-                    $this->arrError['msg'] = '图片缩放失败';
-                    if ($image->thumb($this->thumb[0], $this->thumb[1], \Think\Image::IMAGE_THUMB_SCALE)->save($strPath)) {
-                        $this->arrError = [
-                            'status' => 1,
-                            'msg'    => '图片裁剪成功',
-                            'data'   => trim($strPath, '.'),
-                        ];
-                    }
-                }
-            }
+        if (empty($strPath) || (empty($intX) && empty($intY) && empty($intW) && empty($intH))) {
+            $this->ajaxError('请求数据存在问题');
         }
-        $this->ajaxReturn();
+
+        // 判读图片存在
+        $strPath = '.' . trim($strPath, '.');
+        if (!file_exists($strPath)) {
+            $this->ajaxError('处理图片不存在');
+        }
+
+        $image = new \Think\Image();
+        $image->open($strPath);
+
+        if (!$image->crop($intW, $intH, $intX, $intY)->save($strPath)) {
+            $this->ajaxError('图片裁剪失败');
+        }
+
+        $image->open($strPath);
+        if (!$image->thumb($this->thumb[0], $this->thumb[1], \Think\Image::IMAGE_THUMB_SCALE)->save($strPath)) {
+            $this->ajaxError('图片缩放失败');
+        }
+
+        $this->ajaxSuccess(trim($strPath, '.'), '图片裁剪成功');
     }
 
     // 新增之前的处理
@@ -363,39 +372,6 @@ class Controller extends \Common\Controller
     {
         $model->update_id   = $this->user->id;
         $model->update_time = time();
-        return true;
-    }
-
-    // 删除之前的处理
-    protected function beforeDelete(&$model)
-    {
-        return true;
-    }
-
-    /**
-     * afterSave() 修改之后(新增\修改\删除)
-     * @access protected
-     *
-     * @param  array  $old  旧的数据
-     * @param  array  $new  新的数据
-     * @param  string $type 修改类型
-     *
-     * @return bool
-     */
-    protected function afterSave($old, $new, $type)
-    {
-        return true;
-    }
-
-    /**
-     * afterUpload() 上传文件之后的处理
-     *
-     * @param  array $info 上传文件信息
-     *
-     * @return bool  处理完成返回true
-     */
-    protected function afterUpload($info)
-    {
         return true;
     }
 }
