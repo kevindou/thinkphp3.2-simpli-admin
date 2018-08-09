@@ -106,7 +106,9 @@
 
     // 显示之后
     myTable.afterShow = function (data, isDetail) {
-        if (this.actionType == 'update') $(this.options.sFormId + ' input[name=password]').val('');
+        if (this.actionType == 'update') {
+            $(this.options.sFormId + ' input[name=password]').val('');
+        }
         uploader.refresh();
         return true;
     };
